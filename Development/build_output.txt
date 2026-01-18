@@ -1,0 +1,161 @@
+﻿
+> next-app@0.1.0 build
+> next build
+
+   Γû▓ Next.js 15.3.2
+   - Environments: .env.local
+
+   Creating an optimized production build ...
+node.exe : Failed to compile.
+At line:1 char:1
++ & "C:\Program Files\nodejs/node.exe" 
+"C:\Users\agust\AppData\Roaming\ ...
++ ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+    + CategoryInfo          : NotSpecifie 
+   d: (Failed to compile.:String) [], Re  
+  moteException
+    + FullyQualifiedErrorId : NativeComma 
+   ndError
+ 
+
+./app/portal/customer/projects/[id]/page.t
+sx
+Error:   [31mx[0m You're importing a 
+component that needs `useState`. This 
+React hook only works in a client 
+component. To fix, mark the file (or its 
+parent) with the `"use client"` directive.
+  [31m|[0m
+  [31m|[0m  Learn more: https://nextjs.o
+rg/docs/app/api-reference/directives/use-c
+lient
+  [31m|[0m
+
+   ,-[[36;1;4mC:\Teravolta website dev\De
+velopment\app\portal\customer\projects\[id
+]\page.tsx[0m:1:1]
+ [2m1[0m | import { useState, useEffect 
+} from 'react';
+   : [35;1m         ^^^^^^^^[0m
+ [2m2[0m | import { useParams, 
+useRouter } from 'next/navigation';
+ [2m3[0m | import { useAuth } from 
+'@/components/AuthProvider';
+ [2m3[0m | import { useLanguage } from 
+'@/components/LanguageProvider';
+   `----
+  [31mx[0m You're importing a component 
+that needs `useEffect`. This React hook 
+only works in a client component. To fix, 
+mark the file (or its parent) with the 
+`"use client"` directive.
+  [31m|[0m
+  [31m|[0m  Learn more: https://nextjs.o
+rg/docs/app/api-reference/directives/use-c
+lient
+  [31m|[0m
+
+   ,-[[36;1;4mC:\Teravolta website dev\De
+velopment\app\portal\customer\projects\[id
+]\page.tsx[0m:1:1]
+ [2m1[0m | import { useState, useEffect 
+} from 'react';
+   : [35;1m                   
+^^^^^^^^^[0m
+ [2m2[0m | import { useParams, 
+useRouter } from 'next/navigation';
+ [2m3[0m | import { useAuth } from 
+'@/components/AuthProvider';
+ [2m3[0m | import { useLanguage } from 
+'@/components/LanguageProvider';
+   `----
+  [31mx[0m You're importing a component 
+that needs `useParams`. This React hook 
+only works in a client component. To fix, 
+mark the file (or its parent) with the 
+`"use client"` directive.
+  [31m|[0m
+  [31m|[0m  Learn more: https://nextjs.o
+rg/docs/app/api-reference/directives/use-c
+lient
+  [31m|[0m
+
+   ,-[[36;1;4mC:\Teravolta website dev\De
+velopment\app\portal\customer\projects\[id
+]\page.tsx[0m:2:1]
+ [2m1[0m | import { useState, useEffect 
+} from 'react';
+ [2m2[0m | import { useParams, 
+useRouter } from 'next/navigation';
+   : [35;1m         ^^^^^^^^^[0m
+ [2m3[0m | import { useAuth } from 
+'@/components/AuthProvider';
+ [2m4[0m | import { useLanguage } from 
+'@/components/LanguageProvider';
+ [2m4[0m | import { useToast } from 
+'@/components/ui/Toast';
+   `----
+  [31mx[0m You're importing a component 
+that needs `useRouter`. This React hook 
+only works in a client component. To fix, 
+mark the file (or its parent) with the 
+`"use client"` directive.
+  [31m|[0m
+  [31m|[0m  Learn more: https://nextjs.o
+rg/docs/app/api-reference/directives/use-c
+lient
+  [31m|[0m
+
+   ,-[[36;1;4mC:\Teravolta website dev\De
+velopment\app\portal\customer\projects\[id
+]\page.tsx[0m:2:1]
+ [2m1[0m | import { useState, useEffect 
+} from 'react';
+ [2m2[0m | import { useParams, 
+useRouter } from 'next/navigation';
+   : [35;1m                    
+^^^^^^^^^[0m
+ [2m3[0m | import { useAuth } from 
+'@/components/AuthProvider';
+ [2m4[0m | import { useLanguage } from 
+'@/components/LanguageProvider';
+ [2m4[0m | import { useToast } from 
+'@/components/ui/Toast';
+   `----
+  [31mx[0m You're importing a component 
+that needs `useSearchParams`. This React 
+hook only works in a client component. To 
+fix, mark the file (or its parent) with 
+the `"use client"` directive.
+  [31m|[0m
+  [31m|[0m  Learn more: https://nextjs.o
+rg/docs/app/api-reference/directives/use-c
+lient
+  [31m|[0m
+
+    ,-[[36;1;4mC:\Teravolta website dev\D
+evelopment\app\portal\customer\projects\[i
+d]\page.tsx[0m:14:1]
+ [2m11[0m | import DocumentList from 
+'@/components/DocumentList';
+ [2m12[0m | import { ReviewModal } from 
+'@/components/ReviewModal';
+ [2m13[0m | import { ReviewService } 
+from '@/app/services/reviewService';
+ [2m14[0m | import { useSearchParams } 
+from 'next/navigation';
+    : [35;1m         ^^^^^^^^^^^^^^^[0m
+ [2m15[0m | 
+ [2m16[0m | export default function 
+CustomerProjectDetail() {
+ [2m16[0m |     const { id } = 
+useParams();
+    `----
+
+Import trace for requested module:
+./app/portal/customer/projects/[id]/page.t
+sx
+
+
+> Build failed because of webpack errors

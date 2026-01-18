@@ -1,0 +1,201 @@
+@import url('https://cdnjs.cloudflare.com/ajax/libs/remixicon/4.5.0/remixicon.min.css');
+
+/* Gilroy Font Family - Official TeraVolta Typography */
+@font-face {
+  font-family: 'Gilroy';
+  src: url('/fonts/Gilroy-Light.otf') format('opentype');
+  font-weight: 300;
+  font-style: normal;
+  font-display: swap;
+}
+
+@font-face {
+  font-family: 'Gilroy';
+  src: url('/fonts/Gilroy-Regular.ttf') format('truetype');
+  font-weight: 400;
+  font-style: normal;
+  font-display: swap;
+}
+
+@font-face {
+  font-family: 'Gilroy';
+  src: url('/fonts/Gilroy-Medium.otf') format('opentype');
+  font-weight: 500;
+  font-style: normal;
+  font-display: swap;
+}
+
+@font-face {
+  font-family: 'Gilroy';
+  src: url('/fonts/Gilroy-Bold.ttf') format('truetype');
+  font-weight: 700;
+  font-style: normal;
+  font-display: swap;
+}
+
+@font-face {
+  font-family: 'Gilroy';
+  src: url('/fonts/Gilroy-ExtraBold.ttf') format('truetype');
+  font-weight: 800;
+  font-style: normal;
+  font-display: swap;
+}
+
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+@layer base {
+  :root {
+    /* Fluid Typography */
+    --font-h1: clamp(2rem, 2.2vw + 1rem, 3.5rem);
+    --font-h2: clamp(1.6rem, 1.4vw + 1rem, 2.6rem);
+    --font-h3: clamp(1.35rem, 1vw + 1rem, 2rem);
+    --font-body: clamp(1rem, 0.35vw + 0.95rem, 1.2rem);
+    --font-label: clamp(0.9rem, 0.25vw + 0.85rem, 1.05rem);
+
+    /* Fluid Spacing */
+    --spacing-section: clamp(2.5rem, 4vw, 6rem);
+    --spacing-card: clamp(1.25rem, 2vw, 2.25rem);
+    --spacing-gap: clamp(1.25rem, 2vw, 2.5rem);
+  }
+
+  /* Typography System - Gilroy */
+  body {
+    font-family: 'Gilroy', sans-serif;
+    font-weight: 400;
+    font-size: var(--font-body);
+    line-height: 1.6;
+  }
+  
+  h1, h2, h3 {
+    font-weight: 700;
+    line-height: 1.2;
+  }
+  
+  h1 { font-size: var(--font-h1); }
+  h2 { font-size: var(--font-h2); }
+  h3 { font-size: var(--font-h3); }
+  
+  h4, h5, h6 {
+    font-weight: 500;
+  }
+  
+  strong, b {
+    font-weight: 700;
+  }
+}
+
+/* Animations */
+@keyframes fade-in {
+  from {
+    opacity: 0;
+    transform: translateY(10px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+@keyframes slide-in-right {
+  from {
+    opacity: 0;
+    transform: translateX(100%);
+  }
+  to {
+    opacity: 1;
+    transform: translateX(0);
+  }
+}
+
+@keyframes slide-in-up {
+  from {
+    opacity: 0;
+    transform: translateY(20px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+@keyframes pulse-soft {
+  0%, 100% {
+    opacity: 1;
+  }
+  50% {
+    opacity: 0.6;
+  }
+}
+
+@keyframes shimmer {
+  0% {
+    background-position: -200% 0;
+  }
+  100% {
+    background-position: 200% 0;
+  }
+}
+
+/* Animation Utility Classes */
+.animate-fade-in {
+  animation: fade-in 0.3s ease-out forwards;
+}
+
+.animate-slide-in-right {
+  animation: slide-in-right 0.3s ease-out forwards;
+}
+
+.animate-slide-in-up {
+  animation: slide-in-up 0.4s ease-out forwards;
+}
+
+.animate-pulse-soft {
+  animation: pulse-soft 2s ease-in-out infinite;
+}
+
+/* Enhanced Loading Skeleton */
+.skeleton-shimmer {
+  background: linear-gradient(90deg, #f0f0f0 25%, #e0e0e0 50%, #f0f0f0 75%);
+  background-size: 200% 100%;
+  animation: shimmer 1.5s infinite;
+}
+
+/* Micro-interactions */
+@layer utilities {
+  .transition-hover {
+    @apply transition-all duration-200 ease-out;
+  }
+  
+  .hover-lift {
+    @apply transition-all duration-200 ease-out;
+  }
+  
+  .hover-lift:hover {
+    transform: translateY(-2px);
+    box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
+  }
+  
+  .hover-scale {
+    @apply transition-transform duration-200 ease-out;
+  }
+  
+  .hover-scale:hover {
+    transform: scale(1.02);
+  }
+
+  .btn-press:active {
+    transform: scale(0.98);
+  }
+}
+
+/* Card Hover Effect */
+.card-interactive {
+  @apply transition-all duration-200 ease-out cursor-pointer;
+}
+
+.card-interactive:hover {
+  @apply border-[#004a90] shadow-md;
+  transform: translateY(-2px);
+}

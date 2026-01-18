@@ -1,0 +1,87 @@
+@import url('https://cdnjs.cloudflare.com/ajax/libs/remixicon/4.5.0/remixicon.min.css');
+
+/* Gilroy Font Family - Official TeraVolta Typography */
+@font-face {
+  font-family: 'Gilroy';
+  src: url('/fonts/Gilroy-Light.otf') format('opentype');
+  font-weight: 300;
+  font-style: normal;
+  font-display: swap;
+}
+
+@font-face {
+  font-family: 'Gilroy';
+  src: url('/fonts/Gilroy-Regular.ttf') format('truetype');
+  font-weight: 400;
+  font-style: normal;
+  font-display: swap;
+}
+
+@font-face {
+  font-family: 'Gilroy';
+  src: url('/fonts/Gilroy-Medium.otf') format('opentype');
+  font-weight: 500;
+  font-style: normal;
+  font-display: swap;
+}
+
+@font-face {
+  font-family: 'Gilroy';
+  src: url('/fonts/Gilroy-Bold.ttf') format('truetype');
+  font-weight: 700;
+  font-style: normal;
+  font-display: swap;
+}
+
+@font-face {
+  font-family: 'Gilroy';
+  src: url('/fonts/Gilroy-ExtraBold.ttf') format('truetype');
+  font-weight: 800;
+  font-style: normal;
+  font-display: swap;
+}
+
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+@layer base {
+  :root {
+    /* Fluid Typography */
+    --font-h1: clamp(2rem, 2.2vw + 1rem, 3.5rem);
+    --font-h2: clamp(1.6rem, 1.4vw + 1rem, 2.6rem);
+    --font-h3: clamp(1.35rem, 1vw + 1rem, 2rem);
+    --font-body: clamp(1rem, 0.35vw + 0.95rem, 1.2rem);
+    --font-label: clamp(0.9rem, 0.25vw + 0.85rem, 1.05rem);
+
+    /* Fluid Spacing */
+    --spacing-section: clamp(2.5rem, 4vw, 6rem);
+    --spacing-card: clamp(1.25rem, 2vw, 2.25rem);
+    --spacing-gap: clamp(1.25rem, 2vw, 2.5rem);
+  }
+
+  /* Typography System - Gilroy */
+  body {
+    font-family: 'Gilroy', sans-serif;
+    font-weight: 400;
+    font-size: var(--font-body);
+    line-height: 1.6;
+  }
+  
+  h1, h2, h3 {
+    font-weight: 700;
+    line-height: 1.2;
+  }
+  
+  h1 { font-size: var(--font-h1); }
+  h2 { font-size: var(--font-h2); }
+  h3 { font-size: var(--font-h3); }
+  
+  h4, h5, h6 {
+    font-weight: 500;
+  }
+  
+  strong, b {
+    font-weight: 700;
+  }
+}

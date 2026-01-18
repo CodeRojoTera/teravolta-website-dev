@@ -1,0 +1,8 @@
+
+    <svg xmlns="http://www.w3.org/2000/svg" width="200" height="200" viewBox="0 0 100 100">
+      <g fill="#c3d021" stroke="#c3d021">
+        <circle cx='50' cy='40' r='30' />
+      </g>
+      <text x="50%" y="95%" font-family="Arial" font-size="12" text-anchor="middle" fill="#c3d021">FORTALEZAS</text>
+    </svg>
+    

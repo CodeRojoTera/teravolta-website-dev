@@ -1,0 +1,61 @@
+-- 1. Drop ALL conflicting policies (Aggressive cleanup)
+-- Admin Request Policies
+DROP POLICY IF EXISTS "Users can view their own requests" ON admin_requests;
+DROP POLICY IF EXISTS "Users can create requests" ON admin_requests;
+
+-- Technician Table Policies
+DROP POLICY IF EXISTS "Technicians can read own profile" ON technicians;
+DROP POLICY IF EXISTS "Technicians can update own profile" ON technicians;
+
+-- Appointment Table Policies (The source of the latest error)
+DROP POLICY IF EXISTS "Technicians can read own appointments" ON appointments;
+
+-- Active Projects Policies (Preemptive cleanup)
+DROP POLICY IF EXISTS "Technicians can view assigned projects" ON active_projects;
+
+
+-- 2. Drop Foreign Key Constraints (To be absolutely sure)
+ALTER TABLE admin_requests DROP CONSTRAINT IF EXISTS admin_requests_requester_id_fkey;
+ALTER TABLE technicians DROP CONSTRAINT IF EXISTS technicians_uid_fkey;
+ALTER TABLE appointments DROP CONSTRAINT IF EXISTS appointments_technician_uid_fkey;
+ALTER TABLE active_projects DROP CONSTRAINT IF EXISTS active_projects_technician_uid_fkey;
+
+
+-- 3. Change columns from UUID to TEXT
+ALTER TABLE admin_requests ALTER COLUMN requester_id TYPE text;
+
+DO $$ BEGIN
+  IF EXISTS (SELECT 1 FROM information_schema.columns WHERE table_name = 'technicians' AND column_name = 'uid') THEN
+    ALTER TABLE technicians ALTER COLUMN uid TYPE text;
+  END IF;
+END $$;
+
+DO $$ BEGIN
+  IF EXISTS (SELECT 1 FROM information_schema.columns WHERE table_name = 'appointments' AND column_name = 'technician_uid') THEN
+    ALTER TABLE appointments ALTER COLUMN technician_uid TYPE text;
+  END IF;
+END $$;
+
+DO $$ BEGIN
+  IF EXISTS (SELECT 1 FROM information_schema.columns WHERE table_name = 'active_projects' AND column_name = 'technician_uid') THEN
+    ALTER TABLE active_projects ALTER COLUMN technician_uid TYPE text;
+  END IF;
+END $$;
+
+
+-- 4. Re-create policies with correct type casting
+-- Admin Requests
+CREATE POLICY "Users can view their own requests" ON admin_requests
+    FOR SELECT USING (auth.uid()::text = requester_id);
+CREATE POLICY "Users can create requests" ON admin_requests
+    FOR INSERT WITH CHECK (auth.uid()::text = requester_id);
+
+-- Technicians
+CREATE POLICY "Technicians can read own profile" ON technicians
+    FOR SELECT USING (auth.uid()::text = uid);
+CREATE POLICY "Technicians can update own profile" ON technicians
+    FOR UPDATE USING (auth.uid()::text = uid);
+
+-- Appointments (Restored)
+CREATE POLICY "Technicians can read own appointments" ON appointments
+    FOR SELECT USING (auth.uid()::text = technician_uid);

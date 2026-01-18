@@ -1,0 +1,22 @@
+Caso de Éxito – Auditoría y Respaldo Energético Residencial
+Categoría: Eficiencia Energética para Hogares y Negocios
+Tipo de servicio: Evaluación de consumo y dimensionamiento de baterías
+Tipo de cliente: Propietario de apartamento
+Ubicación: Ciudad de Panamá
+
+Desafío
+Asegurar energía para cargas críticas durante apagones prolongados sin invertir de más.
+
+Solución
+Monitoreo detallado. Medición del perfil de carga durante 18 días con sensor en el tablero principal, identificando picos y consumo promedio diario.
+Análisis de escenarios. Simulación de respaldo para cargas críticas versus toda la vivienda, evaluando duración y costo por kWh almacenado.
+Dimensionamiento óptimo. Recomendación de paquete LiFePO₄ de 15 kWh con inversor híbrido de 5 kVA, balance entre autonomía (12–15 h) y presupuesto.
+Gestión de proveedores. Solicitud de cotizaciones, comparación de precio, garantía y servicio post‑venta; selección de la oferta con mejor relación costo‑beneficio.
+
+Resultados
+Respaldo de 12–15 h para nevera, internet y luces.
+Inversión estimada: US$ 11 000 – 16 000.
+Proyecto contratado con el proveedor seleccionado.
+
+¿Quieres un respaldo a tu medida?
+Contáctanos y te ayudamos a definir la solución ideal para tu hogar.

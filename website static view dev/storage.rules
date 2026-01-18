@@ -1,0 +1,13 @@
+rules_version = '2';
+
+service firebase.storage {
+  match /b/{bucket}/o {
+    // Only allow public to upload files during inquiry creation
+    // They cannot list or read files (blind upload-only)
+    // Admin can read/write everything
+    match /inquiries/{inquiryId}/{fileName} {
+      allow write: if true; 
+      allow read: if request.auth != null;
+    }
+  }
+}

@@ -1,0 +1,36 @@
+Caso de Éxito – Análisis Financiero de Propuesta Fotovoltaica
+Categoría: Consultoría Estratégica
+Tipo de servicio: Evaluación de ofertas – Análisis financiero de propuesta fotovoltaica
+Tipo de cliente: Club con alto consumo energético
+Ubicación: País de Centroamérica
+
+Desafío
+El cliente recibió una oferta para instalar un sistema fotovoltaico en su sede principal y necesitaba validar la viabilidad económica antes de aprobar la inversión. Era imprescindible:
+Verificar la coherencia de los supuestos técnicos (tamaño del sistema, producción anual, degradación, mantenimiento).
+Modelar el impacto financiero bajo distintos esquemas de pago (capital propio, préstamo bancario y leasing).
+Presentar indicadores claros (TIR, VAN, payback) que facilitaran la decisión del comité directivo.
+
+Solución TeraVolta
+Revisión técnica y de costos. Confirmación de la capacidad propuesta (≈ 450 kWp) y costos totales de instalación (≈ US$ 0.35 MM).
+Modelación financiera multiescenario.
+Escenario 100 % equity.
+Escenario 85 % deuda bancaria a 10 años.
+Escenario leasing a varios plazos.
+Indicadores y sensibilidad. Cálculo de TIR, VAN y payback con escalación de distintos escenarios de tarifa eléctrica.
+Informe ejecutivo. Documento de presentación con gráficos de flujo de caja, ahorro anual y comparativo de escenarios.
+
+Resultados
+CAPEX analizado: ≈ US$ 0.36 MM
+Producción anual estimada: 616 MWh (≈ 11 % del consumo actual del sitio).
+TIR sin apalancamiento: 23 %
+VAN: ≈ US$ 0.4 MM
+Payback equity: 5 años (3 años con financiamiento mixto).
+El comité directivo aprobó la iniciativa y dio luz verde a la negociación contractual con el proveedor.
+
+Valor aportado por TeraVolta
+Herramienta financiera flexible, lista para actualizarse con variaciones de tarifa o financiamiento.
+Validación independiente que aportó confianza al órgano de gobierno del club.
+Argumentos cuantitativos que aceleraron la aprobación del proyecto.
+
+¿Necesitas validar la rentabilidad de una propuesta solar?
+Conversa con nuestro equipo y toma decisiones basadas en cifras reales.

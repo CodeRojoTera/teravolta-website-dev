@@ -1,0 +1,160 @@
+rules_version = '2';
+service cloud.firestore {
+  match /databases/{database}/documents {
+    
+    // Helper function to check if user is authenticated
+    function isSignedIn() {
+      return request.auth != null;
+    }
+    
+    // Helper function to check if user is admin or super_admin
+    function isAdmin() {
+      return isSignedIn() && 
+             exists(/databases/$(database)/documents/users/$(request.auth.uid)) &&
+             get(/databases/$(database)/documents/users/$(request.auth.uid)).data.role in ['admin', 'super_admin'];
+    }
+    
+    // Helper function to check if user is super_admin
+    function isSuperAdmin() {
+      return isSignedIn() && 
+             exists(/databases/$(database)/documents/users/$(request.auth.uid)) &&
+             get(/databases/$(database)/documents/users/$(request.auth.uid)).data.role == 'super_admin';
+    }
+    
+    // Users collection
+    match /users/{userId} {
+      allow read: if isSignedIn();
+      allow write: if isSignedIn() && (request.auth.uid == userId || isAdmin());
+    }
+    
+    // Inquiries collection (admin access)
+    match /inquiries/{inquiryId} {
+      allow read: if isAdmin();
+      allow create: if true; // Public can create inquiries
+      allow update, delete: if isAdmin();
+      
+      // Messages subcollection
+      match /messages/{messageId} {
+        allow read, write: if isAdmin();
+      }
+    }
+    
+    // Projects collection (admin access)
+    match /projects/{projectId} {
+      allow read: if true; // Public can read published projects
+      allow create, update, delete: if isAdmin();
+    }
+    
+    // Quotes collection (admin access)
+    match /quotes/{quoteId} {
+      allow read: if isAdmin();
+      allow create: if true; // Public can request quotes
+      allow update, delete: if isAdmin();
+    }
+    
+    // Magic Links collection (for onboarding)
+    match /magicLinks/{linkId} {
+      allow read: if true; // Public can validate magic links
+      allow create: if isAdmin(); // Only admin can create (via API with server-side auth)
+      allow update: if true; // Allow marking as used during onboarding
+      allow delete: if isAdmin();
+    }
+    
+    // Active Projects collection (admin write, customers read own)
+    match /activeProjects/{projectId} {
+      allow read: if isAdmin() || 
+                     (isSignedIn() && resource.data.clientId == request.auth.uid) ||
+                     (isSignedIn() && resource.data.userId == request.auth.uid);
+      allow create: if true; // Public can create projects (e.g. Efficiency checkout flow)
+      allow update, delete: if isAdmin();
+      
+      // Allow reading project updates subcollection
+      match /updates/{updateId} {
+        allow read: if isAdmin();
+        allow create, update, delete: if isAdmin();
+      }
+    }
+    
+    // Portfolio Projects collection (public read, admin write)
+    match /portfolioProjects/{projectId} {
+      allow read: if true; // Public can view portfolio
+      allow create, update, delete: if isAdmin();
+    }
+    
+    // User Settings collection (users can read/write own settings)
+    match /userSettings/{userId} {
+      allow read, write: if isSignedIn() && request.auth.uid == userId;
+    }
+    
+    // Deletion Requests
+    match /deletionRequests/{requestId} {
+      allow read: if isAdmin() || (isSignedIn() && resource.data.requestedBy == request.auth.uid);
+      allow create: if isSignedIn();
+      allow update: if isAdmin();
+      allow delete: if isSuperAdmin();
+    }
+
+    // Admin Inquiries (admin-to-super_admin requests)
+    match /adminInquiries/{inquiryId} {
+      // Admins can read their own inquiries, Super Admins can read all
+      allow read: if isAdmin() || (isSignedIn() && resource.data.requestedBy == request.auth.uid);
+      // Any admin can create an inquiry
+      allow create: if isAdmin();
+      // Allow any admin to update (for read receipts, status updates, close, etc.)
+      allow update: if isAdmin();
+      // Only Super Admins can delete
+      allow delete: if isSuperAdmin();
+
+      // Messages subcollection (conversation thread)
+      match /messages/{messageId} {
+        // Both parties can read messages
+        allow read: if isAdmin();
+        // Both admins and super_admins can create messages
+        allow create: if isAdmin();
+        // No one can update or delete messages
+        allow update, delete: if false;
+      }
+    }
+
+    // Notifications: Allow users to read and update (mark as read) their own notifications
+    match /notifications/{notificationId} {
+      allow read, update: if isSignedIn() && (resource.data.recipientId == request.auth.uid || isAdmin());
+      allow create: if isSignedIn(); // Allow creation for now (e.g. from client triggers)
+    }
+
+    // Documents collection (project files, attachments)
+    match /documents/{docId} {
+      allow read: if isSignedIn();
+      allow create, update, delete: if isAdmin();
+    }
+
+    // Invoices collection (client billing)
+    match /invoices/{invoiceId} {
+      allow read: if isAdmin() || 
+                     (isSignedIn() && resource.data.userId == request.auth.uid);
+      allow create, update, delete: if isAdmin();
+    }
+
+    // Technicians Collection
+    match /technicians/{techId} {
+      // Admin: Full access
+      // Technician: Read own profile (match by uid field)
+      allow read: if isAdmin() || (isSignedIn() && resource.data.uid == request.auth.uid);
+      allow write: if isAdmin();
+    }
+
+    // Appointments Collection
+    match /appointments/{appointmentId} {
+      // Admin: Full access
+      // Technician: Read own appointments (match by technicianUid or technicianId if we used get())
+      // We use technicianUid for efficiency (no extra reads)
+      allow read: if isAdmin() || (isSignedIn() && resource.data.technicianUid == request.auth.uid);
+      
+      // Future: Allow technicians to update status/notes?
+      allow update: if isAdmin() || (isSignedIn() && resource.data.technicianUid == request.auth.uid && 
+                    request.resource.data.diff(resource.data).affectedKeys().hasOnly(['status', 'notes', 'checkInTime', 'checkOutTime', 'locationStart', 'locationEnd']));
+      
+      allow create, delete: if isAdmin();
+    }
+  }
+}

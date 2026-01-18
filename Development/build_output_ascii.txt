@@ -1,0 +1,87 @@
+
+> next-app@0.1.0 build
+> next build
+
+   ??? Next.js 15.3.2
+   - Environments: .env.local
+
+   Creating an optimized production build ...
+node.exe : Failed to 
+compile.
+At line:1 char:1
++ & "C:\Program Files
+\nodejs/node.exe" "C:
+\Users\agust\AppData\
+Roaming\ ...
++ ~~~~~~~~~~~~~~~~~~~
+~~~~~~~~~~~~~~~~~~~~~
+~~~~~~~~~~~~~~~~~~~~~
+~~~~~~~~
+    + CategoryInfo   
+           : NotSpe  
+  cified: (Failed    
+ to compile.:Stri    
+ng) [], RemoteEx    
+ception
+    + FullyQualified 
+   ErrorId : Native  
+  CommandError
+ 
+
+./app/portal/account/
+page.tsx
+Module not found: 
+Can't resolve '../../
+components/Header'
+
+https://nextjs.org/do
+cs/messages/module-no
+t-found
+
+./app/portal/account/
+page.tsx
+Module not found: 
+Can't resolve '../../
+components/Footer'
+
+https://nextjs.org/do
+cs/messages/module-no
+t-found
+
+./app/portal/account/
+page.tsx
+Module not found: 
+Can't resolve '../../
+components/ui/Button'
+
+https://nextjs.org/do
+cs/messages/module-no
+t-found
+
+./app/portal/account/
+page.tsx
+Module not found: 
+Can't resolve '../../
+components/LanguagePr
+ovider'
+
+https://nextjs.org/do
+cs/messages/module-no
+t-found
+
+./app/portal/account/
+page.tsx
+Module not found: 
+Can't resolve '../../
+components/AuthProvid
+er'
+
+https://nextjs.org/do
+cs/messages/module-no
+t-found
+
+
+> Build failed 
+because of webpack 
+errors
+
