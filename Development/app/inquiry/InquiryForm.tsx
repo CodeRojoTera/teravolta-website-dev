@@ -9,7 +9,7 @@ import Footer from '../../components/Footer';
 import Button from '../../components/ui/Button';
 import { useLanguage } from '../../components/LanguageProvider';
 import { useAuth } from '../../components/AuthProvider';
-import { supabase } from '@/lib/supabase';
+import { supabasePublic as supabase } from '@/lib/supabase';
 // Removed Firebase imports
 
 // ... imports remain the same
@@ -337,30 +337,31 @@ function InquiryFormContent() {
     setSubmitStatus('');
 
     try {
-      // 1. Insert into Inquiries
-      const { data: inquiryData, error } = await supabase.from('inquiries').insert({
-        full_name: formData.fullName,
-        email: formData.email,
-        phone: formData.phone,
-        company: formData.company,
-        service: selectedService,
-        project_description: formData.projectDescription,
+      // 1. Insert into Inquiries via API (bypasses RLS)
+      const inquiryResponse = await fetch('/api/create-inquiry', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({
+          full_name: formData.fullName,
+          email: formData.email,
+          phone: formData.phone,
+          company: formData.company,
+          service: selectedService,
+          project_description: formData.projectDescription,
+          timeline: formData.timeline,
+          budget: formData.budget,
+          property_type: formData.propertyType,
+          preferred_contact: formData.preferredContact,
+          city: formData.city,
+          state: formData.state,
+          zip_code: formData.zipCode,
+          address: formData.address,
+        })
+      });
 
-        timeline: formData.timeline,
-        budget: formData.budget,
-        property_type: formData.propertyType,
-        preferred_contact: formData.preferredContact,
-
-        status: 'new',
-
-        city: formData.city,
-        state: formData.state,
-        zip_code: formData.zipCode,
-
-        address: formData.address,
-      }).select().single();
-
-      if (error) throw error;
+      const inquiryResult = await inquiryResponse.json();
+      if (!inquiryResult.success) throw new Error(inquiryResult.error || 'Failed to create inquiry');
+      const inquiryData = inquiryResult.inquiry;
 
       // 2. Update Client Type
       if (formData.email && formData.propertyType) {

@@ -7,7 +7,7 @@ import Header from '../../components/Header';
 import Footer from '../../components/Footer';
 import { useLanguage } from '../../components/LanguageProvider';
 import { useAuth } from '../../components/AuthProvider';
-import { supabase } from '@/lib/supabase';
+import { supabasePublic as supabase } from '@/lib/supabase';
 import { uploadDocument } from '@/lib/documentUtils';
 import { v4 as uuidv4 } from 'uuid';
 import { useToast } from '@/components/ui/Toast';
@@ -508,37 +508,39 @@ function QuotePageContent() {
         }
       }
 
-      // Insert Quote with Booking Preference
-      const { error } = await supabase.from('quotes').insert({
-        id: quoteId,
-        service: formData.service || selectedService,
-        property_type: formData.propertyType,
-        property_size: formData.propertySize,
-        client_name: formData.fullName,
-        client_email: formData.email,
-        client_phone: formData.phone,
-        client_company: formData.company,
-        message: formData.message,
-        address: {
-          street: formData.address,
-          city: formData.city,
-          state: formData.state,
-          zip_code: formData.zipCode,
-          country: 'PA'
-        },
-        bill_files: uploadedBills,
-        status: 'pending',
-        user_id: user ? user.id : null,
-        // Custom fields in JSONB or specific columns
-        // We added booking_preference in migration
-        booking_preference: {
-          date: formData.bookingDate,
-          time: formData.bookingTime,
-          operating_hours: formData.operatingHours
-        }
+      // Insert Quote via API (bypasses RLS)
+      const quoteResponse = await fetch('/api/create-quote', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({
+          id: quoteId,
+          service: formData.service || selectedService,
+          property_type: formData.propertyType,
+          property_size: formData.propertySize,
+          client_name: formData.fullName,
+          client_email: formData.email,
+          client_phone: formData.phone,
+          client_company: formData.company,
+          message: formData.message,
+          address: {
+            street: formData.address,
+            city: formData.city,
+            state: formData.state,
+            zip_code: formData.zipCode,
+            country: 'PA'
+          },
+          bill_files: uploadedBills,
+          user_id: user ? user.id : null,
+          booking_preference: {
+            date: formData.bookingDate,
+            time: formData.bookingTime,
+            operating_hours: formData.operatingHours
+          }
+        })
       });
 
-      if (error) throw error;
+      const quoteResult = await quoteResponse.json();
+      if (!quoteResult.success) throw new Error(quoteResult.error || 'Failed to create quote');
 
       // Update client type
       if (formData.email && formData.propertyType) {

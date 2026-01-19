@@ -424,8 +424,65 @@ export default function QuoteDetailPage() {
 
     const handleAcceptAndOnboard = async () => {
         if (!quote || sendingOnboarding) return;
+
+        // Validation: If project doesn't exist, check requirements before creating
+        if (!quote.linkedProjectId) {
+            const isConsultingOrAdvocacy = quote.service?.toLowerCase().includes('consulting') || quote.service?.toLowerCase().includes('advocacy');
+            if (isConsultingOrAdvocacy && quote.amount > 0 && (!quote.phases || quote.phases.length === 0)) {
+                showToast(language === 'es' ? 'Debe definir las fases de pago antes de aceptar' : 'Must define payment phases before accepting', 'warning');
+                return;
+            }
+        }
+
         setSendingOnboarding(true);
         try {
+            // 0. Ensure Project Exists (Fix for "Empty Dashboard" issue)
+            if (!quote.linkedProjectId) {
+                const projectData = {
+                    userId: quote.user_id || user?.id,
+                    quoteId: quote.id,
+                    service: quote.service,
+                    clientName: quote.fullName || quote.clientName,
+                    clientEmail: quote.email || quote.clientEmail,
+                    clientPhone: quote.phone || quote.clientPhone,
+                    clientCompany: quote.company || quote.clientCompany,
+                    address: quote.address,
+                    description: quote.description || quote.message,
+                    amount: quote.amount,
+                    projectName: `${quote.fullName || 'Client'} - ${quote.service}`,
+                    status: 'pending_planning',
+                    paymentStatus: 'pending',
+                    progress: 0,
+                    propertyType: quote.propertyType,
+                    propertySize: quote.propertySize,
+                    deviceOption: quote.deviceMode,
+                    connectivityType: quote.connectivity,
+                    timeline: quote.timeline,
+                    budget: quote.budget,
+                    projectDescription: quote.projectDescription,
+                    city: quote.city,
+                    state: quote.state,
+                    zipCode: quote.zipCode,
+                    phases: quote.phases || []
+                };
+
+                // Create Project via Service
+                // @ts-ignore
+                const projectId = await ActiveProjectService.create(projectData);
+
+                // Link to Quote
+                const { error } = await supabase
+                    .from('quotes')
+                    .update({ linked_project_id: projectId })
+                    .eq('id', quote.id);
+
+                if (error) throw error;
+
+                // Update local state
+                setQuote((prev: any) => ({ ...prev, linkedProjectId: projectId }));
+                quote.linkedProjectId = projectId; // Immediate update for flow
+            }
+
             // 1. Create magic link (API uses Supabase)
             const linkResponse = await fetch('/api/create-magic-link', {
                 method: 'POST',
@@ -458,10 +515,10 @@ export default function QuoteDetailPage() {
 
             if (!emailResponse.ok) throw new Error('Failed to send email');
 
-            // 3. Update quote status to approved/paid if not already
+            // 3. Update quote status to approved/converted
             await handleStatusChange('converted');
 
-            showToast(language === 'es' ? 'Onboarding enviado exitosamente' : 'Onboarding sent successfully', 'success');
+            showToast(language === 'es' ? 'Proyecto creado y onboarding enviado' : 'Project created & onboarding sent', 'success');
         } catch (error) {
             console.error('Error sending onboarding:', error);
             showToast(language === 'es' ? 'Error al enviar onboarding' : 'Error sending onboarding', 'error');

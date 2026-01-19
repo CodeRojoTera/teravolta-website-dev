@@ -40,7 +40,10 @@ export default function RequestServicePage() {
         city: '',
         state: '',
         deviceMode: '',
-        connectivity: ''
+        connectivity: '',
+        operatingHours: '',
+        bookingDate: '',
+        bookingTime: ''
     });
 
     // Advocacy form
@@ -99,6 +102,8 @@ export default function RequestServicePage() {
         smallBusiness: language === 'es' ? 'Pequeña Empresa' : 'Small Business',
         office: language === 'es' ? 'Oficina' : 'Office',
         industrial: language === 'es' ? 'Industrial' : 'Industrial',
+        hotel: language === 'es' ? 'Hotel' : 'Hotel',
+        building: language === 'es' ? 'Edificio' : 'Building',
         propertySize: language === 'es' ? 'Tamaño (pies²)' : 'Size (sq ft)',
         selectSize: language === 'es' ? 'Seleccionar tamaño' : 'Select size',
         currentBill: language === 'es' ? 'Factura Mensual' : 'Monthly Bill',
@@ -129,7 +134,16 @@ export default function RequestServicePage() {
         submitting: language === 'es' ? 'Enviando...' : 'Submitting...',
         successTitle: language === 'es' ? '¡Solicitud Enviada!' : 'Request Submitted!',
         successMsg: language === 'es' ? 'Tu solicitud ha sido recibida. Te contactaremos pronto.' : 'Your request has been received. We\'ll contact you soon.',
-        backToDash: language === 'es' ? 'Volver al Dashboard' : 'Back to Dashboard'
+        backToDash: language === 'es' ? 'Volver al Dashboard' : 'Back to Dashboard',
+        // New scheduling fields
+        scheduleInspection: language === 'es' ? 'Agendar Inspección' : 'Schedule Inspection',
+        preferredDate: language === 'es' ? 'Fecha Preferida' : 'Preferred Date',
+        preferredTime: language === 'es' ? 'Hora Preferida' : 'Preferred Time',
+        operatingHours: language === 'es' ? 'Horarios de Operación' : 'Operating Hours',
+        operatingHoursDesc: language === 'es' ? 'Horario de actividad del local (para propiedades comerciales)' : 'Business operating hours (for commercial properties)',
+        morning: language === 'es' ? 'Mañana (8am - 12pm)' : 'Morning (8am - 12pm)',
+        afternoon: language === 'es' ? 'Tarde (12pm - 5pm)' : 'Afternoon (12pm - 5pm)',
+        evening: language === 'es' ? 'Noche (5pm - 8pm)' : 'Evening (5pm - 8pm)'
     };
 
     const handleFileUpload = (e: React.ChangeEvent<HTMLInputElement>) => {
@@ -238,6 +252,15 @@ export default function RequestServicePage() {
 
             if (details.timeline) formData.timeline = details.timeline;
             if (details.budget) formData.budget = details.budget;
+
+            // Booking preference (scheduling) - aligns with public Quote form
+            if (details.bookingDate || details.bookingTime || details.operatingHours) {
+                formData.booking_preference = {
+                    date: details.bookingDate || '',
+                    time: details.bookingTime || '',
+                    operating_hours: details.operatingHours || ''
+                };
+            }
 
             // 4. Insert into Quotes Table
             const { error } = await supabase.from('quotes').insert(formData);
@@ -515,6 +538,53 @@ export default function RequestServicePage() {
                                         ))}
                                     </div>
                                 </div>
+                            </div>
+
+                            {/* Inspection Scheduling - Aligns with public Quote form */}
+                            <div className="border-t pt-6 mt-6">
+                                <h3 className="text-lg font-semibold text-[#004a90] mb-4">
+                                    <i className="ri-calendar-check-line mr-2"></i>
+                                    {t.scheduleInspection}
+                                </h3>
+                                <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+                                    <div>
+                                        <label className="block text-sm font-medium text-[#004a90] mb-2">{t.preferredDate}</label>
+                                        <input
+                                            type="date"
+                                            value={efficiencyForm.bookingDate}
+                                            onChange={e => setEfficiencyForm(p => ({ ...p, bookingDate: e.target.value }))}
+                                            className="w-full p-3 border border-gray-300 rounded-lg"
+                                            min={new Date().toISOString().split('T')[0]}
+                                        />
+                                    </div>
+                                    <div>
+                                        <label className="block text-sm font-medium text-[#004a90] mb-2">{t.preferredTime}</label>
+                                        <select
+                                            value={efficiencyForm.bookingTime}
+                                            onChange={e => setEfficiencyForm(p => ({ ...p, bookingTime: e.target.value }))}
+                                            className="w-full p-3 border border-gray-300 rounded-lg"
+                                        >
+                                            <option value="">{t.selectTimeline}</option>
+                                            <option value="morning">{t.morning}</option>
+                                            <option value="afternoon">{t.afternoon}</option>
+                                            <option value="evening">{t.evening}</option>
+                                        </select>
+                                    </div>
+                                </div>
+                                {/* Operating Hours - for commercial properties */}
+                                {['small-business', 'office', 'industrial'].includes(efficiencyForm.propertyType) && (
+                                    <div className="mt-4">
+                                        <label className="block text-sm font-medium text-[#004a90] mb-2">{t.operatingHours}</label>
+                                        <p className="text-xs text-gray-500 mb-2">{t.operatingHoursDesc}</p>
+                                        <input
+                                            type="text"
+                                            value={efficiencyForm.operatingHours}
+                                            onChange={e => setEfficiencyForm(p => ({ ...p, operatingHours: e.target.value }))}
+                                            className="w-full p-3 border border-gray-300 rounded-lg"
+                                            placeholder="e.g., 8:00 AM - 6:00 PM"
+                                        />
+                                    </div>
+                                )}
                             </div>
                         </>
                     )}

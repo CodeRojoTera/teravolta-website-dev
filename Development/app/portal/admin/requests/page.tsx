@@ -8,8 +8,9 @@ import { supabase } from '@/lib/supabase';
 import { PageLoadingSkeleton } from '@/components/ui/Skeleton';
 import { formatJsDate } from '@/lib/dateUtils';
 import { RescheduleService } from '@/app/services/rescheduleService';
+import RoleGuard from '@/components/RoleGuard';
 
-export default function RequestsPage() {
+function RequestsPageContent() {
     const { language } = useLanguage();
     const { user } = useAuth();
     const { showToast } = useToast();
@@ -290,5 +291,14 @@ export default function RequestsPage() {
                 )}
             </div>
         </div>
+    );
+}
+
+// Export with Super Admin role guard
+export default function RequestsPage() {
+    return (
+        <RoleGuard requiredRole="super_admin">
+            <RequestsPageContent />
+        </RoleGuard>
     );
 }

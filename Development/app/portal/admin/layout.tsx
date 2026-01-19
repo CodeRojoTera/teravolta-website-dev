@@ -155,12 +155,13 @@ export default function AdminLayout({ children }: { children: React.ReactNode })
     const managementItems = [
         { name: t.portfolio, href: '/portal/admin/portfolio', icon: 'ri-gallery-line' },
         { name: t.users, href: '/portal/admin/users', icon: 'ri-group-line' }, // handled separately in render
-        {
+        // Requests is Super Admin only
+        ...(userRole === 'super_admin' ? [{
             name: language === 'es' ? 'Solicitudes' : 'Requests',
             href: '/portal/admin/requests',
             icon: 'ri-mail-send-line',
-            badge: userRole === 'super_admin' && unresolvedCount > 0 ? unresolvedCount : undefined
-        },
+            badge: unresolvedCount > 0 ? unresolvedCount : undefined
+        }] : []),
         { name: t.settings, href: '/portal/admin/settings', icon: 'ri-settings-3-line' },
     ];
 
