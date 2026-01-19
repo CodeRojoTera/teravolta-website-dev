@@ -43,3 +43,9 @@ Desktop.ini
 *.bkp
 *.backup
 *.tmp
+
+# Secrets / Keys (Excluded for security)
+**/serviceAccountKey.json
+website static view dev/scripts/serviceAccountKey.json
+website static view dev/bdc0c6a3-3b08-47d0-9d27-04c29b4a03bf
+Development/bdc0c6a3-3b08-47d0-9d27-04c29b4a03bf
