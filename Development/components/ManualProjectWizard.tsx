@@ -304,7 +304,7 @@ export default function ManualProjectWizard({ onClose, onSuccess }: ManualProjec
             <div className="bg-white rounded-2xl w-full max-w-2xl overflow-hidden shadow-xl">
                 {/* Header */}
                 <div className="px-6 py-4 border-b border-gray-100 flex justify-between items-center">
-                    <h3 className="text-xl font-bold text-[#004a90]">
+                    <h3 className="text-xl font-bold text-teravolta-blue">
                         {step === 1 ? t.step1 : step === 2 ? t.step2 : step === 3 ? (formData.project.service === 'efficiency' ? t.summary : t.step3) : t.summary}
                     </h3>
                     <button onClick={onClose} className="text-gray-400 hover:text-gray-600">
@@ -318,7 +318,7 @@ export default function ManualProjectWizard({ onClose, onSuccess }: ManualProjec
                         {[1, 2, 3, 4].map(i => {
                             if (formData.project.service === 'efficiency' && i === 3) return null; // Skip phase step for efficiency
                             return (
-                                <div key={i} className={`h-2 flex-1 rounded-full ${i <= step ? 'bg-[#c3d021]' : 'bg-gray-100'}`}></div>
+                                <div key={i} className={`h-2 flex-1 rounded-full ${i <= step ? 'bg-teravolta-lime' : 'bg-gray-100'}`}></div>
                             );
                         })}
                     </div>
@@ -328,13 +328,13 @@ export default function ManualProjectWizard({ onClose, onSuccess }: ManualProjec
                             <div className="flex bg-gray-100 p-1 rounded-xl">
                                 <button
                                     onClick={() => setFormData(f => ({ ...f, clientType: 'existing' }))}
-                                    className={`flex-1 py-2 text-sm font-medium rounded-lg transition-all ${formData.clientType === 'existing' ? 'bg-white shadow-sm text-[#004a90]' : 'text-gray-500'}`}
+                                    className={`flex-1 py-2 text-sm font-medium rounded-lg transition-all ${formData.clientType === 'existing' ? 'bg-white shadow-sm text-teravolta-blue' : 'text-gray-500'}`}
                                 >
                                     {t.existingClient}
                                 </button>
                                 <button
                                     onClick={() => setFormData(f => ({ ...f, clientType: 'new' }))}
-                                    className={`flex-1 py-2 text-sm font-medium rounded-lg transition-all ${formData.clientType === 'new' ? 'bg-white shadow-sm text-[#004a90]' : 'text-gray-500'}`}
+                                    className={`flex-1 py-2 text-sm font-medium rounded-lg transition-all ${formData.clientType === 'new' ? 'bg-white shadow-sm text-teravolta-blue' : 'text-gray-500'}`}
                                 >
                                     {t.newClient}
                                 </button>
@@ -349,7 +349,7 @@ export default function ManualProjectWizard({ onClose, onSuccess }: ManualProjec
                                             placeholder={t.searchClients}
                                             value={searchTerm}
                                             onChange={e => setSearchTerm(e.target.value)}
-                                            className="w-full pl-10 pr-4 py-2 border rounded-lg focus:ring-2 focus:ring-[#004a90]/20"
+                                            className="w-full pl-10 pr-4 py-2 border rounded-lg focus:ring-2 focus:ring-teravolta-blue/20"
                                         />
                                     </div>
                                     <div className="max-h-60 overflow-y-auto space-y-2 pr-2">
@@ -359,9 +359,9 @@ export default function ManualProjectWizard({ onClose, onSuccess }: ManualProjec
                                             <div
                                                 key={client.uid}
                                                 onClick={() => setFormData(f => ({ ...f, selectedClientId: client.uid }))}
-                                                className={`p-3 border rounded-xl cursor-pointer transition-all ${formData.selectedClientId === client.uid ? 'border-[#c3d021] bg-[#c3d021]/5 shadow-sm' : 'border-gray-100 hover:border-gray-200'}`}
+                                                className={`p-3 border rounded-xl cursor-pointer transition-all ${formData.selectedClientId === client.uid ? 'border-teravolta-lime bg-teravolta-lime/5 shadow-sm' : 'border-gray-100 hover:border-gray-200'}`}
                                             >
-                                                <p className="font-bold text-[#004a90]">{client.fullName}</p>
+                                                <p className="font-bold text-teravolta-blue">{client.fullName}</p>
                                                 <p className="text-sm text-gray-500">{client.email}</p>
                                             </div>
                                         ))}
@@ -429,7 +429,7 @@ export default function ManualProjectWizard({ onClose, onSuccess }: ManualProjec
                                         <button
                                             key={type}
                                             onClick={() => setFormData(f => ({ ...f, project: { ...f.project, service: type } }))}
-                                            className={`py-2 text-sm font-bold rounded-lg border-2 transition-all ${formData.project.service === type ? 'border-[#c3d021] bg-[#c3d021]/5 text-[#194271]' : 'border-gray-100 text-gray-500 hover:border-gray-200'}`}
+                                            className={`py-2 text-sm font-bold rounded-lg border-2 transition-all ${formData.project.service === type ? 'border-teravolta-lime bg-teravolta-lime/5 text-teravolta-navy' : 'border-gray-100 text-gray-500 hover:border-gray-200'}`}
                                         >
                                             {t[type]}
                                         </button>
@@ -483,13 +483,13 @@ export default function ManualProjectWizard({ onClose, onSuccess }: ManualProjec
                                         <div className="flex gap-2">
                                             <button
                                                 onClick={() => setFormData(f => ({ ...f, project: { ...f.project, deviceOption: 'purchase' } }))}
-                                                className={`flex-1 py-2 text-xs font-bold rounded border ${formData.project.deviceOption === 'purchase' ? 'bg-[#004a90] text-white' : 'border-gray-200 text-gray-500'}`}
+                                                className={`flex-1 py-2 text-xs font-bold rounded border ${formData.project.deviceOption === 'purchase' ? 'bg-teravolta-blue text-white' : 'border-gray-200 text-gray-500'}`}
                                             >
                                                 {t.purchase}
                                             </button>
                                             <button
                                                 onClick={() => setFormData(f => ({ ...f, project: { ...f.project, deviceOption: 'rent' } }))}
-                                                className={`flex-1 py-2 text-xs font-bold rounded border ${formData.project.deviceOption === 'rent' ? 'bg-[#004a90] text-white' : 'border-gray-200 text-gray-500'}`}
+                                                className={`flex-1 py-2 text-xs font-bold rounded border ${formData.project.deviceOption === 'rent' ? 'bg-teravolta-blue text-white' : 'border-gray-200 text-gray-500'}`}
                                             >
                                                 {t.rent}
                                             </button>
@@ -500,13 +500,13 @@ export default function ManualProjectWizard({ onClose, onSuccess }: ManualProjec
                                         <div className="flex gap-2">
                                             <button
                                                 onClick={() => setFormData(f => ({ ...f, project: { ...f.project, connectivity: 'wifi' } }))}
-                                                className={`flex-1 py-2 text-xs font-bold rounded border ${formData.project.connectivity === 'wifi' ? 'bg-[#004a90] text-white' : 'border-gray-200 text-gray-500'}`}
+                                                className={`flex-1 py-2 text-xs font-bold rounded border ${formData.project.connectivity === 'wifi' ? 'bg-teravolta-blue text-white' : 'border-gray-200 text-gray-500'}`}
                                             >
                                                 WiFi
                                             </button>
                                             <button
                                                 onClick={() => setFormData(f => ({ ...f, project: { ...f.project, connectivity: '3g' } }))}
-                                                className={`flex-1 py-2 text-xs font-bold rounded border ${formData.project.connectivity === '3g' ? 'bg-[#004a90] text-white' : 'border-gray-200 text-gray-500'}`}
+                                                className={`flex-1 py-2 text-xs font-bold rounded border ${formData.project.connectivity === '3g' ? 'bg-teravolta-blue text-white' : 'border-gray-200 text-gray-500'}`}
                                             >
                                                 3G
                                             </button>
@@ -609,7 +609,7 @@ export default function ManualProjectWizard({ onClose, onSuccess }: ManualProjec
                                         phases: [...f.project.phases, { id: crypto.randomUUID(), name: '', amount: 0 }]
                                     }
                                 }))}
-                                className="w-full py-3 border-2 border-dashed border-gray-300 rounded-xl text-gray-500 font-medium hover:border-[#004a90] hover:text-[#004a90] transition-colors"
+                                className="w-full py-3 border-2 border-dashed border-gray-300 rounded-xl text-gray-500 font-medium hover:border-teravolta-blue hover:text-teravolta-blue transition-colors"
                             >
                                 <i className="ri-add-line mr-2"></i>
                                 {language === 'es' ? 'Agregar Fase' : 'Add Phase'}
@@ -617,7 +617,7 @@ export default function ManualProjectWizard({ onClose, onSuccess }: ManualProjec
 
                             <div className="flex justify-between items-center pt-4 border-t border-gray-100">
                                 <span className="font-medium text-gray-700">Total</span>
-                                <span className="text-xl font-bold text-[#004a90]">
+                                <span className="text-xl font-bold text-teravolta-blue">
                                     ${formData.project.phases.reduce((sum, p) => sum + (p.amount || 0), 0).toFixed(2)}
                                 </span>
                             </div>
@@ -639,7 +639,7 @@ export default function ManualProjectWizard({ onClose, onSuccess }: ManualProjec
                                     </div>
                                     <div className="flex justify-between items-center text-gray-900 border-b border-gray-100 pb-3">
                                         <span className="font-medium">{t.service}</span>
-                                        <span className="font-bold capitalize text-[#004a90]">{t[formData.project.service]}</span>
+                                        <span className="font-bold capitalize text-teravolta-blue">{t[formData.project.service]}</span>
                                     </div>
                                     <div className="flex justify-between items-center text-gray-900">
                                         <span className="font-medium">{t.projectName}</span>

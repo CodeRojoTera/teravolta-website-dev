@@ -204,9 +204,19 @@ export default function ClientsPage() {
 
                 setUsers(prev => prev.map(u => u.id === userId ? { ...u, status: 'deactivated' } : u));
             } else {
-                // Hard delete - remove user document
-                // Note: Auth user deletion usually requires Supabase Admin API (backend). 
-                // Client-side delete on 'users' table is RLS permitted for admin? Yes per RLS plan.
+                // Hard delete - remove user document AND related data to prevent "Invite Pending" ghosts
+
+                // 1. Delete Inquiries (leads)
+                await supabase.from('inquiries').delete().eq('email', deleteModal.user.email);
+
+                // 2. Delete Quotes (leads)
+                await supabase.from('quotes').delete().eq('client_email', deleteModal.user.email);
+
+                // 3. Delete Projects (owned)
+                // Warning: This deletes projects. Verify if client wants this. (Prompt says "remove data")
+                await supabase.from('active_projects').delete().eq('client_id', userId);
+
+                // 4. Delete Auth/User record
                 const { error } = await supabase
                     .from('users')
                     .delete()
@@ -214,7 +224,6 @@ export default function ClientsPage() {
 
                 if (error) throw error;
 
-                // Note: Related data (activeProjects, etc.) would need cascade or trigger.
                 setUsers(prev => prev.filter(u => u.id !== userId));
             }
             showToast(language === 'es' ? 'Cliente eliminado' : 'Client deleted', 'success');

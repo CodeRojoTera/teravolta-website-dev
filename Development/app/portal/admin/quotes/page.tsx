@@ -21,7 +21,8 @@ export default function QuotesPage() {
                 const data = await QuoteService.getAll();
                 // Filter out efficiency if needed, or keep all. Original code filtered efficiency?
                 // Original: .filter((q: Quote) => q.service !== 'efficiency');
-                const filteredData = data.filter(q => q.service && q.service !== 'efficiency');
+                // Removed legacy filter: .filter(q => q.service !== 'efficiency');
+                const filteredData = data;
                 setQuotes(filteredData);
                 setFilteredQuotes(filteredData);
             } catch (error) {
@@ -50,6 +51,7 @@ export default function QuotesPage() {
             subtitle: 'Review and manage customer quotation requests',
             all: 'All Services',
             consulting: 'Consulting',
+            efficiency: 'Efficiency',
             advocacy: 'Advocacy',
             client: 'Client',
             service: 'Service',
@@ -73,6 +75,7 @@ export default function QuotesPage() {
             subtitle: 'Revisar y gestionar solicitudes de cotización de clientes',
             all: 'Todos los Servicios',
             consulting: 'Consultoría',
+            efficiency: 'Eficiencia',
             advocacy: 'Abogacía',
             client: 'Cliente',
             service: 'Servicio',
@@ -141,6 +144,15 @@ export default function QuotesPage() {
                     {t.consulting}
                 </button>
                 <button
+                    onClick={() => setActiveService('efficiency')}
+                    className={`px-4 py-2 rounded-lg text-sm font-medium whitespace-nowrap transition-colors ${activeService === 'efficiency'
+                        ? 'bg-[#004a90] text-white'
+                        : 'bg-white text-gray-600 hover:bg-gray-50'
+                        }`}
+                >
+                    {t.efficiency}
+                </button>
+                <button
                     onClick={() => setActiveService('advocacy')}
                     className={`px-4 py-2 rounded-lg text-sm font-medium whitespace-nowrap transition-colors ${activeService === 'advocacy'
                         ? 'bg-[#004a90] text-white'
@@ -182,7 +194,8 @@ export default function QuotesPage() {
                                         <td className="px-6 py-4">
                                             <span className={`px-2 py-1 rounded text-xs font-bold uppercase tracking-wider ${quote.service === 'consulting' ? 'bg-blue-100 text-blue-700' :
                                                 quote.service === 'advocacy' ? 'bg-purple-100 text-purple-700' :
-                                                    'bg-gray-100 text-gray-700'
+                                                    quote.service === 'efficiency' ? 'bg-lime-100 text-lime-700' :
+                                                        'bg-gray-100 text-gray-700'
                                                 }`}>
                                                 {quote.service}
                                             </span>

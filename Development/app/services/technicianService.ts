@@ -149,6 +149,18 @@ export const TechnicianService = {
      */
     delete: async (id: string): Promise<void> => {
         try {
+            // 1. Delete Leaves
+            await supabase.from('technician_leave_requests').delete().eq('technician_id', id);
+
+            // 2. Delete Reviews
+            await supabase.from('technician_reviews').delete().eq('technician_id', id);
+
+            // 3. Unassign from active projects (optional, or handle elsewhere)
+            // For now, let's assume constraints might block if we don't.
+            // But we don't want to delete the project, just unassign?
+            // If we are hard purging, we might leave it to the user or database cascades.
+            // Let's stick to the direct owned data.
+
             const { error } = await supabase
                 .from('technicians')
                 .delete()

@@ -12,6 +12,7 @@ import { PageLoadingSkeleton } from '@/components/ui/Skeleton';
 import { supabase } from '@/lib/supabase';
 import { toJsDate, formatJsDate } from '@/lib/dateUtils';
 import InspectionDashboard from '@/components/technician/InspectionDashboard';
+import { EmptyState } from '@/components/ui/EmptyState';
 
 export default function TechnicianDashboard() {
     const { language } = useLanguage();
@@ -371,8 +372,14 @@ export default function TechnicianDashboard() {
                     })}
                 </div>
             ) : (
-                <div className="bg-white rounded-xl p-12 text-center border border-gray-100">
-                    <p className="text-gray-500 font-medium">{t.noVisits}</p>
+                <div className="bg-white rounded-xl p-8 border border-gray-100 shadow-sm">
+                    <EmptyState
+                        icon="ri-calendar-check-line"
+                        title={t.noVisits}
+                        description={language === 'es'
+                            ? 'Disfruta tu día. Te notificaremos cuando tengas nuevas visitas.'
+                            : 'Enjoy your day off. We will notify you when new visits are assigned.'}
+                    />
                 </div>
             )}
 

@@ -360,9 +360,18 @@ export default function CustomerDashboard() {
                 ) : (
                     pendingRequests.length === 0 && (
                         <EmptyState
-                            icon="ri-folder-line"
+                            icon="ri-folder-add-line"
                             title={t.noProjects}
                             description={t.noProjectsDesc}
+                            action={
+                                <button
+                                    onClick={() => router.push('/portal/customer/request-service')}
+                                    className="px-6 py-2 bg-[#c3d021] hover:bg-[#b0bc1e] text-[#194271] rounded-lg font-bold transition-colors flex items-center gap-2 mx-auto"
+                                >
+                                    <i className="ri-add-line"></i>
+                                    {language === 'en' ? 'Request New Service' : 'Solicitar Nuevo Servicio'}
+                                </button>
+                            }
                         />
                     )
                 )}

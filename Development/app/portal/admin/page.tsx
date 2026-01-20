@@ -220,7 +220,7 @@ export default function AdminDashboard() {
         <div className="space-y-8">
             {/* Header */}
             <div>
-                <h1 className="text-3xl font-bold text-[#004a90]">{t.title}</h1>
+                <h1 className="text-3xl font-bold text-teravolta-blue">{t.title}</h1>
                 <p className="text-gray-600 mt-1">{t.subtitle}</p>
             </div>
 
@@ -260,7 +260,16 @@ export default function AdminDashboard() {
                     <div className="flex justify-between items-start">
                         <div>
                             <p className="text-sm font-medium text-gray-500">{t.pendingInquiries}</p>
-                            <h3 className="text-3xl font-bold text-[#004a90] mt-2">{stats.pendingInquiries}</h3>
+                            {stats.pendingInquiries > 0 ? (
+                                <h3 className="text-3xl font-bold text-teravolta-blue mt-2">{stats.pendingInquiries}</h3>
+                            ) : (
+                                <div className="mt-2 flex items-center gap-2">
+                                    <i className="ri-checkbox-circle-line text-green-500 text-xl"></i>
+                                    <span className="text-sm font-medium text-gray-400">
+                                        {language === 'es' ? 'Todo al día' : 'All caught up'}
+                                    </span>
+                                </div>
+                            )}
                         </div>
                         <div className={`w-10 h-10 rounded-full flex items-center justify-center ${stats.pendingInquiries > 0 ? 'bg-blue-100 text-blue-600' : 'bg-gray-100 text-gray-400'}`}>
                             <i className="ri-message-3-line text-xl"></i>
@@ -276,7 +285,16 @@ export default function AdminDashboard() {
                     <div className="flex justify-between items-start">
                         <div>
                             <p className="text-sm font-medium text-gray-500">{t.pendingQuotes}</p>
-                            <h3 className="text-3xl font-bold text-[#004a90] mt-2">{stats.pendingQuotes}</h3>
+                            {stats.pendingQuotes > 0 ? (
+                                <h3 className="text-3xl font-bold text-teravolta-blue mt-2">{stats.pendingQuotes}</h3>
+                            ) : (
+                                <div className="mt-2 flex items-center gap-2">
+                                    <i className="ri-checkbox-circle-line text-green-500 text-xl"></i>
+                                    <span className="text-sm font-medium text-gray-400">
+                                        {language === 'es' ? 'Todo al día' : 'All caught up'}
+                                    </span>
+                                </div>
+                            )}
                         </div>
                         <div className={`w-10 h-10 rounded-full flex items-center justify-center ${stats.pendingQuotes > 0 ? 'bg-yellow-100 text-yellow-600' : 'bg-gray-100 text-gray-400'}`}>
                             <i className="ri-file-list-3-line text-xl"></i>
@@ -292,7 +310,7 @@ export default function AdminDashboard() {
                     <div className="flex justify-between items-start">
                         <div>
                             <p className="text-sm font-medium text-gray-500">{t.jobsActive}</p>
-                            <h3 className="text-3xl font-bold text-[#004a90] mt-2">{stats.jobsInProgress}</h3>
+                            <h3 className="text-3xl font-bold text-teravolta-blue mt-2">{stats.jobsInProgress}</h3>
                         </div>
                         <div className="w-10 h-10 rounded-full bg-green-100 flex items-center justify-center text-green-600">
                             <i className="ri-tools-line text-xl"></i>
@@ -308,7 +326,7 @@ export default function AdminDashboard() {
                     <div className="flex justify-between items-start">
                         <div>
                             <p className="text-sm font-medium text-gray-500">{t.techsOnRoute}</p>
-                            <h3 className="text-3xl font-bold text-[#004a90] mt-2">{stats.activeTechnicians}</h3>
+                            <h3 className="text-3xl font-bold text-teravolta-blue mt-2">{stats.activeTechnicians}</h3>
                         </div>
                         <div className="w-10 h-10 rounded-full bg-blue-100 flex items-center justify-center text-blue-600">
                             <i className="ri-hard-hat-line text-xl"></i>
@@ -321,7 +339,30 @@ export default function AdminDashboard() {
             <div className="grid grid-cols-1 lg:grid-cols-3 gap-8">
                 {/* Chart - Takes up 2 cols */}
                 <div className="lg:col-span-2 bg-white rounded-xl p-6 shadow-sm border border-gray-100">
-                    <h3 className="text-lg font-bold text-[#004a90] mb-6">Inquiries Context (6 Months)</h3>
+                    <h3 className="text-lg font-bold text-teravolta-blue mb-6">Inquiries Context (6 Months)</h3>
+                    <ResponsiveContainer width="100%" height={300}>
+                        <LineChart data={chartData}>
+                            <CartesianGrid strokeDasharray="3 3" stroke="#f0f0f0" />
+                            <XAxis dataKey="month" stroke="#9ca3af" tick={{ fontSize: 12 }} />
+                            <YAxis stroke="#9ca3af" tick={{ fontSize: 12 }} />
+                            <Tooltip
+                                contentStyle={{ borderRadius: '8px', border: 'none', boxShadow: '0 4px 6px -1px rgba(0, 0, 0, 0.1)' }}
+                            />
+                            <Line
+                                type="monotone"
+                                dataKey="inquiries"
+                                stroke="#004a90"
+                                strokeWidth={3}
+                                dot={{ fill: '#c3d021', strokeWidth: 0, r: 6 }}
+                                activeDot={{ r: 8 }}
+                            />
+                        </LineChart>
+                    </ResponsiveContainer>
+                </div>
+
+                {/* Activity Feed - Takes up 1 col */}
+                <div className="bg-white rounded-xl p-6 shadow-sm border border-gray-100">
+                    <h3 className="text-lg font-bold text-teravolta-blue mb-6">{t.recentActivity}</h3>
                     <ResponsiveContainer width="100%" height={300}>
                         <LineChart data={chartData}>
                             <CartesianGrid strokeDasharray="3 3" stroke="#f0f0f0" />

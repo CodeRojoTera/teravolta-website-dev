@@ -177,62 +177,56 @@ export default function OnboardPage() {
 
             if (signInError) throw signInError;
 
-            // 3. Link existing active projects in Supabase (if any)
+            // 3. Link/Create Quote instead of Active Project
             const userRole = linkData.role || 'customer';
 
             if (userRole === 'customer') {
                 try {
-                    // Link orphan projects in Supabase
-                    // We look for projects with matching email but no user_id
+                    // Update existing active projects (linking orphans) - Keep this
                     const { data: orphanProjects, error: fetchError } = await supabase
                         .from('active_projects')
                         .select('id')
                         .eq('client_email', linkData.email)
                         .is('user_id', null);
 
-                    if (fetchError) throw fetchError;
-
-                    let hasExistingProjects = false;
-
-                    if (orphanProjects && orphanProjects.length > 0) {
-                        const { error: updateError } = await supabase
+                    if (!fetchError && orphanProjects && orphanProjects.length > 0) {
+                        await supabase
                             .from('active_projects')
                             .update({ user_id: userId })
                             .in('id', orphanProjects.map(p => p.id));
-
-                        if (updateError) throw updateError;
-                        hasExistingProjects = true;
                     }
 
-                    // Create new active project in Supabase if needed
-                    // (Matches original logic but using Supabase)
-                    if (!hasExistingProjects && (linkData.inquiryId || linkData.quoteId)) {
-                        // Use the internal API to create the project to ensure consistency
-                        const createResponse = await fetch('/api/create-project', {
+                    // NEW LOGIC: Handle Quotes/Inquiries
+                    if (linkData.quoteId) {
+                        // SCENARIO 1: User came from Quote Wizard (Efficiency, etc.)
+                        // Claim the existing quote
+                        await fetch('/api/claims/quote', {
                             method: 'POST',
                             headers: { 'Content-Type': 'application/json' },
                             body: JSON.stringify({
-                                userId: userId,
-                                clientName: linkData.fullName,
-                                clientEmail: linkData.email,
-                                clientPhone: linkData.phone || '',
-                                clientCompany: linkData.company || '',
-                                service: linkData.service || 'consulting',
-                                description: `Project started from onboarding. Source: ${linkData.quoteId ? 'Quote' : 'Inquiry'}`,
-                                amount: 0, // Default or fetch from quote?? logic in original was simple addDoc
-                                status: 'in_progress',
                                 quoteId: linkData.quoteId,
-                                inquiryId: linkData.inquiryId
+                                userId: userId
                             })
                         });
-
-                        if (!createResponse.ok) {
-                            console.error("Failed to create initial project");
-                        }
+                    } else if (linkData.inquiryId) {
+                        // SCENARIO 2: User came from Inquiry Form (Consulting, Advocacy)
+                        // Convert Inquiry to Quote
+                        await fetch('/api/conversions/inquiry-to-quote', {
+                            method: 'POST',
+                            headers: { 'Content-Type': 'application/json' },
+                            body: JSON.stringify({
+                                inquiryId: linkData.inquiryId,
+                                userId: userId
+                            })
+                        });
                     }
+
+                    // REMOVED: Automatic creation of 'Active Project' via /api/create-project
+                    // Projects should only become active after Admin approval of the Quote.
+
                 } catch (dbError) {
-                    console.error("Error linking/creating projects:", dbError);
-                    // Non-fatal, account is active
+                    console.error("Error linking/creating records:", dbError);
+                    // Non-fatal
                 }
             }
 

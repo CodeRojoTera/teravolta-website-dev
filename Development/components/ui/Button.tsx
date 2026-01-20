@@ -23,9 +23,9 @@ export default function Button({
   const baseClasses = "inline-flex items-center justify-center font-medium rounded-full transition-colors cursor-pointer whitespace-nowrap relative";
 
   const variantClasses = {
-    primary: "bg-[#004a90] text-white hover:bg-teravolta-blue-dark disabled:bg-gray-300 disabled:cursor-not-allowed",
-    secondary: "bg-[#c3d021] text-[#194271] hover:bg-teravolta-lime-dark disabled:bg-gray-200 disabled:text-gray-400 disabled:cursor-not-allowed",
-    outline: "border-2 border-[#004a90] text-[#004a90] bg-transparent hover:bg-teravolta-blue hover:text-white disabled:border-gray-300 disabled:text-gray-300 disabled:cursor-not-allowed"
+    primary: "bg-teravolta-blue text-white hover:bg-teravolta-blue-dark disabled:bg-gray-300 disabled:cursor-not-allowed",
+    secondary: "bg-teravolta-lime text-teravolta-navy hover:bg-teravolta-lime-dark disabled:bg-gray-200 disabled:text-gray-400 disabled:cursor-not-allowed",
+    outline: "border-2 border-teravolta-blue text-teravolta-blue bg-transparent hover:bg-teravolta-blue hover:text-white disabled:border-gray-300 disabled:text-gray-300 disabled:cursor-not-allowed"
   };
 
   const sizeClasses = {
@@ -49,9 +49,9 @@ export default function Button({
   }
 
   return (
-    <button 
-      className={classes} 
-      style={buttonStyle} 
+    <button
+      className={classes}
+      style={buttonStyle}
       disabled={disabled || isLoading}
       {...props}
     >
