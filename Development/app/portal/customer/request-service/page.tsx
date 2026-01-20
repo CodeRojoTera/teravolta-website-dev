@@ -8,6 +8,7 @@ import { supabase } from '@/lib/supabase';
 import { updateClientType } from '@/lib/clientTypeUtils';
 import { useToast } from '@/components/ui/Toast';
 import { PageLoadingSkeleton } from '@/components/ui/Skeleton';
+import Button from '@/components/ui/Button';
 
 type ServiceType = '' | 'efficiency' | 'advocacy' | 'consulting';
 
@@ -751,23 +752,15 @@ export default function RequestServicePage() {
                     </div>
 
                     {/* Submit */}
-                    <button
+                    <Button
                         type="submit"
+                        variant="secondary"
                         disabled={submitting}
-                        className="w-full py-3 bg-[#c3d021] hover:bg-[#b0bc1e] text-[#194271] rounded-lg font-bold disabled:opacity-50"
+                        isLoading={submitting}
+                        className="w-full rounded-lg font-bold"
                     >
-                        {submitting ? (
-                            <>
-                                <i className="ri-loader-4-line animate-spin mr-2"></i>
-                                {t.submitting}
-                            </>
-                        ) : (
-                            <>
-                                <i className="ri-send-plane-line mr-2"></i>
-                                {t.submit}
-                            </>
-                        )}
-                    </button>
+                        {t.submit}
+                    </Button>
                 </form>
             )}
         </div>

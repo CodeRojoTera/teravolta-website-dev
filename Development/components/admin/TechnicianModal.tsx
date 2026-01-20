@@ -2,6 +2,7 @@
 import { useState, useEffect } from 'react';
 import { useLanguage } from '@/components/LanguageProvider';
 import { Technician } from '@/lib/types';
+import Button from '@/components/ui/Button';
 
 interface TechnicianModalProps {
     isOpen: boolean;
@@ -208,8 +209,8 @@ export const TechnicianModal = ({ isOpen, onClose, onSave, technician }: Technic
                                     key={day}
                                     onClick={() => toggleDay(day)}
                                     className={`w-8 h-8 rounded-full text-xs font-bold transition-all ${formData.workingHours?.days.includes(day)
-                                            ? 'bg-[#004a90] text-white'
-                                            : 'bg-gray-100 text-gray-400 hover:bg-gray-200'
+                                        ? 'bg-[#004a90] text-white'
+                                        : 'bg-gray-100 text-gray-400 hover:bg-gray-200'
                                         }`}
                                 >
                                     {language === 'es' ? DAYS_ES[day].charAt(0) : DAYS[day].charAt(0)}
@@ -237,13 +238,14 @@ export const TechnicianModal = ({ isOpen, onClose, onSave, technician }: Technic
                     >
                         {t.cancel}
                     </button>
-                    <button
+                    <Button
                         onClick={handleSave}
                         disabled={loading}
-                        className="px-6 py-2 bg-[#004a90] hover:bg-[#194271] text-white rounded-lg font-bold shadow-lg shadow-blue-900/20 disabled:opacity-50 transition-all transform hover:scale-105"
+                        isLoading={loading}
+                        className="rounded-lg shadow-lg shadow-blue-900/20 px-6 py-2"
                     >
-                        {loading ? t.saving : t.save}
-                    </button>
+                        {t.save}
+                    </Button>
                 </div>
             </div>
         </div>

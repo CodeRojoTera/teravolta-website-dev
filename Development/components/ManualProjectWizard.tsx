@@ -3,6 +3,7 @@
 import { useState, useEffect } from 'react';
 import { useLanguage } from '@/components/LanguageProvider';
 import { useToast } from '@/components/ui/Toast';
+import Button from '@/components/ui/Button';
 import { ServiceType, Technician, User } from '@/lib/types';
 import { supabase } from '@/lib/supabase';
 import { ActiveProjectService } from '@/app/services/activeProjectService';
@@ -221,8 +222,7 @@ export default function ManualProjectWizard({ onClose, onSuccess }: ManualProjec
         en: {
             step1: 'Client Selection',
             step2: 'Project Details',
-            step1: 'Client Selection',
-            step2: 'Project Details',
+
             step3: 'Payment Phases',
             step4: 'Confirmation',
             existingClient: 'Existing Client',
@@ -261,8 +261,7 @@ export default function ManualProjectWizard({ onClose, onSuccess }: ManualProjec
         es: {
             step1: 'Selección de Cliente',
             step2: 'Detalles del Proyecto',
-            step1: 'Selección de Cliente',
-            step2: 'Detalles del Proyecto',
+
             step3: 'Fases de Pago',
             step4: 'Confirmación',
             existingClient: 'Cliente Existente',
@@ -553,136 +552,136 @@ export default function ManualProjectWizard({ onClose, onSuccess }: ManualProjec
                         </div>
                     )}
 
-                </div>
+
+                    {step === 3 && formData.project.service !== 'efficiency' && (
+                        <div className="space-y-6">
+                            <div className="bg-blue-50 p-4 rounded-xl border border-blue-100 mb-4">
+                                <p className="text-sm text-blue-800">
+                                    {language === 'es'
+                                        ? 'Define las fases de pago para este proyecto. El cliente podrá pagar cada fase individualmente.'
+                                        : 'Define payment phases for this project. The client will be able to pay each phase individually.'}
+                                </p>
+                            </div>
+
+                            <div className="space-y-3">
+                                {formData.project.phases.map((phase, idx) => (
+                                    <div key={idx} className="flex gap-2 items-center">
+                                        <input
+                                            type="text"
+                                            value={phase.name}
+                                            onChange={e => {
+                                                const newPhases = [...formData.project.phases];
+                                                newPhases[idx].name = e.target.value;
+                                                setFormData(f => ({ ...f, project: { ...f.project, phases: newPhases } }));
+                                            }}
+                                            placeholder="Phase Name (e.g., Initial Deposit)"
+                                            className="flex-[2] px-4 py-2 border rounded-lg"
+                                        />
+                                        <input
+                                            type="number"
+                                            value={phase.amount}
+                                            onChange={e => {
+                                                const newPhases = [...formData.project.phases];
+                                                newPhases[idx].amount = Number(e.target.value);
+                                                setFormData(f => ({ ...f, project: { ...f.project, phases: newPhases } }));
+                                            }}
+                                            placeholder="Amount"
+                                            className="flex-1 px-4 py-2 border rounded-lg"
+                                        />
+                                        <button
+                                            onClick={() => {
+                                                const newPhases = formData.project.phases.filter((_, i) => i !== idx);
+                                                setFormData(f => ({ ...f, project: { ...f.project, phases: newPhases } }));
+                                            }}
+                                            className="text-red-500 hover:bg-red-50 p-2 rounded-lg"
+                                        >
+                                            <i className="ri-delete-bin-line"></i>
+                                        </button>
+                                    </div>
+                                ))}
+                            </div>
+
+                            <button
+                                onClick={() => setFormData(f => ({
+                                    ...f,
+                                    project: {
+                                        ...f.project,
+                                        phases: [...f.project.phases, { id: crypto.randomUUID(), name: '', amount: 0 }]
+                                    }
+                                }))}
+                                className="w-full py-3 border-2 border-dashed border-gray-300 rounded-xl text-gray-500 font-medium hover:border-[#004a90] hover:text-[#004a90] transition-colors"
+                            >
+                                <i className="ri-add-line mr-2"></i>
+                                {language === 'es' ? 'Agregar Fase' : 'Add Phase'}
+                            </button>
+
+                            <div className="flex justify-between items-center pt-4 border-t border-gray-100">
+                                <span className="font-medium text-gray-700">Total</span>
+                                <span className="text-xl font-bold text-[#004a90]">
+                                    ${formData.project.phases.reduce((sum, p) => sum + (p.amount || 0), 0).toFixed(2)}
+                                </span>
+                            </div>
+                        </div>
                     )}
 
-                {step === 3 && formData.project.service !== 'efficiency' && (
-                    <div className="space-y-6">
-                        <div className="bg-blue-50 p-4 rounded-xl border border-blue-100 mb-4">
-                            <p className="text-sm text-blue-800">
-                                {language === 'es'
-                                    ? 'Define las fases de pago para este proyecto. El cliente podrá pagar cada fase individualmente.'
-                                    : 'Define payment phases for this project. The client will be able to pay each phase individually.'}
-                            </p>
-                        </div>
-
-                        <div className="space-y-3">
-                            {formData.project.phases.map((phase, idx) => (
-                                <div key={idx} className="flex gap-2 items-center">
-                                    <input
-                                        type="text"
-                                        value={phase.name}
-                                        onChange={e => {
-                                            const newPhases = [...formData.project.phases];
-                                            newPhases[idx].name = e.target.value;
-                                            setFormData(f => ({ ...f, project: { ...f.project, phases: newPhases } }));
-                                        }}
-                                        placeholder="Phase Name (e.g., Initial Deposit)"
-                                        className="flex-[2] px-4 py-2 border rounded-lg"
-                                    />
-                                    <input
-                                        type="number"
-                                        value={phase.amount}
-                                        onChange={e => {
-                                            const newPhases = [...formData.project.phases];
-                                            newPhases[idx].amount = Number(e.target.value);
-                                            setFormData(f => ({ ...f, project: { ...f.project, phases: newPhases } }));
-                                        }}
-                                        placeholder="Amount"
-                                        className="flex-1 px-4 py-2 border rounded-lg"
-                                    />
-                                    <button
-                                        onClick={() => {
-                                            const newPhases = formData.project.phases.filter((_, i) => i !== idx);
-                                            setFormData(f => ({ ...f, project: { ...f.project, phases: newPhases } }));
-                                        }}
-                                        className="text-red-500 hover:bg-red-50 p-2 rounded-lg"
-                                    >
-                                        <i className="ri-delete-bin-line"></i>
-                                    </button>
+                    {(step === 4 || (step === 3 && formData.project.service === 'efficiency')) && (
+                        <div className="space-y-6">
+                            <div className="bg-gray-50 rounded-2xl p-6 border border-gray-100">
+                                <h4 className="text-sm font-bold text-gray-400 uppercase tracking-wider mb-4">{t.summary}</h4>
+                                <div className="space-y-4">
+                                    <div className="flex justify-between items-center text-gray-900 border-b border-gray-100 pb-3">
+                                        <span className="font-medium">{t.client}</span>
+                                        <span className="font-bold">
+                                            {formData.clientType === 'existing'
+                                                ? clients.find(c => c.uid === formData.selectedClientId)?.fullName
+                                                : formData.newClient.fullName}
+                                        </span>
+                                    </div>
+                                    <div className="flex justify-between items-center text-gray-900 border-b border-gray-100 pb-3">
+                                        <span className="font-medium">{t.service}</span>
+                                        <span className="font-bold capitalize text-[#004a90]">{t[formData.project.service]}</span>
+                                    </div>
+                                    <div className="flex justify-between items-center text-gray-900">
+                                        <span className="font-medium">{t.projectName}</span>
+                                        <span className="font-bold">{formData.project.name || '-'}</span>
+                                    </div>
                                 </div>
-                            ))}
-                        </div>
+                            </div>
 
+                            {formData.clientType === 'new' && (
+                                <div className="flex gap-3 p-4 bg-amber-50 border border-amber-200 rounded-xl">
+                                    <i className="ri-information-line text-amber-600 text-xl"></i>
+                                    <p className="text-sm text-amber-800">{t.onboardingNote}</p>
+                                </div>
+                            )}
+                        </div>
+                    )}
+                </div>
+
+                {/* Footer */}
+                <div className="px-6 py-4 border-t border-gray-100 bg-gray-50 flex gap-3">
+                    {step > 1 && (
                         <button
-                            onClick={() => setFormData(f => ({
-                                ...f,
-                                project: {
-                                    ...f.project,
-                                    phases: [...f.project.phases, { id: crypto.randomUUID(), name: '', amount: 0 }]
-                                }
-                            }))}
-                            className="w-full py-3 border-2 border-dashed border-gray-300 rounded-xl text-gray-500 font-medium hover:border-[#004a90] hover:text-[#004a90] transition-colors"
+                            onClick={prevStep}
+                            className="px-6 py-2 border border-gray-300 rounded-xl font-medium text-gray-600 hover:bg-white transition-colors"
                         >
-                            <i className="ri-add-line mr-2"></i>
-                            {language === 'es' ? 'Agregar Fase' : 'Add Phase'}
+                            {t.back}
                         </button>
-
-                        <div className="flex justify-between items-center pt-4 border-t border-gray-100">
-                            <span className="font-medium text-gray-700">Total</span>
-                            <span className="text-xl font-bold text-[#004a90]">
-                                ${formData.project.phases.reduce((sum, p) => sum + (p.amount || 0), 0).toFixed(2)}
-                            </span>
-                        </div>
-                    </div>
-                )}
-
-                {(step === 4 || (step === 3 && formData.project.service === 'efficiency')) && (
-                    <div className="space-y-6">
-                        <div className="bg-gray-50 rounded-2xl p-6 border border-gray-100">
-                            <h4 className="text-sm font-bold text-gray-400 uppercase tracking-wider mb-4">{t.summary}</h4>
-                            <div className="space-y-4">
-                                <div className="flex justify-between items-center text-gray-900 border-b border-gray-100 pb-3">
-                                    <span className="font-medium">{t.client}</span>
-                                    <span className="font-bold">
-                                        {formData.clientType === 'existing'
-                                            ? clients.find(c => c.uid === formData.selectedClientId)?.fullName
-                                            : formData.newClient.fullName}
-                                    </span>
-                                </div>
-                                <div className="flex justify-between items-center text-gray-900 border-b border-gray-100 pb-3">
-                                    <span className="font-medium">{t.service}</span>
-                                    <span className="font-bold capitalize text-[#004a90]">{t[formData.project.service]}</span>
-                                </div>
-                                <div className="flex justify-between items-center text-gray-900">
-                                    <span className="font-medium">{t.projectName}</span>
-                                    <span className="font-bold">{formData.project.name || '-'}</span>
-                                </div>
-                            </div>
-                        </div>
-
-                        {formData.clientType === 'new' && (
-                            <div className="flex gap-3 p-4 bg-amber-50 border border-amber-200 rounded-xl">
-                                <i className="ri-information-line text-amber-600 text-xl"></i>
-                                <p className="text-sm text-amber-800">{t.onboardingNote}</p>
-                            </div>
-                        )}
-                    </div>
-                )}
-            </div>
-
-            {/* Footer */}
-            <div className="px-6 py-4 border-t border-gray-100 bg-gray-50 flex gap-3">
-                {step > 1 && (
-                    <button
-                        onClick={prevStep}
-                        className="px-6 py-2 border border-gray-300 rounded-xl font-medium text-gray-600 hover:bg-white transition-colors"
+                    )}
+                    <Button
+                        onClick={step === 3 && formData.project.service === 'efficiency' ? handleSubmit : step === 4 ? handleSubmit : nextStep}
+                        disabled={
+                            loading ||
+                            (step === 1 && (formData.clientType === 'existing' ? !formData.selectedClientId : (!formData.newClient.fullName || !formData.newClient.email))) ||
+                            (step === 2 && !formData.project.address) ||
+                            (step === 3 && formData.project.service !== 'efficiency' && formData.project.phases.length === 0)
+                        }
+                        isLoading={loading}
+                        className="flex-1 rounded-xl"
                     >
-                        {t.back}
-                    </button>
-                )}
-                <button
-                    onClick={step === 3 && formData.project.service === 'efficiency' ? handleSubmit : step === 4 ? handleSubmit : nextStep}
-                    disabled={
-                        loading ||
-                        (step === 1 && (formData.clientType === 'existing' ? !formData.selectedClientId : (!formData.newClient.fullName || !formData.newClient.email))) ||
-                        (step === 2 && !formData.project.address) ||
-                        (step === 3 && formData.project.service !== 'efficiency' && formData.project.phases.length === 0)
-                    }
-                    className="flex-1 px-6 py-2 bg-[#004a90] text-white rounded-xl font-bold hover:bg-[#194271] transition-all disabled:opacity-50 disabled:cursor-not-allowed"
-                >
-                    {loading ? '...' : (step === 4 || (step === 3 && formData.project.service === 'efficiency')) ? t.createProject : t.next}
-                </button>
+                        {(step === 4 || (step === 3 && formData.project.service === 'efficiency')) ? t.createProject : t.next}
+                    </Button>
+                </div>
             </div>
         </div>
     );
