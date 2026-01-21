@@ -29,19 +29,25 @@ This document describes the detailed user journeys through the TeraVolta website
 
 **Path**: `/quote`
 
-**Purpose**: Allow potential clients to request a detailed quote for solar/energy services.
+**Purpose**: Allow potential clients to request a detailed quote.
+
+**Logic Split**:
+- **Consulting / Advocacy**: Redirects to `/inquiry/[service]` (See Flow #2).
+- **Efficiency**: Proceeds with detailed quote calculator below.
 
 ```mermaid
 flowchart TD
     A[User visits /quote] --> B[Step 1: Select Service Type]
-    B --> C[Step 2: Location & Contact Info]
-    C --> D[Step 3: Energy Consumption Details]
-    D --> E[Step 4: Upload Bill Files - Optional]
-    E --> F[Step 5: Review & Submit]
-    F --> G{Submit}
-    G --> H[Quote saved to Supabase /quotes]
-    H --> I[Admin receives Notification]
-    I --> J[Success Page Shown to User]
+    B --> C{Service Type}
+    C -->|Consulting/Advocacy| D[Redirect to /inquiry]
+    C -->|Efficiency| E[Step 2: Location & Contact Info]
+    E --> F[Step 3: Energy Consumption Details]
+    F --> G[Step 4: Upload Bill Files - Optional]
+    G --> H[Step 5: Review & Submit]
+    H --> I[Quote saved to Supabase /quotes]
+    I --> J[Admin receives Notification]
+    J --> K[Success Page Shown to User]
+```
     
     subgraph Admin Workflow
     K[Admin views Quote in Portal] --> L{Action}

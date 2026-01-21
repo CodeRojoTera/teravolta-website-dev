@@ -10,6 +10,7 @@ import Button from '../../components/ui/Button';
 import { useLanguage } from '../../components/LanguageProvider';
 import { useAuth } from '../../components/AuthProvider';
 import { supabasePublic as supabase } from '@/lib/supabase';
+import { v4 as uuidv4 } from 'uuid';
 // Removed Firebase imports
 
 // ... imports remain the same
@@ -337,31 +338,42 @@ function InquiryFormContent() {
     setSubmitStatus('');
 
     try {
-      // 1. Insert into Inquiries via API (bypasses RLS)
-      const inquiryResponse = await fetch('/api/create-inquiry', {
+      // 1. Insert into Quotes via API (bypasses RLS)
+      // Note: We use Quotes for all services now to unify Admin Dashboard.
+      const quoteId = uuidv4();
+
+      const quoteResponse = await fetch('/api/create-quote', {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
         body: JSON.stringify({
-          full_name: formData.fullName,
-          email: formData.email,
-          phone: formData.phone,
-          company: formData.company,
+          id: quoteId, // Required by create-quote
+          client_name: formData.fullName, // Mapped
+          client_email: formData.email, // Mapped
+          client_phone: formData.phone, // Mapped
+          client_company: formData.company, // Mapped
           service: selectedService,
           project_description: formData.projectDescription,
           timeline: formData.timeline,
           budget: formData.budget,
           property_type: formData.propertyType,
-          preferred_contact: formData.preferredContact,
-          city: formData.city,
-          state: formData.state,
-          zip_code: formData.zipCode,
-          address: formData.address,
+          // preferred_contact: formData.preferredContact, // Not in create-quote schema yet, maybe add if needed?
+          message: formData.projectDescription, // Map desc to message too for compatibility
+          address: {
+            street: formData.address,
+            city: formData.city,
+            state: formData.state,
+            zip_code: formData.zipCode,
+            country: 'PA'
+          },
+          // Empty fields for quote-specifics
+          bill_files: [],
+          booking_preference: null
         })
       });
 
-      const inquiryResult = await inquiryResponse.json();
-      if (!inquiryResult.success) throw new Error(inquiryResult.error || 'Failed to create inquiry');
-      const inquiryData = inquiryResult.inquiry;
+      const quoteResult = await quoteResponse.json();
+      if (!quoteResult.success) throw new Error(quoteResult.error || 'Failed to create quote');
+      const quoteData = quoteResult.quote;
 
       // 2. Update Client Type
       if (formData.email && formData.propertyType) {
@@ -382,7 +394,7 @@ function InquiryFormContent() {
           phone: formData.phone,
           company: formData.company,
           role: 'customer',
-          inquiryId: inquiryData.id, // Link to the created inquiry
+          quoteId: quoteId, // Link to the created quote
           service: selectedService
         })
       });

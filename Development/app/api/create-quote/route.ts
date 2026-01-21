@@ -31,7 +31,12 @@ export async function POST(request: Request) {
             bill_files: body.bill_files || [],
             status: 'pending',
             user_id: body.user_id || null,
-            booking_preference: body.booking_preference || null
+            booking_preference: body.booking_preference || null,
+
+            // Inquiry/Consulting Fields
+            project_description: body.project_description || null,
+            timeline: body.timeline || null,
+            budget: body.budget || null
         }).select().single();
 
         if (error) {
