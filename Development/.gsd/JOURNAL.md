@@ -46,3 +46,43 @@
 ## Status
 - **Milestone**: v1.1 Stabilization COMPLETE.
 - **Next Actions**: Project Handoff / v1.2 Planning.
+
+---
+
+# Session Journal - 2026-01-20 (Part 4)
+
+## Accomplishments
+- **New Milestone**: initialized `v1.2 Comprehensive Documentation & Audit`.
+- **Strategy**: Defined "Atomic Audit" strategy (Architecture -> Public -> Dashboards -> Synthesis).
+- **Phase 1 Complete**: Architecture & Database Deep-Dive.
+  - Generated `docs/ATOMIC_DATABASE.md` (Table index + RLS + Relations).
+  - Generated `docs/ATOMIC_ARCHITECTURE.md` (Services + API + Types).
+  - Verified 100% table and service coverage.
+
+## Status
+- **Phase**: 1 Complete. Phase 2 (Public Site Audit) Ready to Start.
+- **Artifacts**: New documentation files created in `docs/`.
+
+# Session Journal - 2026-01-21
+
+## Objective
+Complete Level 2 Deep Dive Audit (Customer/Technician Portals) and Create System Narrative.
+
+## Accomplished
+- Completed Audit for **Customer Portal** (Project Detail, Billing, Docs).
+- Completed Audit for **Technician Portal** (Job Execution, Waze, Incidents).
+- Created docs/SYSTEM_NARRATIVE.md: A comprehensive, non-technical system manual.
+- Updated 	ask.md and milestone_review.md.
+
+## Verification
+- [x] Verified Customer Portal project view logic.
+- [x] Verified Technician Portal job flow logic.
+- [x] Verified System Narrative against audit findings.
+
+## Paused Because
+User requested pause via /pause.
+
+## Handoff Notes
+Ready to start **Phase 5: Remediation**. The plan is in implementation_plan.md.
+**CRITICAL**: Start with fixing the users table RLS policy.
+
