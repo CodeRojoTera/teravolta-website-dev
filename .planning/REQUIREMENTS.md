@@ -41,95 +41,125 @@ Fix ghost data, cascade delete, and field name errors.
 
 ### Energy Efficiency Workflow (EE) - HIGH
 
-Complete all 4 stages of multi-stage energy efficiency workflow.
+Complete multi-stage energy efficiency workflow with payment-triggered conversion.
 
-**Business Context**: Energy efficiency uses Emporia Vue meters (primarily for residential/small business). Each electrical panel needs its own meter. Customers can have main panel + sub-panels. Some want detailed monitoring (meters on all sub-panels), others want general monitoring (main panel only).
+**Business Context**: Energy efficiency uses Emporia Vue meters. Residential clients (90%) use standard Emporia without inspection. Commercial clients require inspection. Conversion from quote → project happens AFTER first payment received + receipt uploaded.
 
-**Workflow**: Quote → Inspection → Customer Choices → Admin Pricing
+**Flow Types**:
+- **Flow A**: Residential Simple (no inspection needed) - 90% of cases
+- **Flow B**: Commercial/Complex (inspection required)
+- **Flow C**: Residential Discovered Issue (standard install fails, need extras)
 
-#### Stage 1: Customer Quote Form (No Device/Connectivity Yet)
+**Critical Rule**: Quote → Project conversion triggered by FIRST PAYMENT RECEIPT UPLOAD, not inspection completion
+
+#### Common: Quote Submission (All Flows Start Here)
 - [ ] **EE-01**: Add service-type filter to bill upload UI
   - **Issue**: `app/quote/page.tsx:745-761` shows bill upload for all services
   - **Impact**: Consulting/advocacy users see irrelevant bill upload
   - **Solution**: Only show DocumentManager with 'bill' category if `service === 'efficiency'`
 
-- [ ] **EE-02**: Remove device_option and connectivity fields from Stage 1
+- [ ] **EE-02**: Remove device_option and connectivity fields from quote form
   - **Issue**: Customer doesn't know what device/connectivity they need before inspection
-  - **Impact**: Collecting these fields upfront is premature - should be after inspection
-  - **Solution**: REMOVE `deviceMode` and `connectivity` from public quote form (customer chooses AFTER inspection)
+  - **Impact**: Collecting these fields upfront is premature - collected after inspection
+  - **Solution**: REMOVE `deviceMode` and `connectivity` from public quote form
 
-#### Stage 2: Technician Inspection (Discovers Panels, Recommends Solutions)
-- [ ] **EE-03**: Add panel hierarchy support (main panel vs sub-panels)
+- [ ] **EE-03**: Add inspection requirement detection logic
+  - **Issue**: No automatic detection of whether inspection needed
+  - **Impact**: Manual decision by admin every time
+  - **Solution**: Auto-detect based on property type: commercial/hotel/building/industrial = inspection required, residential/apartment/small-business = optional
+
+- [ ] **EE-04**: Add optional inspection request for residential customers
+  - **Issue**: Residential customers can't request pre-installation inspection
+  - **Impact**: Can't offer inspection to residential who want certainty before paying
+  - **Solution**: Add checkbox in quote form: "Request inspection first (additional cost)" for residential property types
+
+#### Inspection Payment (Commercial Required, Residential Optional)
+- [ ] **EE-05**: Create inspection payment tracking
+  - **Issue**: No way to track inspection fee separately from equipment payment
+  - **Impact**: Can't distinguish inspection payment from equipment payment
+  - **Solution**: Add `inspection_payment` table or extend `quotes` table with:
+    - `inspection_fee` (numeric)
+    - `inspection_paid` (boolean)
+    - `inspection_receipt_url` (text)
+    - `inspection_paid_at` (timestamp)
+
+- [ ] **EE-06**: Add admin UI to set and collect inspection fee
+  - **Issue**: No workflow to charge inspection before scheduling
+  - **Impact**: Can't collect inspection payment upfront
+  - **Solution**: In admin quote detail, add "Set Inspection Fee" form, customer receives payment prompt BEFORE inspection appointment scheduling
+
+#### Technician Inspection (If Inspection Path)
+- [ ] **EE-07**: Add panel hierarchy support (main panel vs sub-panels)
   - **Issue**: Current `electrical_boards` table doesn't distinguish main vs sub-panels
   - **Impact**: Can't show customer which panels are main vs sub for monitoring scope decisions
   - **Solution**: Add `panel_type` field ('main' | 'sub') and `parent_panel_id` (nullable FK) to `electrical_boards` table
 
-- [ ] **EE-04**: Add connectivity recommendation field to inspection
+- [ ] **EE-08**: Add connectivity recommendation field to inspection
   - **Issue**: No field for technician to recommend WiFi vs 3G based on site conditions
   - **Impact**: Customer makes connectivity choice without guidance
-  - **Solution**: Add `recommended_connectivity` field ('wifi' | '3g') with `connectivity_notes` (text) to inspection summary or `electrical_boards`
+  - **Solution**: Add `recommended_connectivity` field ('wifi' | '3g') with `connectivity_notes` (text) to inspection summary
 
-- [ ] **EE-05**: Create extra costs tracking system (per panel + overall)
+- [ ] **EE-09**: Create extra costs tracking system (per panel + overall)
   - **Issue**: No way for technician to log discovered costs
   - **Impact**: Admin doesn't know about special CTs, panel upgrades, installation complexity
   - **Solution**: Create `inspection_extra_costs` table with fields:
     - `id`, `appointment_id` (FK)
     - `electrical_board_id` (nullable FK - null if overall cost)
-    - `description` (text) - e.g., "Special CTs for thick cables"
+    - `description` (text)
     - `category` ('panel_specific' | 'installation' | 'materials' | 'labor' | 'other')
     - `required` (boolean) - mandatory vs optional extra
     - `notes` (text)
 
-- [ ] **EE-06**: Add per-panel extra costs input to BoardForm
+- [ ] **EE-10**: Add per-panel extra costs input to BoardForm
   - **Issue**: BoardForm doesn't allow logging panel-specific extras
   - **Impact**: Can't capture "Panel 2 needs special CTs" cost
   - **Solution**: Add "Extra Costs" section to BoardForm allowing multiple cost entries per panel
 
-- [ ] **EE-07**: Add overall inspection summary form with extras
+- [ ] **EE-11**: Add overall inspection summary form with extras
   - **Issue**: No form for overall costs (installation complexity, access difficulty, etc.)
   - **Impact**: Can't capture site-wide extra costs
   - **Solution**: Create InspectionSummaryForm shown after all panels completed, collects connectivity recommendation + overall extra costs
 
-- [ ] **EE-08**: Ensure all inspection data persists correctly
+- [ ] **EE-12**: Ensure all inspection data persists correctly
   - **Issue**: Components exist but data persistence not validated
   - **Impact**: Inspection data may be lost
   - **Solution**: Add validation that all board data + extras + recommendations save on appointment completion
 
-- [ ] **EE-09**: Add service-type enforcement for inspection workflow
+- [ ] **EE-13**: Add service-type enforcement for inspection workflow
   - **Issue**: Inspection shows for all services, relies on manual check
   - **Impact**: Inspection form shows for consulting/advocacy (shouldn't)
   - **Solution**: Enforce `service === 'efficiency'` at route/component level
 
-#### Stage 2.5: Customer Reviews Inspection & Makes Choices (NEW STAGE)
-- [ ] **EE-10**: Create customer inspection results view
+#### Customer Equipment Choices (If Inspection Path)
+- [ ] **EE-14**: Create customer inspection results view
   - **Issue**: Customer portal doesn't show inspection findings
   - **Impact**: Customer can't review what technician found before making decisions
-  - **Solution**: Add `/portal/customer/projects/[id]/inspection-results` showing:
+  - **Solution**: Add `/portal/customer/quotes/[id]/inspection-results` (still quote state) showing:
     - All discovered panels (main + subs) with meter type recommendations
     - Technician's connectivity recommendation + reasoning
     - Extra costs discovered (required + optional separately)
 
-- [ ] **EE-11**: Create measurement scope selector
+- [ ] **EE-15**: Create measurement scope selector
   - **Issue**: No UI for customer to choose which panels to meter
   - **Impact**: Can't implement "main only" vs "main + subs" vs "subs only" options
   - **Solution**: Add panel selection UI: checkboxes for each discovered panel, group by main/sub, show meter type per panel
 
-- [ ] **EE-12**: Create device option selector (buy all / rent all / custom)
+- [ ] **EE-16**: Create device option selector (buy all / rent all / custom)
   - **Issue**: No UI for customer to choose purchase vs rent
   - **Impact**: Can't collect customer's device ownership preference
   - **Solution**: Add radio buttons: "Buy All Meters" | "Rent All Meters" | "Custom (choose per panel)"
 
-- [ ] **EE-13**: Create per-panel device option selector (if custom)
+- [ ] **EE-17**: Create per-panel device option selector (if custom)
   - **Issue**: No UI for per-panel buy/rent choice
   - **Impact**: Can't implement custom option
   - **Solution**: If "Custom" selected, show buy/rent toggle per selected panel
 
-- [ ] **EE-14**: Create connectivity selector with recommendation highlight
+- [ ] **EE-18**: Create connectivity selector with recommendation highlight
   - **Issue**: No UI for customer to choose WiFi vs 3G
   - **Impact**: Can't collect connectivity preference
   - **Solution**: Add radio buttons: "WiFi" | "3G", highlight technician's recommendation with note
 
-- [ ] **EE-15**: Implement preliminary pricing calculator
+- [ ] **EE-19**: Implement preliminary pricing calculator
   - **Issue**: No pricing estimate for customer
   - **Impact**: Customer makes choices blind without cost guidance
   - **Solution**: Calculate estimate based on:
@@ -140,11 +170,11 @@ Complete all 4 stages of multi-stage energy efficiency workflow.
     - Required extra costs
     - Display as: "Estimated Total: $X (upfront) + $Y/month" OR "Estimated Total: $X (upfront only)"
 
-- [ ] **EE-16**: Create customer choices submission workflow
+- [ ] **EE-20**: Create customer choices submission workflow
   - **Issue**: No backend to save customer's selections
   - **Impact**: Choices made but not persisted
   - **Solution**: Create `customer_equipment_choices` table:
-    - `id`, `project_id` (FK)
+    - `id`, `quote_id` (FK) - still quote state
     - `selected_panels` (jsonb array of electrical_board_ids)
     - `device_option` ('buy_all' | 'rent_all' | 'custom')
     - `panel_device_choices` (jsonb map: {board_id: 'buy'|'rent'})
@@ -152,13 +182,13 @@ Complete all 4 stages of multi-stage energy efficiency workflow.
     - `preliminary_estimate` (numeric) - calculated estimate
     - `submitted_at` (timestamp)
 
-- [ ] **EE-17**: Notify admin when customer submits choices
+- [ ] **EE-21**: Notify admin when customer submits choices
   - **Issue**: Admin doesn't know customer is ready for final pricing
   - **Impact**: Customer waits without knowing next step
   - **Solution**: Send email to admin + add notification in admin dashboard when customer choices submitted
 
-#### Stage 3: Admin Final Pricing (Reviews Choices + Sets Price)
-- [ ] **EE-18**: Create admin inspection review UI with customer choices
+#### Admin Pricing (Both Paths)
+- [ ] **EE-22**: Create admin inspection review UI (if inspection path)
   - **Issue**: `app/portal/admin/quotes/[id]/page.tsx` has no reference to inspection or customer choices
   - **Impact**: Admin prices without seeing technical findings or customer selections
   - **Solution**: Add "Inspection & Customer Choices" section showing:
@@ -167,33 +197,103 @@ Complete all 4 stages of multi-stage energy efficiency workflow.
     - Extra costs (required + optional)
     - Preliminary estimate shown to customer
 
-- [ ] **EE-19**: Add final pricing form with breakdown
+- [ ] **EE-23**: Add final pricing form with optional breakdown
   - **Issue**: No structured pricing form
   - **Impact**: Admin enters single number without breakdown
-  - **Solution**: Create pricing form with line items:
-    - Base cost per panel
-    - Device cost per panel (purchase/rent)
-    - Connectivity fee
-    - Extra costs (list each)
-    - Installation labor
-    - Total calculation
+  - **Solution**: Create pricing form with:
+    - Simple mode (residential): Single total amount field
+    - Detailed mode (commercial): Line items (base per panel, device cost, connectivity, extras, labor)
+    - Payment phases section (optional): Split total into phases with amounts and descriptions
 
-- [ ] **EE-20**: Add validation that inspection is complete before pricing
-  - **Issue**: `handleCreateProject` doesn't check for inspection data
-  - **Impact**: Projects activated without inspection
-  - **Solution**: For efficiency service, check that:
-    - Appointment exists and status = 'completed'
-    - `electrical_boards` records exist
-    - Customer choices submitted (`customer_equipment_choices` exists)
-    - Before allowing final pricing / project activation
+- [ ] **EE-24**: Add phased payment configuration
+  - **Issue**: No way to define payment phases for large projects
+  - **Impact**: Can't split payments for customer financial flexibility
+  - **Solution**: In pricing form, add "Payment Phases" section:
+    - Number of phases (1-5)
+    - Per phase: amount, description, due date/milestone
+    - Validation: phase amounts sum to total
 
-- [ ] **EE-21**: Link inspection data to project detail pages (admin and customer)
-  - **Issue**: Inspection data not shown in project detail after activation
-  - **Impact**: No historical visibility into technical findings
+- [ ] **EE-25**: Add validation before allowing pricing
+  - **Issue**: Admin can price without required information
+  - **Impact**: Incomplete pricing decisions
+  - **Solution**: Validate before enabling pricing form:
+    - If inspection required: inspection appointment completed + `electrical_boards` exist + customer choices submitted
+    - If residential simple: customer contacted (manual admin confirmation checkbox)
+
+#### Payment & Receipt Upload (Still Quote State)
+- [ ] **EE-26**: Create payment tracking system
+  - **Issue**: No structured payment tracking
+  - **Impact**: Can't track inspection vs equipment payments, or phased payments
+  - **Solution**: Create `quote_payments` table:
+    - `id`, `quote_id` (FK)
+    - `payment_type` ('inspection' | 'equipment' | 'phase')
+    - `phase_number` (int, nullable - which phase if phased)
+    - `amount` (numeric)
+    - `receipt_url` (text)
+    - `paid_at` (timestamp)
+    - `uploaded_by` (user FK)
+    - `is_first_equipment_payment` (boolean) - THIS triggers conversion
+
+- [ ] **EE-27**: Create admin receipt upload UI
+  - **Issue**: No UI to upload payment receipt
+  - **Impact**: Can't verify payments received
+  - **Solution**: In admin quote detail, add "Payments" section:
+    - List all payments (inspection, phases)
+    - Upload receipt button per payment
+    - Mark payment as received
+
+- [ ] **EE-28**: Implement conversion trigger on first equipment payment
+  - **Issue**: No automatic quote → project conversion on payment
+  - **Impact**: Admin must manually convert
+  - **Solution**: When admin uploads receipt for first equipment payment (not inspection), auto-trigger quote → project conversion
+    - Create project record from quote data
+    - Copy all related data (inspection, equipment choices, pricing)
+    - Update quote status to 'converted'
+    - Redirect customer to installation scheduling
+
+#### Installation Scheduling (Now Project State)
+- [ ] **EE-29**: Create immediate installation scheduling prompt
+  - **Issue**: After conversion, customer doesn't know next step
+  - **Impact**: Project stalls waiting for customer action
+  - **Solution**: After conversion, IMMEDIATELY show customer modal/page: "Your project is ready! Schedule installation"
+
+- [ ] **EE-30**: Create installation appointment scheduling UI
+  - **Issue**: Current scheduling may assume single appointment model
+  - **Impact**: Can't distinguish inspection vs installation appointments
+  - **Solution**: Create installation appointment with `appointment_type` = 'installation', link to project (not quote)
+
+- [ ] **EE-31**: Notify technician when installation scheduled
+  - **Issue**: Tech doesn't know about new installation
+  - **Impact**: Installation not on tech schedule
+  - **Solution**: Send email + dashboard notification when installation scheduled
+
+#### Installation & Discovered Issues (Project State)
+- [ ] **EE-32**: Add "Pause Installation" workflow for technicians
+  - **Issue**: No workflow when tech discovers incompatibility during residential install
+  - **Impact**: Tech stuck, can't report issue
+  - **Solution**: Add "Report Issue" button in technician job modal:
+    - Pauses installation (appointment status = 'paused')
+    - Tech logs issue description + photos
+    - Project status = 'on_hold'
+    - Notification sent to admin
+
+- [ ] **EE-33**: Create admin discovered issue resolution workflow
+  - **Issue**: No workflow to charge extra after issue discovered
+  - **Impact**: Can't handle Flow C (residential discovered issue)
+  - **Solution**: In admin project detail, when project = 'on_hold':
+    - Show issue report from tech
+    - Add "Set Additional Charge" form
+    - Customer receives payment prompt (second invoice)
+    - After payment, customer reschedules installation
+
+- [ ] **EE-34**: Link all data to project detail (admin and customer)
+  - **Issue**: Inspection/equipment data not shown in project after conversion
+  - **Impact**: No historical visibility
   - **Solution**: Add "Technical Assessment" section to project detail showing:
-    - All panels with specifications
-    - Customer's equipment choices
-    - Final pricing breakdown
+    - Inspection results (if inspection path)
+    - Customer equipment choices
+    - Payment history
+    - All appointments (inspection + installation)
 
 ### Wizard Unification (WIZ) - HIGH
 
@@ -492,9 +592,9 @@ Requirement-to-phase mapping (populated during roadmap creation).
 | TBD | TBD | Pending |
 
 **Coverage:**
-- v1 requirements: 68 total
+- v1 requirements: 81 total
 - Mapped to phases: 0 (roadmap pending)
-- Unmapped: 68 ⚠️
+- Unmapped: 81 ⚠️
 
 ---
 
