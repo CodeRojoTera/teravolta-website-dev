@@ -39,12 +39,16 @@ Decimal phases appear between their surrounding integers in numeric order.
   4. Database foreign keys automatically cascade deletes for user, project, and appointment relationships
   5. Documents table exists and tracks all uploaded files with metadata
   6. State machine validates efficiency-specific statuses (pending_installation, etc.)
-  7. State machine validates consulting-specific statuses (requirements_defined → rfp_preparation → offers_evaluation → supplier_selection)
-  8. State machine validates advocacy-specific statuses (pending_audit → claim_formulation → claim_filed → asep_filed → resolved)
-**Plans**: TBD
+  7. State machine validates consulting-specific statuses (requirements_defined -> rfp_preparation -> offers_evaluation -> supplier_selection)
+  8. State machine validates advocacy-specific statuses (pending_audit -> claim_formulation -> claim_filed -> asep_filed -> resolved)
+**Plans**: 5 plans
 
 Plans:
-- [ ] TBD during phase planning
+- [ ] 01-01-PLAN.md - Database schema: soft delete infrastructure and documents table
+- [ ] 01-02-PLAN.md - Database schema: CASCADE constraints on foreign keys
+- [ ] 01-03-PLAN.md - State machine implementation (TDD) for all service types
+- [ ] 01-04-PLAN.md - User deletion logic with proper field handling
+- [ ] 01-05-PLAN.md - State machine integration into service and UI
 
 ### Phase 2: Quote Submission & Wizard Unification
 **Goal**: All 4 quote/project creation wizards collect consistent data with proper service-specific filtering for efficiency, consulting, and advocacy
@@ -256,13 +260,13 @@ Plans:
 ## Progress
 
 **Execution Order:**
-Phases execute in numeric order: 1 → 2 → 3 → 4 → 5 → 6 → 7 → (8 || 9) → 10 → 11 → 12 → 13
+Phases execute in numeric order: 1 -> 2 -> 3 -> 4 -> 5 -> 6 -> 7 -> (8 || 9) -> 10 -> 11 -> 12 -> 13
 
 **Note on Parallelism:** Phases 8 (Consulting) and 9 (Advocacy) are PARALLEL - they can be worked on independently after Phase 3 completes. They have no dependency on each other.
 
 | Phase | Plans Complete | Status | Completed |
 |-------|----------------|--------|-----------|
-| 1. Foundation & Data Integrity | 0/TBD | Not started | - |
+| 1. Foundation & Data Integrity | 0/5 | Planned | - |
 | 2. Quote Submission & Wizard Unification | 0/TBD | Not started | - |
 | 3. Shared Service Features | 0/TBD | Not started | - |
 | 4. EE Inspection Workflow | 0/TBD | Not started | - |
@@ -278,4 +282,4 @@ Phases execute in numeric order: 1 → 2 → 3 → 4 → 5 → 6 → 7 → (8 ||
 
 ---
 *Roadmap created: 2026-01-28*
-*Last updated: 2026-01-28 - Expanded to 13 phases with Consulting, Advocacy, and Shared service features*
+*Last updated: 2026-01-29 - Phase 1 planned with 5 plans in 2 waves*
