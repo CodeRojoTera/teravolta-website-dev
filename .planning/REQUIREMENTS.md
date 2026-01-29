@@ -543,6 +543,350 @@ Create comprehensive documentation as requested.
   - **Audience**: Support, developers
   - **Location**: `docs/TROUBLESHOOTING.md`
 
+### Consulting Service Workflow (CONS) - HIGH
+
+Complete the consulting service workflow with phase tracking, timeline management, and deliverables.
+
+**Business Context**: Consulting projects are phase-based with defined deliverables (RFP creation, offer evaluation, supplier selection). Projects have timeline and budget constraints with milestone-based progress tracking.
+
+#### Status Flow & Progress
+- [ ] **CONS-01**: Define consulting-specific status flow
+  - **Issue**: Currently uses generic efficiency statuses (pending_installation, etc.) that don't apply
+  - **Impact**: Status doesn't reflect actual consulting workflow stages
+  - **Solution**: Create consulting status enum:
+    - `pending_requirements` → `requirements_defined` → `rfp_preparation` → `rfp_published` → `offers_evaluation` → `supplier_selection` → `contract_negotiation` → `completed` → `cancelled`
+  - Integrate with state machine (UI-01) to validate transitions
+
+- [ ] **CONS-02**: Implement phase-based progress calculation
+  - **Issue**: `progress` field is 0-100 numeric but consulting is milestone-driven
+  - **Impact**: No way to show "2 of 4 phases complete"
+  - **Solution**: Calculate progress as `(completed_phases / total_phases) * 100`
+    - Update progress automatically when phase status changes
+    - Display in customer portal as "Phase X of Y complete"
+
+#### Phase Management
+- [ ] **CONS-03**: Create phase definition workflow in admin
+  - **Issue**: `phases` JSONB column exists but no UI to populate it
+  - **Impact**: Phases can't be defined when converting quote to project
+  - **Solution**: In admin quote detail, add "Define Project Phases" section:
+    - Phase name, description, estimated duration (weeks)
+    - Deliverables list per phase
+    - Payment amount per phase
+    - Dependencies (which phases must complete first)
+    - Save to `phases` column before conversion
+
+- [ ] **CONS-04**: Display phases in customer portal
+  - **Issue**: Customer can't see project phases or deliverables
+  - **Impact**: Customer doesn't know what to expect or when
+  - **Solution**: Create "Project Phases" section in customer project detail:
+    - List all phases with name, status, due date, deliverables
+    - Highlight current phase
+    - Show completed phases with checkmarks
+    - Show upcoming phases grayed out
+
+- [ ] **CONS-05**: Add phase status tracking
+  - **Issue**: No way to mark individual phases as complete
+  - **Impact**: Can't track which deliverables are done
+  - **Solution**: Create `consulting_phases` table or extend phases JSONB:
+    - `phase_status` (pending | in_progress | completed | blocked)
+    - `actual_start_date`, `actual_end_date`
+    - `completion_notes` (what was delivered)
+    - Admin can update phase status in project detail
+
+#### Timeline & Milestone Tracking
+- [ ] **CONS-06**: Parse timeline text to date ranges
+  - **Issue**: Timeline stored as text ("1-2 weeks") not as dates
+  - **Impact**: Can't calculate project end date or show timeline chart
+  - **Solution**: Convert timeline dropdown to weeks:
+    - "1-2 weeks" → 1.5 weeks average
+    - "1 month" → 4 weeks
+    - "2-3 months" → 10 weeks
+    - Calculate `estimated_end_date` = start_date + timeline_weeks
+
+- [ ] **CONS-07**: Add milestone date tracking
+  - **Issue**: No actual dates tracked per phase
+  - **Impact**: Can't measure timeline adherence
+  - **Solution**: Add to each phase:
+    - `planned_start_date`, `planned_end_date` (from timeline)
+    - `actual_start_date`, `actual_end_date` (when work done)
+    - Calculate variance (actual vs planned)
+    - Show timeline deviation in admin dashboard
+
+#### Deliverables Management
+- [ ] **CONS-08**: Create deliverables tracking system
+  - **Issue**: No structured way to track deliverable submission/approval
+  - **Impact**: Admin doesn't know what's been delivered, customer doesn't know what to submit
+  - **Solution**: Add `deliverables` array to each phase:
+    - Deliverable name, description, document category
+    - Status (pending | submitted | approved | rejected)
+    - Submitted document reference
+    - Admin review notes
+
+- [ ] **CONS-09**: Add deliverable submission workflow
+  - **Issue**: Customer has no UI to submit phase deliverables
+  - **Impact**: Must email or manually upload
+  - **Solution**: In customer project detail, for current phase:
+    - Show list of required deliverables
+    - Upload button per deliverable
+    - Notification to admin when submitted
+    - Admin approval/rejection with feedback
+
+#### Budget & Payment Tracking
+- [ ] **CONS-10**: Convert budget text to numeric ranges
+  - **Issue**: Budget stored as "$5-15k" text, can't do math
+  - **Impact**: No budget vs actual comparison
+  - **Solution**: Add `budget_min` and `budget_max` numeric fields:
+    - Parse text to numbers on quote creation
+    - Store both range boundaries
+    - Display formatted in UI
+
+- [ ] **CONS-11**: Track actual costs vs budget
+  - **Issue**: No cost tracking, no variance alerts
+  - **Impact**: Project cost can exceed budget without warning
+  - **Solution**: Add `actual_cost` field:
+    - Sum of all invoice amounts
+    - Calculate variance: `actual_cost - budget_max`
+    - Show budget warning in admin if variance > 0
+    - Display budget status in customer portal
+
+- [ ] **CONS-12**: Implement phase payment tracking
+  - **Issue**: Phases have amounts but no payment status per phase
+  - **Impact**: Can't track which phases are paid
+  - **Solution**: Extend `quote_payments` table (EE-26):
+    - Support `payment_type = 'phase'` for consulting
+    - `phase_number` references which consulting phase
+    - Admin uploads receipt per phase
+    - Customer sees payment status per phase
+
+#### Form & Validation
+- [ ] **CONS-13**: Remove inappropriate fields from consulting forms
+  - **Issue**: Consulting forms show efficiency fields (property_size, device_option, booking, bills)
+  - **Impact**: Confusing UX, unnecessary data collection
+  - **Solution**: In all wizards, if `service === 'consulting'`:
+    - HIDE: property_size, device_option, connectivity, booking_date, bill_upload, renewable_budget
+    - SHOW: timeline, budget, project_description, industry (optional), phases
+    - Validate: timeline and budget required for consulting
+
+- [ ] **CONS-14**: Add consulting-specific required field validation
+  - **Issue**: No validation that consulting projects have timeline/budget
+  - **Impact**: Incomplete consulting projects created
+  - **Solution**: Create Zod schema for consulting quote/project:
+    - Required: service, timeline, budget, project_description
+    - Optional: phases (can be defined later by admin)
+    - Validate before allowing quote submission or project creation
+
+### Advocacy Service Workflow (ADVO) - HIGH
+
+Complete the advocacy service workflow with claim tracking, evidence management, and regulatory filing.
+
+**Business Context**: Advocacy handles service quality claims against distributors/regulators. Projects track claim type, distributor, evidence, regulatory filings (ASEP), and recovery amounts.
+
+#### Status Flow & Claim Lifecycle
+- [ ] **ADVO-01**: Define advocacy-specific status flow
+  - **Issue**: Currently uses generic efficiency statuses that don't apply
+  - **Impact**: Status doesn't reflect claim lifecycle stages
+  - **Solution**: Create advocacy status enum:
+    - `pending_audit` → `audit_in_progress` → `audit_complete` → `claim_formulation` → `claim_ready` → `claim_filed` → `distributor_negotiating` → `asep_filed` → `asep_negotiating` → `resolved` → `recovery_received` → `cancelled`
+  - Integrate with state machine (UI-01) to validate transitions
+
+- [ ] **ADVO-02**: Add claim-specific data fields
+  - **Issue**: No fields for claim type, distributor, claim amount, loss details
+  - **Impact**: Can't track what claim is about or who it's against
+  - **Solution**: Add to `quotes` and `active_projects` tables:
+    - `claim_type` (billing_dispute | power_quality | service_interruption | infrastructure_damage)
+    - `distributor_company` (text) - e.g., "Naturgy", "Edemet", "Edechi"
+    - `claim_amount` (numeric) - how much customer is claiming
+    - `incident_date` (date) - when issue occurred
+    - `damage_description` (text) - detailed description of loss/damage
+
+#### Evidence Management
+- [ ] **ADVO-03**: Create evidence tracking system
+  - **Issue**: Claims require evidence but no structured collection
+  - **Impact**: Can't track what evidence is submitted or validated
+  - **Solution**: Create `advocacy_evidence` table:
+    - `id`, `project_id` (FK)
+    - `document_id` (FK to documents table)
+    - `evidence_type` (meter_readings | outage_logs | damage_photos | billing_records | regulatory_filing | witness_statement | other)
+    - `submitted_date` (timestamp)
+    - `admin_reviewed` (boolean)
+    - `review_notes` (text)
+    - `is_required` (boolean) - critical vs supplemental evidence
+
+- [ ] **ADVO-04**: Add evidence submission workflow for customers
+  - **Issue**: Customer has no guided evidence upload
+  - **Impact**: Evidence submission is ad-hoc, incomplete
+  - **Solution**: In customer project detail, add "Submit Evidence" section:
+    - Checklist of required evidence types per claim type
+    - Upload button per evidence type
+    - Status indicator (not submitted | submitted | approved | more needed)
+    - Notification to admin when new evidence uploaded
+
+- [ ] **ADVO-05**: Add admin evidence review workflow
+  - **Issue**: No workflow to validate evidence adequacy
+  - **Impact**: Can't determine if claim is ready to file
+  - **Solution**: In admin project detail, add "Evidence Review" section:
+    - List all submitted evidence with type and date
+    - Mark each as reviewed with notes
+    - Checkbox: "Evidence adequate to proceed"
+    - Request more evidence button (sends notification to customer)
+
+- [ ] **ADVO-06**: Add evidence adequacy validation
+  - **Issue**: No enforcement that minimum evidence exists before filing
+  - **Impact**: Claims filed without sufficient documentation
+  - **Solution**: Before status can change to `claim_ready`:
+    - Validate: At least 1 evidence of each required type exists
+    - Admin has marked evidence as adequate
+    - Block status transition if validation fails
+
+#### Regulatory Filing Tracking
+- [ ] **ADVO-07**: Add regulatory filing fields
+  - **Issue**: No tracking of ASEP complaint filings
+  - **Impact**: Can't reference regulatory case numbers or track filing status
+  - **Solution**: Add to `active_projects` table:
+    - `asep_complaint_number` (text) - regulatory reference number
+    - `asep_filed_date` (date)
+    - `distributor_response` (text) - what distributor said
+    - `asep_decision` (text) - regulator's decision
+    - `asep_decision_date` (date)
+
+- [ ] **ADVO-08**: Create regulatory filing workflow
+  - **Issue**: No UI to record filing information
+  - **Impact**: Regulatory filings tracked manually outside system
+  - **Solution**: In admin project detail, add "Regulatory Filing" section:
+    - Record ASEP complaint number when filed
+    - Upload ASEP filing documents
+    - Record distributor response
+    - Record ASEP decision when received
+    - Auto-update status when filing recorded
+
+#### Claim Value & Recovery Tracking
+- [ ] **ADVO-09**: Add claim value tracking fields
+  - **Issue**: No tracking of financial stakes (claimed vs recovered)
+  - **Impact**: Can't measure recovery success rate
+  - **Solution**: Add to `active_projects`:
+    - `claim_amount` (numeric) - already in ADVO-02
+    - `recovery_amount` (numeric) - how much actually recovered
+    - `recovery_percentage` (computed: recovery / claim * 100)
+    - `settlement_type` (full_recovery | partial_recovery | compensation | dismissed)
+    - `resolution_date` (date)
+
+- [ ] **ADVO-10**: Display claim financials in portals
+  - **Issue**: Customer can't see claim value or recovery status
+  - **Impact**: No transparency on financial outcome
+  - **Solution**: In customer and admin project detail:
+    - Show "Claim Amount: $X"
+    - When resolved, show "Recovered: $Y (Z%)"
+    - Show settlement details and resolution date
+
+#### Form & Validation
+- [ ] **ADVO-11**: Remove inappropriate fields from advocacy forms
+  - **Issue**: Advocacy forms show efficiency fields (property_size, device_option, bills) and consulting fields (timeline, budget, phases)
+  - **Impact**: Confusing UX, irrelevant data collection
+  - **Solution**: In all wizards, if `service === 'advocacy'`:
+    - HIDE: property_size, device_option, connectivity, booking_date, bill_upload, renewable_budget, timeline, budget, phases
+    - SHOW: claim_type, distributor_company, claim_amount, incident_date, damage_description, property_type (for context), address
+    - Validate: claim fields required for advocacy
+
+- [ ] **ADVO-12**: Add advocacy-specific document categories
+  - **Issue**: Document categories don't include evidence types
+  - **Impact**: Evidence uploads use generic 'other' category
+  - **Solution**: Add to document category enum:
+    - `meter_readings`, `outage_logs`, `damage_photos`, `regulatory_filing`, `distributor_correspondence`, `witness_statement`, `settlement_agreement`
+    - Filter by service: advocacy sees these, efficiency/consulting don't
+
+### Shared Service Features (SHAR) - HIGH
+
+Features that apply across all three services to unify workflows.
+
+#### Quote to Project Conversion
+- [ ] **SHAR-01**: Implement quote-to-project conversion for consulting
+  - **Issue**: No clear trigger or workflow to convert consulting quote to project
+  - **Impact**: Quotes stay in limbo, manual admin conversion
+  - **Solution**: In admin quote detail for consulting:
+    - "Define Phases & Convert" button (requires phases defined)
+    - Validation: timeline set, budget set, at least 1 phase defined
+    - On convert: create project with status `pending_requirements`, copy all data including phases
+    - Notification to customer: "Your consulting project is ready!"
+
+- [ ] **SHAR-02**: Implement quote-to-project conversion for advocacy
+  - **Issue**: No clear trigger or workflow to convert advocacy quote to project
+  - **Impact**: Quotes stay in limbo, manual admin conversion
+  - **Solution**: In admin quote detail for advocacy:
+    - "Validate Claim & Convert" button
+    - Validation: claim_type set, distributor set, claim_amount set, damage_description exists
+    - On convert: create project with status `pending_audit`, copy all claim data
+    - Notification to customer: "We're reviewing your claim"
+
+- [ ] **SHAR-03**: Add conversion status indicators
+  - **Issue**: Can't tell if quote is ready to convert
+  - **Impact**: Admin doesn't know which quotes to prioritize
+  - **Solution**: In admin quote list:
+    - Badge: "Ready to Convert" if validation passes
+    - Badge: "Needs Info" if validation fails with reason
+    - Sort/filter by conversion readiness
+
+#### Service-Specific Customer Portal Views
+- [ ] **SHAR-04**: Create consulting-specific project detail view
+  - **Issue**: Customer portal shows generic progress bar, not phase-based view
+  - **Impact**: Consulting customers don't see relevant info (phases, deliverables, timeline)
+  - **Solution**: In `/portal/customer/projects/[id]`, if `service === 'consulting'`:
+    - Show "Project Phases" section (CONS-04)
+    - Show timeline chart with milestones
+    - Show deliverables checklist
+    - Show budget vs actual
+    - HIDE: installation scheduling, appointment sections
+
+- [ ] **SHAR-05**: Create advocacy-specific project detail view
+  - **Issue**: Customer portal shows generic progress bar, not claim-centric view
+  - **Impact**: Advocacy customers don't see claim status, evidence, recovery
+  - **Solution**: In `/portal/customer/projects/[id]`, if `service === 'advocacy'`:
+    - Show "Claim Details" section (type, distributor, amount, incident date)
+    - Show "Evidence Submitted" section with checklist
+    - Show "Claim Status" with regulatory filing info
+    - Show recovery amount when resolved
+    - HIDE: installation scheduling, appointment sections, progress bar
+
+- [ ] **SHAR-06**: Create service-specific admin project detail views
+  - **Issue**: Admin sees one-size-fits-all project detail
+  - **Impact**: Admin can't efficiently manage service-specific workflows
+  - **Solution**: In `/portal/admin/projects/[id]`:
+    - Efficiency: show inspection, equipment choices, installation
+    - Consulting: show phases, deliverables, timeline, budget variance
+    - Advocacy: show claim details, evidence review, regulatory filing, recovery
+    - Use conditional rendering based on `project.service`
+
+#### Document Category Filtering
+- [ ] **SHAR-07**: Implement service-specific document category filtering
+  - **Issue**: DocumentManager shows all categories regardless of service
+  - **Impact**: Users see irrelevant upload options
+  - **Solution**: Update DocumentManager component:
+    - Pass `service` prop
+    - Filter categories by service:
+      - Efficiency: bill, invoice, meter_reading, site_plan, payment_proof
+      - Consulting: contract, invoice, report, deliverable, payment_proof, requirements_doc, rfp, proposal
+      - Advocacy: invoice, regulatory_filing, claim_evidence, meter_readings, outage_logs, damage_photos, settlement_agreement, payment_proof
+    - Only show relevant categories in upload dropdown
+
+#### Admin Approval Workflows
+- [ ] **SHAR-08**: Create unified quote review workflow
+  - **Issue**: Admin quote detail doesn't have service-specific review sections
+  - **Impact**: Admin reviews all services the same way (wrong)
+  - **Solution**: In admin quote detail, show different sections by service:
+    - Efficiency: inspection requirement, property details, bill analysis
+    - Consulting: timeline feasibility, budget approval, phase definition
+    - Advocacy: claim validation, evidence adequacy, case strength assessment
+    - Each section has approval checkbox before conversion enabled
+
+- [ ] **SHAR-09**: Add service-specific validation before project creation
+  - **Issue**: Projects can be created without service-appropriate data
+  - **Impact**: Incomplete projects that can't progress
+  - **Solution**: Create service-specific validation logic:
+    - Efficiency: validate property details, inspection requirement determined
+    - Consulting: validate timeline, budget, phases defined
+    - Advocacy: validate claim_type, distributor, claim_amount, damage_description
+    - Block "Create Project" button until validation passes
+    - Show validation errors in UI
+
 ---
 
 ## Future Requirements (v2.0+)
@@ -585,18 +929,155 @@ Explicitly excluded features with reasoning.
 
 ## Traceability
 
-Requirement-to-phase mapping (populated during roadmap creation).
+Requirement-to-phase mapping (updated 2026-01-28 with full 13-phase structure).
 
 | Requirement | Phase | Status |
 |-------------|-------|--------|
-| TBD | TBD | Pending |
+| DATA-01 | Phase 1 | Pending |
+| DATA-02 | Phase 1 | Pending |
+| DATA-03 | Phase 1 | Pending |
+| DATA-04 | Phase 1 | Pending |
+| DATA-05 | Phase 1 | Pending |
+| SCHEMA-01 | Phase 1 | Pending |
+| SCHEMA-02 | Phase 1 | Pending |
+| SCHEMA-03 | Phase 1 | Pending |
+| SCHEMA-04 | Phase 1 | Pending |
+| UI-01 | Phase 1 | Pending |
+| UI-02 | Phase 1 | Pending |
+| UI-03 | Phase 1 | Pending |
+| CONS-01 | Phase 1 | Pending |
+| ADVO-01 | Phase 1 | Pending |
+| EE-01 | Phase 2 | Pending |
+| EE-02 | Phase 2 | Pending |
+| EE-03 | Phase 2 | Pending |
+| EE-04 | Phase 2 | Pending |
+| WIZ-01 | Phase 2 | Pending |
+| WIZ-02 | Phase 2 | Pending |
+| WIZ-03 | Phase 2 | Pending |
+| WIZ-04 | Phase 2 | Pending |
+| WIZ-05 | Phase 2 | Pending |
+| WIZ-06 | Phase 2 | Pending |
+| WIZ-07 | Phase 2 | Pending |
+| WIZ-08 | Phase 2 | Pending |
+| SVC-01 | Phase 2 | Pending |
+| SVC-02 | Phase 2 | Pending |
+| SVC-03 | Phase 2 | Pending |
+| SVC-04 | Phase 2 | Pending |
+| CONS-13 | Phase 2 | Pending |
+| CONS-14 | Phase 2 | Pending |
+| ADVO-11 | Phase 2 | Pending |
+| SHAR-01 | Phase 3 | Pending |
+| SHAR-02 | Phase 3 | Pending |
+| SHAR-03 | Phase 3 | Pending |
+| SHAR-04 | Phase 3 | Pending |
+| SHAR-05 | Phase 3 | Pending |
+| SHAR-06 | Phase 3 | Pending |
+| SHAR-07 | Phase 3 | Pending |
+| SHAR-08 | Phase 3 | Pending |
+| SHAR-09 | Phase 3 | Pending |
+| EE-05 | Phase 4 | Pending |
+| EE-06 | Phase 4 | Pending |
+| EE-07 | Phase 4 | Pending |
+| EE-08 | Phase 4 | Pending |
+| EE-09 | Phase 4 | Pending |
+| EE-10 | Phase 4 | Pending |
+| EE-11 | Phase 4 | Pending |
+| EE-12 | Phase 4 | Pending |
+| EE-13 | Phase 4 | Pending |
+| EE-14 | Phase 5 | Pending |
+| EE-15 | Phase 5 | Pending |
+| EE-16 | Phase 5 | Pending |
+| EE-17 | Phase 5 | Pending |
+| EE-18 | Phase 5 | Pending |
+| EE-19 | Phase 5 | Pending |
+| EE-20 | Phase 5 | Pending |
+| EE-21 | Phase 5 | Pending |
+| PORT-06 | Phase 5 | Pending |
+| EE-22 | Phase 6 | Pending |
+| EE-23 | Phase 6 | Pending |
+| EE-24 | Phase 6 | Pending |
+| EE-25 | Phase 6 | Pending |
+| EE-26 | Phase 6 | Pending |
+| EE-27 | Phase 6 | Pending |
+| EE-28 | Phase 6 | Pending |
+| EE-29 | Phase 7 | Pending |
+| EE-30 | Phase 7 | Pending |
+| EE-31 | Phase 7 | Pending |
+| EE-32 | Phase 7 | Pending |
+| EE-33 | Phase 7 | Pending |
+| EE-34 | Phase 7 | Pending |
+| CONS-02 | Phase 8 | Pending |
+| CONS-03 | Phase 8 | Pending |
+| CONS-04 | Phase 8 | Pending |
+| CONS-05 | Phase 8 | Pending |
+| CONS-06 | Phase 8 | Pending |
+| CONS-07 | Phase 8 | Pending |
+| CONS-08 | Phase 8 | Pending |
+| CONS-09 | Phase 8 | Pending |
+| CONS-10 | Phase 8 | Pending |
+| CONS-11 | Phase 8 | Pending |
+| CONS-12 | Phase 8 | Pending |
+| ADVO-02 | Phase 9 | Pending |
+| ADVO-03 | Phase 9 | Pending |
+| ADVO-04 | Phase 9 | Pending |
+| ADVO-05 | Phase 9 | Pending |
+| ADVO-06 | Phase 9 | Pending |
+| ADVO-07 | Phase 9 | Pending |
+| ADVO-08 | Phase 9 | Pending |
+| ADVO-09 | Phase 9 | Pending |
+| ADVO-10 | Phase 9 | Pending |
+| ADVO-12 | Phase 9 | Pending |
+| PORT-01 | Phase 10 | Pending |
+| PORT-02 | Phase 10 | Pending |
+| PORT-03 | Phase 10 | Pending |
+| PORT-04 | Phase 10 | Pending |
+| PORT-05 | Phase 10 | Pending |
+| PORT-07 | Phase 10 | Pending |
+| UI-04 | Phase 11 | Pending |
+| UI-05 | Phase 11 | Pending |
+| UI-06 | Phase 11 | Pending |
+| UI-07 | Phase 11 | Pending |
+| UI-08 | Phase 11 | Pending |
+| DOCS-01 | Phase 12 | Pending |
+| DOCS-02 | Phase 12 | Pending |
+| DOCS-03 | Phase 12 | Pending |
+| DOCS-04 | Phase 12 | Pending |
+| DOCS-09 | Phase 12 | Pending |
+| DOCS-10 | Phase 12 | Pending |
+| DOCS-11 | Phase 12 | Pending |
+| DOCS-05 | Phase 13 | Pending |
+| DOCS-06 | Phase 13 | Pending |
+| DOCS-07 | Phase 13 | Pending |
+| DOCS-08 | Phase 13 | Pending |
 
 **Coverage:**
-- v1 requirements: 81 total
-- Mapped to phases: 0 (roadmap pending)
-- Unmapped: 81 ⚠️
+- v1 requirements: 116 total
+- Mapped to phases: 116
+- Unmapped: 0
+
+**Coverage Summary by Phase:**
+- Phase 1: 14 requirements (DATA: 5, SCHEMA: 4, UI: 3, CONS: 1, ADVO: 1)
+- Phase 2: 19 requirements (EE: 4, WIZ: 8, SVC: 4, CONS: 2, ADVO: 1)
+- Phase 3: 9 requirements (SHAR: 9)
+- Phase 4: 9 requirements (EE: 9)
+- Phase 5: 9 requirements (EE: 8, PORT: 1)
+- Phase 6: 7 requirements (EE: 7)
+- Phase 7: 6 requirements (EE: 6)
+- Phase 8: 11 requirements (CONS: 11)
+- Phase 9: 10 requirements (ADVO: 10)
+- Phase 10: 6 requirements (PORT: 6)
+- Phase 11: 5 requirements (UI: 5)
+- Phase 12: 7 requirements (DOCS: 7)
+- Phase 13: 4 requirements (DOCS: 4)
+
+**Service Distribution:**
+- Energy Efficiency (EE): 34 requirements across Phases 2, 4, 5, 6, 7
+- Consulting (CONS): 14 requirements across Phases 1, 2, 8
+- Advocacy (ADVO): 12 requirements across Phases 1, 2, 9
+- Shared (SHAR): 9 requirements in Phase 3
+- Infrastructure (DATA, SCHEMA, UI, WIZ, SVC, PORT, DOCS): 47 requirements across Phases 1, 2, 10, 11, 12, 13
 
 ---
 
 *Requirements defined: 2026-01-28 based on CURRENT_STATE_ISSUES.md*
-*Last updated: 2026-01-28 after codebase analysis*
+*Last updated: 2026-01-28 - Complete traceability for all 116 requirements across 13 phases*
