@@ -8,6 +8,7 @@ import type {
   AdvocacyStatus,
   TransitionResult
 } from './types';
+import { STATUS_LABELS, STATUS_COLORS } from './types';
 
 // ============================================================================
 // Transition Maps - Define valid transitions for each service type
@@ -213,6 +214,37 @@ function getTransitionMap(service: ServiceType) {
     default:
       return EFFICIENCY_TRANSITIONS;
   }
+}
+
+/**
+ * Get the display label for a status in the specified language.
+ */
+export function getStatusLabel(status: ProjectStatus, language: 'en' | 'es' = 'en'): string {
+  return STATUS_LABELS[status]?.[language] || status;
+}
+
+/**
+ * Get the Tailwind color classes for a status.
+ */
+export function getStatusColor(status: ProjectStatus): string {
+  return STATUS_COLORS[status] || 'bg-gray-100 text-gray-800';
+}
+
+/**
+ * Get customer-friendly label (simplified version for customer-facing UI).
+ */
+export function getCustomerLabel(status: ProjectStatus, service: ServiceType, language: 'en' | 'es' = 'en'): string {
+  // Map technical statuses to friendly customer labels
+  const friendlyMappings: Partial<Record<ProjectStatus, { en: string; es: string }>> = {
+    'pending_onboarding': { en: 'Getting Started', es: 'Comenzando' },
+    'pending_payment': { en: 'Awaiting Your Payment', es: 'Esperando Tu Pago' },
+    'pending_scheduling': { en: 'Schedule Your Appointment', es: 'Programa Tu Cita' },
+    'scheduled': { en: 'Appointment Scheduled', es: 'Cita Programada' },
+    'in_progress': { en: 'Work In Progress', es: 'Trabajo en Progreso' },
+    'completed': { en: 'Project Complete', es: 'Proyecto Completado' },
+  };
+
+  return friendlyMappings[status]?.[language] || STATUS_LABELS[status]?.[language] || status;
 }
 
 // ============================================================================

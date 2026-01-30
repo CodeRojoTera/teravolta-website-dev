@@ -2,6 +2,7 @@
 
 import { describe, it, expect } from 'vitest';
 import { canTransition, getValidTransitions, getInitialStatus } from './project-states';
+import type { ConsultingStatus, AdvocacyStatus } from './types';
 
 describe('Project State Machine', () => {
 
@@ -51,7 +52,7 @@ describe('Project State Machine', () => {
     });
 
     it('allows full consulting flow', () => {
-      const flow = [
+      const flow: ConsultingStatus[] = [
         'pending_requirements',
         'requirements_defined',
         'rfp_preparation',
@@ -91,7 +92,7 @@ describe('Project State Machine', () => {
     });
 
     it('allows full advocacy flow', () => {
-      const flow = [
+      const flow: AdvocacyStatus[] = [
         'pending_audit',
         'audit_in_progress',
         'audit_complete',
