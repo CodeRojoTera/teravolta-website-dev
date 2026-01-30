@@ -628,3 +628,31 @@ export interface ElectricalBoard {
     created_at?: string;
     updated_at?: string;
 }
+
+// ============================================================================
+// Deletion Audit Types
+// ============================================================================
+
+/** Reason for deletion */
+export type DeletionReason = 'user_request' | 'admin_action' | 'inactivity' | 'violation' | 'cascade';
+
+/** Type of deletion operation */
+export type DeletionType = 'soft' | 'hard' | 'cascade' | 'scheduled';
+
+/**
+ * Deletion audit log record
+ * Tracks all deletion operations for compliance and recovery
+ * Created: 2026-01-29 - Phase 01-01
+ */
+export interface DeletionAuditLog {
+  id: string;
+  table_name: string;
+  record_id: string;
+  record_data: Record<string, unknown>;
+  deleted_at: string;
+  deleted_by: string | null;
+  delete_reason: DeletionReason | null;
+  deletion_type: DeletionType;
+  parent_deletion_id: string | null;
+  related_deletions: Array<{ table: string; id: string }>;
+}
