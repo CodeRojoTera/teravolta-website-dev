@@ -37,18 +37,20 @@ Decimal phases appear between their surrounding integers in numeric order.
   2. Project status transitions are validated by state machine (invalid jumps blocked)
   3. Admin can only select valid next statuses when manually changing project status
   4. Database foreign keys automatically cascade deletes for user, project, and appointment relationships
-  5. Documents table exists and tracks all uploaded files with metadata
+  5. Documents table has soft delete support for recovery
   6. State machine validates efficiency-specific statuses (pending_installation, etc.)
   7. State machine validates consulting-specific statuses (requirements_defined -> rfp_preparation -> offers_evaluation -> supplier_selection)
   8. State machine validates advocacy-specific statuses (pending_audit -> claim_formulation -> claim_filed -> asep_filed -> resolved)
-**Plans**: 5 plans
+**Plans**: 5 plans (re-planned 2026-01-30 based on database audit)
 
 Plans:
-- [ ] 01-01-PLAN.md - Database schema: soft delete infrastructure and documents table
-- [ ] 01-02-PLAN.md - Database schema: CASCADE constraints on foreign keys
-- [ ] 01-03-PLAN.md - State machine implementation (TDD) for all service types
-- [ ] 01-04-PLAN.md - User deletion logic with proper field handling
-- [ ] 01-05-PLAN.md - State machine integration into service and UI
+- [ ] 01-01-PLAN.md — Soft delete infrastructure (users table columns, active_users view, deletion_audit_log)
+- [ ] 01-02-PLAN.md — CASCADE constraints on all foreign keys (15+ constraints)
+- [x] 01-03-PLAN.md — Soft delete for documents table + cleanup legacy deletion_requests
+- [ ] 01-04-PLAN.md — User deletion logic (schedule/soft/hard delete with audit)
+- [ ] 01-05-PLAN.md — State machine integration into project service and API
+
+**Note:** State machine already implemented (01-03-SUMMARY.md from previous execution). Plans 01-01, 01-02, 01-03 are Wave 1 (parallel). Plans 01-04, 01-05 are Wave 2 (depend on Wave 1).
 
 ### Phase 2: Quote Submission & Wizard Unification
 **Goal**: All 4 quote/project creation wizards collect consistent data with proper service-specific filtering for efficiency, consulting, and advocacy
@@ -266,7 +268,7 @@ Phases execute in numeric order: 1 -> 2 -> 3 -> 4 -> 5 -> 6 -> 7 -> (8 || 9) -> 
 
 | Phase | Plans Complete | Status | Completed |
 |-------|----------------|--------|-----------|
-| 1. Foundation & Data Integrity | 0/5 | Planned | - |
+| 1. Foundation & Data Integrity | 0/5 | Re-planned | - |
 | 2. Quote Submission & Wizard Unification | 0/TBD | Not started | - |
 | 3. Shared Service Features | 0/TBD | Not started | - |
 | 4. EE Inspection Workflow | 0/TBD | Not started | - |

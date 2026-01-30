@@ -10,11 +10,18 @@ See: .planning/PROJECT.md (updated 2026-01-28)
 ## Current Position
 
 Phase: 1 of 13 (Foundation & Data Integrity)
-Plan: 2 of 5 complete (01-01-PLAN.md)
-Status: In progress
-Last activity: 2026-01-29 - Completed 01-01-PLAN.md (Soft Delete & Document Infrastructure)
+Plan: 0 of 5 complete (re-planned 2026-01-30)
+Status: Ready for execution
+Last activity: 2026-01-30 - Re-planned Phase 1 based on database audit
 
-Progress: [████░░░░░░] 40%
+Progress: [░░░░░░░░░░] 0%
+
+**Re-plan Summary (2026-01-30):**
+- All previous plans archived to .archive/
+- Fresh plans created based on DATABASE REALITY (live Supabase access)
+- State machine already complete (lib/state-machines/) - no longer needs separate plan
+- Wave 1: Plans 01-01, 01-02, 01-03 (parallel - database migrations)
+- Wave 2: Plans 01-04, 01-05 (depend on Wave 1 - TypeScript services)
 
 ## Performance Metrics
 
@@ -64,8 +71,29 @@ None yet.
 
 ## Session Continuity
 
-Last session: 2026-01-29 (plan execution)
-Stopped at: Completed 01-01-PLAN.md (Soft Delete & Document Infrastructure)
-Resume file: None
+Last session: 2026-01-30 (Phase 1 RE-PLANNING COMPLETE)
+Stopped at: Fresh plans created, ready for execution
+Resume file: .planning/phases/01-foundation--data-integrity/01-01-PLAN.md
 
-**Next action:** Continue with remaining Phase 1 plans (01-02, 01-04, 01-05)
+**Re-planning Outcome:**
+- Database audit verified via live Supabase MCP
+- 5 fresh plans created addressing DATABASE REALITY
+- Previous plans archived to .archive/
+- State machine confirmed complete (no plan needed)
+
+**Current Database State (verified 2026-01-30):**
+- users table: NO soft delete columns (deleted_at missing)
+- active_users view: DOES NOT EXIST
+- deletion_audit_log: DOES NOT EXIST
+- deletion_requests: EXISTS (legacy - to be removed)
+- documents table: EXISTS (needs soft delete columns added)
+- CASCADE constraints: Only 3 exist (need 12+ more)
+
+**Execution Status:**
+- Plan 01-01: Ready (soft delete infrastructure)
+- Plan 01-02: Ready (CASCADE constraints)
+- Plan 01-03: Ready (documents soft delete + cleanup)
+- Plan 01-04: Depends on Wave 1 (user deletion service)
+- Plan 01-05: Depends on Wave 1 (state machine integration)
+
+**Next action:** `/gsd:execute-phase 01`
