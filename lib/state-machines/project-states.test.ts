@@ -121,6 +121,12 @@ describe('Project State Machine', () => {
       expect(transitions).not.toContain('completed');
     });
 
+    it('returns inspection step before installation for efficiency', () => {
+      const transitions = getValidTransitions('pending_inspection', 'efficiency');
+      expect(transitions).toContain('pending_installation');
+      expect(transitions).toContain('cancelled');
+    });
+
     it('returns empty array for terminal states', () => {
       const transitions = getValidTransitions('completed', 'efficiency');
       expect(transitions).toEqual([]);

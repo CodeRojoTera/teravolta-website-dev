@@ -16,6 +16,7 @@ export type EfficiencyStatus =
   | 'pending_payment'
   | 'pending_scheduling'
   | 'scheduled'
+  | 'pending_inspection'
   | 'pending_installation'
   | 'pending_documents'
   | 'pending_assignment'
@@ -85,6 +86,7 @@ export const STATUS_LABELS: Record<ProjectStatus, { en: string; es: string }> = 
   'pending_payment': { en: 'Awaiting Payment', es: 'Esperando Pago' },
   'pending_scheduling': { en: 'Ready to Schedule', es: 'Listo para Programar' },
   'scheduled': { en: 'Scheduled', es: 'Programado' },
+  'pending_inspection': { en: 'Inspection Pending', es: 'Inspeccion Pendiente' },
   'pending_installation': { en: 'Installation Pending', es: 'Instalacion Pendiente' },
   'pending_documents': { en: 'Documents Required', es: 'Documentos Requeridos' },
   'pending_assignment': { en: 'Awaiting Technician', es: 'Esperando Tecnico' },
@@ -131,6 +133,7 @@ export const STATUS_COLORS: Record<ProjectStatus, string> = {
   'pending_payment': 'bg-blue-50 text-blue-700',
   'pending_scheduling': 'bg-blue-100 text-blue-800',
   'scheduled': 'bg-blue-200 text-blue-900',
+  'pending_inspection': 'bg-blue-100 text-blue-800',
   'pending_installation': 'bg-blue-100 text-blue-800',
   'pending_documents': 'bg-amber-100 text-amber-800',
   'pending_assignment': 'bg-blue-50 text-blue-700',

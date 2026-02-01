@@ -21,17 +21,18 @@ const EFFICIENCY_TRANSITIONS: Record<EfficiencyStatus, EfficiencyStatus[]> = {
   // Payment flow
   'pending_payment': ['pending_scheduling', 'cancelled'],
   'pending_scheduling': ['scheduled', 'cancelled'],
-  'scheduled': ['pending_assignment', 'pending_installation', 'cancelled', 'urgent_reschedule'],
+  'scheduled': ['pending_assignment', 'pending_inspection', 'pending_installation', 'cancelled', 'urgent_reschedule'],
 
   // Assignment and installation
-  'pending_assignment': ['pending_installation', 'cancelled'],
+  'pending_assignment': ['pending_inspection', 'pending_installation', 'cancelled'],
+  'pending_inspection': ['pending_installation', 'on_hold', 'cancelled'],
   'pending_installation': ['in_progress', 'cancelled', 'on_hold'],
 
   // Active work
   'in_progress': ['completed', 'paused', 'on_hold', 'cancelled', 'incomplete'],
   'active': ['completed', 'paused', 'cancelled'],
   'paused': ['in_progress', 'active', 'cancelled'],
-  'on_hold': ['pending_installation', 'in_progress', 'cancelled'],
+  'on_hold': ['pending_inspection', 'pending_installation', 'in_progress', 'cancelled'],
 
   // Document/review states
   'pending_documents': ['in_review', 'cancelled'],

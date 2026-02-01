@@ -178,6 +178,7 @@ function calculateProgressFromStatus(status: ProjectStatus, service: ServiceType
       pending_scheduling: 15,
       scheduled: 20,
       pending_assignment: 25,
+      pending_inspection: 28,
       pending_installation: 30,
       in_progress: 50,
       active: 60,
