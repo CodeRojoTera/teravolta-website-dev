@@ -31,7 +31,7 @@ export async function updateClientType(email: string, newPropertyType: string): 
     try {
         // Find user by email
         const { data: userData, error } = await supabase
-            .from('users')
+            .from('active_users')
             .select('id, client_type')
             .eq('email', email)
             .maybeSingle();

@@ -38,7 +38,7 @@ export default function Header() {
       setRoleLoading(true);
       try {
         const { data, error } = await supabase
-          .from('users')
+          .from('active_users')
           .select('role')
           .eq('id', user.id)
           .maybeSingle();

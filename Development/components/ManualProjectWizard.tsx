@@ -84,7 +84,7 @@ export default function ManualProjectWizard({ onClose, onSuccess }: ManualProjec
         setLoadingClients(true);
         try {
             const { data, error } = await supabase
-                .from('users')
+                .from('active_users')
                 .select('*')
                 .or('role.eq.customer,role.is.null')
                 .order('full_name');
