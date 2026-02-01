@@ -20,15 +20,7 @@ function RequestsPageContent() {
     useEffect(() => {
         const fetchRequests = async () => {
             try {
-                // 1. Fetch Deletion Requests (Legacy)
-                const { data: deletionData, error: delError } = await supabase
-                    .from('deletion_requests')
-                    .select('*')
-                    .order('requested_at', { ascending: false });
-
-                if (delError) console.error('Error fetching deletion requests:', delError);
-
-                // 2. Fetch Admin Requests (New System)
+                // 1. Fetch Admin Requests (New System)
                 const { data: adminData, error: adminError } = await supabase
                     .from('admin_requests')
                     .select('*')
@@ -36,7 +28,7 @@ function RequestsPageContent() {
 
                 if (adminError) console.error('Error fetching admin requests:', adminError);
 
-                // 3. Fetch Technician Leave Requests
+                // 2. Fetch Technician Leave Requests
                 const { data: leaveData, error: leaveError } = await supabase
                     .from('technician_leave_requests')
                     .select('*, technicians(name)')
@@ -45,19 +37,6 @@ function RequestsPageContent() {
                 if (leaveError) console.error('Error fetching leave requests:', leaveError);
 
                 // Normalize & Merge
-                const normalizedDeletion = (deletionData || []).map((req: any) => ({
-                    id: req.id,
-                    sourceTable: 'deletion_requests',
-                    type: 'deletion', // broadly classified
-                    subType: req.resource_type,
-                    requestedBy: req.user_id,
-                    requestedByName: req.user_id ? `User ${req.user_id.substring(0, 6)}...` : 'Unknown',
-                    reason: req.reason,
-                    status: req.status,
-                    createdAt: new Date(req.requested_at),
-                    details: {}
-                }));
-
                 const normalizedAdmin = (adminData || []).map((req: any) => ({
                     id: req.id,
                     sourceTable: 'admin_requests',
@@ -89,7 +68,7 @@ function RequestsPageContent() {
                     }
                 }));
 
-                const merged = [...normalizedAdmin, ...normalizedDeletion, ...normalizedLeaves]
+                const merged = [...normalizedAdmin, ...normalizedLeaves]
                     .sort((a, b) => b.createdAt.getTime() - a.createdAt.getTime());
                 setRequests(merged);
 
@@ -105,13 +84,7 @@ function RequestsPageContent() {
 
     const handleApprove = async (request: any) => {
         try {
-            if (request.sourceTable === 'deletion_requests') {
-                const { error } = await supabase
-                    .from('deletion_requests')
-                    .update({ status: 'approved', reviewed_by: user?.id, reviewed_at: new Date().toISOString() })
-                    .eq('id', request.id);
-                if (error) throw error;
-            } else if (request.sourceTable === 'technician_leave_requests') {
+            if (request.sourceTable === 'technician_leave_requests') {
                 const { error } = await supabase
                     .from('technician_leave_requests')
                     .update({ status: 'approved' })
@@ -171,13 +144,7 @@ function RequestsPageContent() {
 
     const handleReject = async (request: any) => {
         try {
-            if (request.sourceTable === 'deletion_requests') {
-                const { error } = await supabase
-                    .from('deletion_requests')
-                    .update({ status: 'rejected', reviewed_by: user?.id, reviewed_at: new Date().toISOString() })
-                    .eq('id', request.id);
-                if (error) throw error;
-            } else if (request.sourceTable === 'technician_leave_requests') {
+            if (request.sourceTable === 'technician_leave_requests') {
                 const { error } = await supabase
                     .from('technician_leave_requests')
                     .update({ status: 'rejected' })

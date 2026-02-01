@@ -14,7 +14,8 @@ export default function CustomerSettings() {
     const [pageLoading, setPageLoading] = useState(true);
     const [status, setStatus] = useState<'idle' | 'success' | 'error'>('idle');
     const [prefStatus, setPrefStatus] = useState<'idle' | 'saving' | 'success' | 'error'>('idle');
-    const [existingRequest, setExistingRequest] = useState<any>(null);
+    const [deletionScheduledFor, setDeletionScheduledFor] = useState<string | null>(null);
+    const [statusMessage, setStatusMessage] = useState<string | null>(null);
     const [emailNotifications, setEmailNotifications] = useState(false);
 
     const [profile, setProfile] = useState<{
@@ -49,11 +50,11 @@ export default function CustomerSettings() {
                     .eq('user_id', user.id)
                     .maybeSingle();
 
-                const { data: requests } = await supabase
-                    .from('deletion_requests')
-                    .select('*')
-                    .eq('user_id', user.id)
-                    .eq('status', 'pending');
+                const { data: activeUser } = await supabase
+                    .from('active_users')
+                    .select('deletion_scheduled_for')
+                    .eq('id', user.id)
+                    .maybeSingle();
 
                 if (settings) {
                     setEmailNotifications(settings.email_notifications ?? true);
@@ -61,9 +62,7 @@ export default function CustomerSettings() {
                     setEmailNotifications(true);
                 }
 
-                if (requests && requests.length > 0) {
-                    setExistingRequest(requests[0]);
-                }
+                setDeletionScheduledFor(activeUser?.deletion_scheduled_for || null);
             } catch (error) {
                 console.error('Error fetching settings:', error);
             } finally {
@@ -96,27 +95,61 @@ export default function CustomerSettings() {
         }
     };
 
+    const runDeletionAction = async (
+        action: 'schedule' | 'cancel',
+        payload?: Record<string, unknown>
+    ) => {
+        if (!user) return null;
+
+        const response = await fetch(`/api/users/${user.id}/deletion`, {
+            method: 'POST',
+            headers: { 'Content-Type': 'application/json' },
+            body: JSON.stringify({ action, ...(payload || {}) })
+        });
+
+        const data = await response.json().catch(() => ({}));
+
+        if (!response.ok) {
+            throw new Error((data as { error?: string })?.error || 'Request failed');
+        }
+
+        return data as { scheduledFor?: string };
+    };
+
     const handleDeletionRequest = async () => {
         if (!user) return;
         setLoading(true);
         setStatus('idle');
         try {
-            const { error } = await supabase.from('deletion_requests').insert({
-                user_id: user.id,
-                resource_type: 'account',
-                resource_id: user.id,
-                reason: 'Customer requested account deletion',
-                status: 'pending',
-                requested_at: new Date().toISOString()
+            const result = await runDeletionAction('schedule', {
+                reason: 'user_request'
             });
 
-            if (error) throw error;
-
             setStatus('success');
-            setExistingRequest(true);
+            setStatusMessage(t.requestSent);
+            setDeletionScheduledFor(result?.scheduledFor || new Date().toISOString());
         } catch (error) {
             console.error('Error creating deletion request:', error);
             setStatus('error');
+            setStatusMessage(null);
+        } finally {
+            setLoading(false);
+        }
+    };
+
+    const handleCancelDeletion = async () => {
+        if (!user) return;
+        setLoading(true);
+        setStatus('idle');
+        try {
+            await runDeletionAction('cancel');
+            setDeletionScheduledFor(null);
+            setStatus('success');
+            setStatusMessage(t.requestCancelled);
+        } catch (error) {
+            console.error('Error cancelling deletion request:', error);
+            setStatus('error');
+            setStatusMessage(null);
         } finally {
             setLoading(false);
         }
@@ -156,6 +189,8 @@ export default function CustomerSettings() {
             requestDeletion: 'Request Account Deletion',
             requestPending: 'Deletion Request Pending',
             requestSent: 'Request sent successfully',
+            cancelDeletion: 'Cancel Deletion',
+            requestCancelled: 'Deletion cancelled',
             error: 'An error occurred. Please try again.',
             preferences: 'Notification Preferences',
             emailNotifications: 'Email Notifications',
@@ -178,6 +213,8 @@ export default function CustomerSettings() {
             requestDeletion: 'Solicitar Eliminación de Cuenta',
             requestPending: 'Solicitud de Eliminación Pendiente',
             requestSent: 'Solicitud enviada exitosamente',
+            cancelDeletion: 'Cancelar Eliminacion',
+            requestCancelled: 'Eliminacion cancelada',
             error: 'Ocurrió un error. Por favor intenta de nuevo.',
             preferences: 'Preferencias de Notificación',
             emailNotifications: 'Notificaciones por Correo',
@@ -320,10 +357,21 @@ export default function CustomerSettings() {
                     <h4 className="font-medium text-gray-900 mb-2">{t.deleteAccount}</h4>
                     <p className="text-gray-600 text-sm mb-4">{t.deleteDescription}</p>
 
-                    {existingRequest ? (
-                        <div className="inline-flex items-center px-4 py-2 bg-yellow-100 text-yellow-800 rounded-lg text-sm font-medium">
-                            <i className="ri-time-line mr-2"></i>
-                            {t.requestPending}
+                    {deletionScheduledFor ? (
+                        <div className="space-y-3">
+                            <div className="inline-flex items-center px-4 py-2 bg-yellow-100 text-yellow-800 rounded-lg text-sm font-medium">
+                                <i className="ri-time-line mr-2"></i>
+                                {t.requestPending}
+                            </div>
+                            <div>
+                                <button
+                                    onClick={handleCancelDeletion}
+                                    disabled={loading}
+                                    className="px-4 py-2 bg-gray-100 hover:bg-gray-200 text-gray-700 rounded-lg font-medium transition-colors disabled:opacity-50"
+                                >
+                                    {t.cancelDeletion}
+                                </button>
+                            </div>
                         </div>
                     ) : (
                         <button
@@ -342,8 +390,8 @@ export default function CustomerSettings() {
                         </button>
                     )}
 
-                    {status === 'success' && (
-                        <p className="text-green-600 text-sm mt-2">{t.requestSent}</p>
+                    {status === 'success' && statusMessage && (
+                        <p className="text-green-600 text-sm mt-2">{statusMessage}</p>
                     )}
                     {status === 'error' && (
                         <p className="text-red-600 text-sm mt-2">{t.error}</p>
