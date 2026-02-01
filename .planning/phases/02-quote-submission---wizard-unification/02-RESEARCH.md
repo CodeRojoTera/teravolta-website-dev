@@ -574,3 +574,320 @@ Things that couldn't be fully resolved:
 
 **Research date:** 2026-02-01
 **Valid until:** 2026-03-01 (30 days - stable libraries, no rapid changes expected)
+
+---
+
+## Feasibility Analysis
+
+**Analyzed:** 2026-02-01
+**Verdict:** GO WITH CAUTION
+
+### Technical Feasibility
+
+**✅ FEASIBLE** with dependency installation and architecture setup required.
+
+#### Current Codebase State
+
+**Strengths:**
+1. **Database schema ready** - All required columns exist:
+   - `quotes` table: `service`, `property_type`, `device_mode`, `connectivity`, `timeline`, `budget`, `project_description` (all `text`, nullable)
+   - `active_projects` table: `service`, `property_type`, `device_option`, `connectivity_type`, `client_timeline`, `budget`, `project_description` (all nullable)
+   - `documents` table: `category` (text, nullable) - ready for service-specific filtering
+   
+2. **TypeScript types defined** - `lib/types.ts` has comprehensive interfaces:
+   - `ServiceType = 'efficiency' | 'consulting' | 'advocacy'`
+   - `Quote` interface with all service-specific fields
+   - `ActiveProject` interface with matching fields
+   - `DocumentCategory` type with all categories (including advocacy-specific `claim_evidence`, `regulatory_filing`)
+
+3. **Existing wizard foundation** - `ManualProjectWizard.tsx`:
+   - 689 lines, multi-step wizard pattern already implemented
+   - Service-specific conditional rendering present (lines 450, 479, 518)
+   - Phase management UI exists for consulting/advocacy (lines 556-625)
+   - Property type selector implemented (lines 452-462)
+   - Uses `useState` + manual form validation (ready to refactor to RHF)
+
+4. **Public quote form exists** - `app/quote/page.tsx`:
+   - Service selection and multi-step flow
+   - File upload for bills
+   - Property type fields
+   - Can serve as template for unified approach
+
+5. **DocumentManager component exists** - `components/DocumentManager.tsx`:
+   - 303 lines, full upload/list functionality
+   - `allowedCategories` prop already supported (line 23)
+   - Ready for service-type filtering with minimal changes
+
+**Gaps:**
+1. **❌ React Hook Form NOT installed** - `package.json` missing:
+   ```
+   NOT_INSTALLED: react-hook-form, zod, @hookform/resolvers
+   ```
+
+2. **❌ No schema validation layer** - No `lib/schemas/` directory exists
+   - Need to create discriminated union schemas from scratch
+   - Need to create shared constants file for property types
+
+3. **❌ Inconsistent form patterns** - Different validation approaches:
+   - ManualProjectWizard: Manual validation with `useState`
+   - Quote form: Different manual validation
+   - Need refactor to unified RHF + Zod approach
+
+4. **⚠️ Property type inconsistency** - ManualProjectWizard only has 2 options (residential, commercial) on lines 459-461, but requirements specify 6 options (residential, apartment, small-business, hotel, building, industrial) per WIZ-01
+
+5. **⚠️ Device/connectivity still collected** - ManualProjectWizard collects these on lines 479-516, but WIZ-02 requires removal from ALL quote wizards (collected after inspection)
+
+#### Dependency Analysis
+
+**Required installations:**
+```bash
+npm install react-hook-form@^7.66.0 zod@^3.24.2 @hookform/resolvers@latest
+```
+
+**Compatibility check:**
+- ✅ React 19.0.0 - React Hook Form 7.66+ fully supports React 19
+- ✅ TypeScript 5.x - Zod 3.24+ has excellent TS 5 support
+- ✅ Next.js 15.3.2 - No conflicts with RHF (client-side form library)
+
+**Bundle size impact:** ~45KB gzipped total (acceptable for form-heavy application)
+
+#### Database Schema Alignment
+
+**✅ ALIGNED** - All 9 success criteria can be satisfied with existing schema:
+
+1. **Property type standardization** - `quotes.property_type` and `active_projects.property_type` are flexible `text` fields (no enum constraint)
+2. **Device/connectivity removal** - Fields exist but can be left `null` during quote submission
+3. **Bill upload filtering** - `documents.category` supports service filtering
+4. **Inspection auto-detection** - Can be implemented in application logic based on `property_type` value
+5. **DocumentManager service filtering** - `category` field supports all service-specific categories
+6. **Customer request wizard** - Can use same `quotes` table structure
+7. **Consulting wizard fields** - `timeline`, `budget`, `project_description` columns exist
+8. **Advocacy wizard fields** - Same columns as consulting (both use phases)
+9. **Service-specific validation** - Application-level validation (no schema changes needed)
+
+**⚠️ Minor concern:** Document categories are `text` not `enum`, so service-specific filtering must be enforced in application layer (database won't reject invalid combinations).
+
+### Risk Assessment
+
+**HIGH RISK (mitigable):**
+
+1. **R1: Dependency installation in production**
+   - **Risk:** Adding 3 new dependencies could break build pipeline
+   - **Likelihood:** Low (these are stable, widely-used libraries)
+   - **Impact:** High (blocks entire phase)
+   - **Mitigation:** Install dependencies first, verify build succeeds before starting implementation
+
+2. **R2: Existing wizard refactor scope creep**
+   - **Risk:** ManualProjectWizard refactor uncovers hidden dependencies/bugs
+   - **Likelihood:** Medium (689 lines, complex state management)
+   - **Impact:** High (delays unification)
+   - **Mitigation:** Keep existing wizard working, create parallel RHF version first, swap once validated
+
+3. **R3: Form validation complexity explosion**
+   - **Risk:** Service-specific validation logic becomes unmaintainable
+   - **Likelihood:** Medium (3 service types × 4 wizards = 12 permutations)
+   - **Impact:** Medium (technical debt, hard to extend)
+   - **Mitigation:** Follow discriminated union pattern strictly, create shared components early
+
+**MEDIUM RISK:**
+
+4. **R4: Customer request wizard is actually broken**
+   - **Risk:** Requirements say it's broken (WIZ-07), but no file found matching "CustomerRequestWizard" or "ServiceRequestWizard"
+   - **Likelihood:** Medium (may be in portal area or named differently)
+   - **Impact:** Medium (need to find/fix before unifying)
+   - **Mitigation:** Phase 1 scope: Investigate and locate this wizard early
+
+5. **R5: Document category validation gap**
+   - **Risk:** `documents.category` is `text` not `enum`, no database enforcement of service-appropriate categories
+   - **Likelihood:** High (will happen if only UI enforces rules)
+   - **Impact:** Low (data quality issue, not functional breakage)
+   - **Mitigation:** Add backend validation in document upload API (SVC-02 requirement)
+
+6. **R6: Phase management ambiguity**
+   - **Risk:** Open question #2 - unclear if phases collected during quote or only during admin pricing
+   - **Likelihood:** High (requirements unclear)
+   - **Impact:** Medium (affects wizard field structure)
+   - **Mitigation:** Clarify with stakeholder in Phase 0, default to "admin pricing only" based on efficiency pattern
+
+**LOW RISK:**
+
+7. **R7: Inspection requirement logic ambiguity**
+   - **Risk:** Open question #1 - unclear if small-business/hotel follow commercial or residential rules
+   - **Likelihood:** Medium (edge case, may not come up immediately)
+   - **Impact:** Low (business logic only, easy to change)
+   - **Mitigation:** Implement as "commercial = inspection required, all others = optional" initially, refine based on feedback
+
+### Blocker Analysis
+
+**HARD BLOCKERS: None**
+
+All blockers are soft (require decisions or setup, but don't prevent implementation).
+
+**SOFT BLOCKERS:**
+
+**SB1: Dependency installation (CRITICAL)**
+- **What:** React Hook Form, Zod, and resolvers not installed
+- **Impact:** Cannot start schema or form implementation
+- **Resolution:** Run `npm install react-hook-form@^7.66.0 zod@^3.24.2 @hookform/resolvers@latest`
+- **Timeline:** 5 minutes
+- **Who:** Execute immediately before planning
+
+**SB2: Customer request wizard location unknown (HIGH)**
+- **What:** WIZ-07 mentions broken wizard, but file not found in codebase search
+- **Impact:** Cannot unify all 4 wizards if 4th wizard is missing/unlocated
+- **Resolution:** 
+  - Search logged-in customer portal area (`app/portal/customer/`)
+  - Check if it's actually the quote page with conditional logic
+  - Ask stakeholder if it exists or needs to be created
+- **Timeline:** 30 minutes investigation
+- **Who:** First task in planning
+
+**SB3: Phase collection timing decision (MEDIUM)**
+- **What:** Open question #2 - when to collect phases for consulting/advocacy
+- **Impact:** Affects wizard field structure and validation rules
+- **Resolution:** Make decision based on efficiency pattern (admin-only) or confirm with stakeholder
+- **Timeline:** Decision needed before Plan 02-03 (consulting/advocacy wizards)
+- **Recommendation:** Default to admin-only (matches efficiency workflow)
+
+**SB4: Property type inspection rules (LOW)**
+- **What:** Open question #1 - inspection requirements for small-business and hotel types
+- **Impact:** EE-03 auto-detection logic incomplete
+- **Resolution:** Make assumption (treat as residential - optional) or confirm with stakeholder
+- **Timeline:** Decision needed before Plan 02-02 (inspection auto-detection)
+- **Recommendation:** small-business = optional, hotel = required (hotel is commercial-scale)
+
+### Effort Estimation
+
+**Complexity:** MODERATE
+
+**Reasoning:**
+- Form patterns are standard (RHF + Zod is well-documented)
+- Database schema aligned (no migrations needed)
+- BUT: 4 wizards to unify, service-specific logic branching, existing code to refactor
+
+**Estimated Context Burn:** MEDIUM
+
+**Breakdown:**
+- Setup phase (dependencies, schemas, constants): 15% of context
+- ManualProjectWizard refactor: 25% of context (largest component)
+- Public quote form updates: 20% of context
+- Customer request wizard (locate + fix/create): 20% of context
+- DocumentManager service filtering: 10% of context
+- Testing and integration: 10% of context
+
+**Number of Plans Needed:** 4-6
+
+**Plan structure:**
+1. **Plan 02-01:** Install dependencies + create schema layer (1 plan)
+2. **Plan 02-02:** Shared constants + property type standardization (1 plan)
+3. **Plan 02-03:** ManualProjectWizard RHF refactor (1-2 plans - may need split)
+4. **Plan 02-04:** Public quote form RHF refactor (1 plan)
+5. **Plan 02-05:** Customer request wizard locate/fix/unify (1 plan)
+6. **Plan 02-06:** DocumentManager service filtering + validation (1 plan)
+
+**Execution Time:** 2-3 days
+
+**Timeline:**
+- Day 1: Dependencies, schemas, constants (Plans 01-02)
+- Day 2: Wizard refactors (Plans 03-04, may spill to Day 3)
+- Day 3: Customer request + DocumentManager + testing (Plans 05-06)
+
+**Confidence:** 75%
+
+**Risk factors:**
+- If customer request wizard doesn't exist, add +1 day (need to create from scratch)
+- If ManualProjectWizard refactor reveals hidden bugs, add +0.5 day
+- If schema validation patterns need iteration, add +0.5 day
+
+### Recommendation
+
+**Verdict: GO WITH CAUTION**
+
+**Rationale:**
+
+✅ **Proceed because:**
+1. Database schema fully supports requirements (no migrations needed)
+2. TypeScript types already defined (clear data contracts)
+3. Existing wizard infrastructure provides solid foundation
+4. Standard stack (RHF + Zod) is well-documented and proven
+5. All blockers are soft (require setup/decisions, not fundamental rewrites)
+6. Phase 1 (state machine, soft delete, data integrity) is complete ✅
+
+⚠️ **Caution areas:**
+1. Dependency installation must happen first (breaks build if done wrong)
+2. Customer request wizard location unknown (investigation required)
+3. Moderate refactor scope (4 wizards, existing code to adapt)
+4. Service-specific logic requires discipline (discriminated unions critical)
+
+**Action Items Before Starting:**
+
+**CRITICAL (do first):**
+1. ✅ Install dependencies in development environment:
+   ```bash
+   npm install react-hook-form@^7.66.0 zod@^3.24.2 @hookform/resolvers@latest
+   ```
+2. ✅ Verify build succeeds: `npm run build`
+3. ✅ Commit dependency changes separately before implementation
+
+**HIGH (do before planning):**
+4. 🔍 Locate customer request wizard:
+   - Search `app/portal/customer/` recursively
+   - Check if quote page has customer-specific mode
+   - Document location in CONTEXT.md
+   
+5. 📋 Make phase collection timing decision:
+   - Default: Admin-only (matches efficiency pattern)
+   - Confirm with stakeholder if uncertain
+   - Document decision in CONTEXT.md
+
+**MEDIUM (do during planning):**
+6. 📝 Create shared constants file skeleton in `lib/schemas/constants.ts`:
+   - PROPERTY_TYPES array (6 options)
+   - SERVICE_DOCUMENT_CATEGORIES map
+   - PROPERTY_TYPE_LABELS (bilingual)
+
+7. 🧪 Set up test environment for form validation:
+   - Install vitest if not present
+   - Prepare schema test file structure
+
+**Implementation Approach:**
+
+**Phase execution order:**
+1. **Setup First:** Install dependencies, create schema layer, verify build
+2. **Shared Infrastructure:** Constants, base schemas, shared components
+3. **Incremental Refactor:** One wizard at a time, keep existing working
+4. **Parallel Development:** DocumentManager updates can happen alongside wizard refactors
+5. **Integration Last:** Connect all pieces, end-to-end testing
+
+**Risk Mitigation Strategy:**
+- Keep existing wizards functional during refactor (feature flag or parallel implementation)
+- Create discriminated union schemas early, validate pattern before spreading
+- Extract shared form components ASAP to prevent duplication
+- Add backend validation for document categories (don't rely on UI enforcement)
+- Test service-specific logic thoroughly (3 services × 4 wizards = 12 permutations)
+
+**Success Metrics:**
+- All 9 success criteria pass verification
+- All 4 wizards use same Zod schema (single source of truth)
+- No device/connectivity fields in quote submission forms
+- DocumentManager correctly filters categories by service
+- Zero TypeScript errors related to form data shapes
+- Property type options consistent across all wizards
+
+**Readiness Score:** 8/10
+
+**Deductions:**
+- -1: Dependencies not installed
+- -1: Customer request wizard location unknown
+
+**Proceed to planning once:**
+1. Dependencies installed and build verified
+2. Customer request wizard located/documented
+3. Phase collection timing decision made
+
+---
+
+**Next Steps:**
+1. Execute action items above
+2. Run `/gsd-plan-phase 02` to generate detailed implementation plans
+3. Begin execution with Plan 02-01 (dependencies + schema setup)
