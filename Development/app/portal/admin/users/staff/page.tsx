@@ -66,7 +66,7 @@ export default function StaffPage() {
             if (!authUser) return;
             try {
                 const { data } = await supabase
-                    .from('users')
+                    .from('active_users')
                     .select('role')
                     .eq('id', authUser.id)
                     .single();
@@ -86,7 +86,7 @@ export default function StaffPage() {
         const fetchStaff = async () => {
             try {
                 const { data, error } = await supabase
-                    .from('users')
+                    .from('active_users')
                     .select('*')
                     .in('role', ['admin', 'super_admin'])
                     .order('created_at', { ascending: false });

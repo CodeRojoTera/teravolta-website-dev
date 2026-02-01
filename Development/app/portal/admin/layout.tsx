@@ -41,7 +41,7 @@ export default function AdminLayout({ children }: { children: React.ReactNode })
 
             try {
                 const { data: userData, error } = await supabase
-                    .from('users')
+                    .from('active_users')
                     .select('*')
                     .eq('id', user.id)
                     .single();

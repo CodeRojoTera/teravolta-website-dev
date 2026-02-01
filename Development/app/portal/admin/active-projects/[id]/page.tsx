@@ -146,7 +146,7 @@ export default function ProjectDetailPage() {
 
                     if (data.assignedTo && data.assignedTo.length > 0) {
                         const { data: tech } = await supabase
-                            .from('users')
+                            .from('active_users')
                             .select('id, full_name, email')
                             .eq('id', data.assignedTo[0])
                             .single();

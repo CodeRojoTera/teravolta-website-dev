@@ -92,7 +92,7 @@ export default function UserDetailPage() {
             try {
                 // Use Supabase to get role
                 const { data, error } = await supabase
-                    .from('users')
+                    .from('active_users')
                     .select('role')
                     .eq('id', authUser.id)
                     .single();
@@ -111,7 +111,7 @@ export default function UserDetailPage() {
         const fetchUser = async () => {
             try {
                 const { data, error } = await supabase
-                    .from('users')
+                    .from('active_users')
                     .select('*')
                     .eq('id', id)
                     .single();

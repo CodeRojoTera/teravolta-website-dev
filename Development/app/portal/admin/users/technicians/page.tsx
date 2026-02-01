@@ -40,7 +40,7 @@ export default function TechniciansPage() {
             if (!authUser) return;
             try {
                 const { data } = await supabase
-                    .from('users')
+                    .from('active_users')
                     .select('role')
                     .eq('id', authUser.id)
                     .single();
