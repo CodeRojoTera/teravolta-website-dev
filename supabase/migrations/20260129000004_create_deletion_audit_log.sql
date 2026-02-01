@@ -18,13 +18,14 @@ CREATE TABLE IF NOT EXISTS deletion_audit_log (
   -- Deletion metadata
   deleted_at TIMESTAMPTZ NOT NULL DEFAULT NOW(),
   deleted_by UUID REFERENCES users(id),
-  delete_reason TEXT CHECK (
-    delete_reason IS NULL OR
-    delete_reason IN ('user_request', 'admin_action', 'inactivity', 'violation', 'cascade')
+  deletion_reason TEXT CHECK (
+    deletion_reason IS NULL OR
+    deletion_reason IN ('user_request', 'admin_action', 'inactivity', 'violation', 'cascade')
   ),
   deletion_type TEXT NOT NULL CHECK (
     deletion_type IN ('soft', 'hard', 'cascade', 'scheduled')
   ),
+  notes TEXT,
 
   -- For tracking cascade deletions
   parent_deletion_id UUID REFERENCES deletion_audit_log(id),
@@ -56,7 +57,7 @@ CREATE POLICY "Only admins can view deletion audit log" ON deletion_audit_log
   FOR SELECT USING (
     EXISTS (
       SELECT 1 FROM users
-      WHERE uid = auth.uid() AND role IN ('admin', 'super_admin')
+      WHERE id = auth.uid() AND role IN ('admin', 'super_admin')
     )
   );
 
@@ -65,9 +66,14 @@ CREATE POLICY "Admins can create audit entries" ON deletion_audit_log
   FOR INSERT WITH CHECK (
     EXISTS (
       SELECT 1 FROM users
-      WHERE uid = auth.uid() AND role IN ('admin', 'super_admin')
+      WHERE id = auth.uid() AND role IN ('admin', 'super_admin')
     )
   );
+
+-- RLS Policy: Service role can insert audit entries (for triggers)
+CREATE POLICY "Service role can insert deletion audit" ON deletion_audit_log
+  FOR INSERT TO service_role
+  WITH CHECK (true);
 
 -- Add table comment for documentation
 COMMENT ON TABLE deletion_audit_log IS 'Comprehensive audit trail for all deletion operations (soft, hard, cascade). Restricted to admin access only.';
