@@ -64,6 +64,16 @@ FOREIGN KEY (uploaded_by)
 REFERENCES public.users(id)
 ON DELETE SET NULL;
 
+-- documents.deleted_by -> users (SET NULL - preserve deletion audit trail)
+ALTER TABLE public.documents
+DROP CONSTRAINT IF EXISTS documents_deleted_by_fkey;
+
+ALTER TABLE public.documents
+ADD CONSTRAINT documents_deleted_by_fkey
+FOREIGN KEY (deleted_by)
+REFERENCES public.users(id)
+ON DELETE SET NULL;
+
 -- ----------------------------------------------------------------------------
 -- INVOICES: CASCADE on user deletion (from public.users)
 -- ----------------------------------------------------------------------------
@@ -222,6 +232,7 @@ COMMENT ON CONSTRAINT appointments_technician_id_fkey ON public.appointments IS 
 COMMENT ON CONSTRAINT documents_project_id_fkey ON public.documents IS 'CASCADE: documents deleted when project deleted';
 COMMENT ON CONSTRAINT documents_user_id_fkey ON public.documents IS 'SET NULL: preserve document when user deleted';
 COMMENT ON CONSTRAINT documents_uploaded_by_fkey ON public.documents IS 'SET NULL: preserve document when uploader deleted';
+COMMENT ON CONSTRAINT documents_deleted_by_fkey ON public.documents IS 'SET NULL: preserve deletion audit when user deleted';
 COMMENT ON CONSTRAINT invoices_user_id_fkey ON public.invoices IS 'CASCADE: invoices deleted when user deleted';
 COMMENT ON CONSTRAINT active_projects_user_id_fkey ON public.active_projects IS 'CASCADE: projects deleted when user deleted';
 COMMENT ON CONSTRAINT quotes_user_id_fkey ON public.quotes IS 'CASCADE: quotes deleted when user deleted';
