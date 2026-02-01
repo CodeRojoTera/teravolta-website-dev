@@ -45,7 +45,7 @@ Decimal phases appear between their surrounding integers in numeric order.
 
 Plans:
 - [ ] 01-01-PLAN.md — Soft delete infrastructure (users table columns, active_users view, deletion_audit_log)
-- [ ] 01-02-PLAN.md — CASCADE constraints on all foreign keys (15+ constraints)
+- [x] 01-02-PLAN.md — CASCADE constraints on all foreign keys (15+ constraints)
 - [x] 01-03-PLAN.md — Soft delete for documents table + cleanup legacy deletion_requests
 - [ ] 01-04-PLAN.md — User deletion logic (schedule/soft/hard delete with audit)
 - [ ] 01-05-PLAN.md — State machine integration into project service and API
@@ -268,7 +268,7 @@ Phases execute in numeric order: 1 -> 2 -> 3 -> 4 -> 5 -> 6 -> 7 -> (8 || 9) -> 
 
 | Phase | Plans Complete | Status | Completed |
 |-------|----------------|--------|-----------|
-| 1. Foundation & Data Integrity | 0/5 | Re-planned | - |
+| 1. Foundation & Data Integrity | 3/5 | In progress | - |
 | 2. Quote Submission & Wizard Unification | 0/TBD | Not started | - |
 | 3. Shared Service Features | 0/TBD | Not started | - |
 | 4. EE Inspection Workflow | 0/TBD | Not started | - |
