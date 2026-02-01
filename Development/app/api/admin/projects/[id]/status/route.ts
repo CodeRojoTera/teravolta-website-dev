@@ -65,7 +65,7 @@ export async function PATCH(
     }
 
     const { data: adminUser, error: adminError } = await supabaseAdmin
-      .from('users')
+      .from('active_users')
       .select('role')
       .eq('id', currentUser.id)
       .single();

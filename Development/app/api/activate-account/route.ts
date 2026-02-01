@@ -52,9 +52,9 @@ export async function POST(request: Request) {
         // 2. Create or Get User (Supabase Auth)
         // 2. Create or Get User (Supabase Auth)
 
-        // First, check if they exist in public.users (Linked User)
+        // First, check if they exist in active_users (Linked User)
         const { data: existingPublicUser } = await supabaseAdmin
-            .from('users')
+            .from('active_users')
             .select('id')
             .eq('email', email)
             .maybeSingle();

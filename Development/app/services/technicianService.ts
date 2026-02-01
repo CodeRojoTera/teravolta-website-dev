@@ -417,7 +417,7 @@ export const TechnicianService = {
 
             // 1. Get total count of technicians
             const { count: totalTechs, error: countError } = await supabase
-                .from('users')
+                .from('active_users')
                 .select('id', { count: 'exact', head: true })
                 .eq('role', 'technician');
 

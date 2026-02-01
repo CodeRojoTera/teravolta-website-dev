@@ -37,9 +37,9 @@ export async function POST(request: Request) {
             );
         }
 
-        // Get the user by email (from users table to get ID)
+        // Get the user by email (from active_users to avoid soft-deleted users)
         const { data: userRecord, error: userError } = await supabaseAdmin
-            .from('users')
+            .from('active_users')
             .select('id')
             .eq('email', email)
             .single();

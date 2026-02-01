@@ -11,9 +11,9 @@ export async function POST(request: Request) {
         if (!userId && payload.clientEmail) {
             console.log(`Looking up user for ${payload.clientEmail}...`);
 
-            // 1. Check existing users table
+            // 1. Check existing active users table
             const { data: existingUser } = await supabaseAdmin
-                .from('users')
+                .from('active_users')
                 .select('id')
                 .eq('email', payload.clientEmail)
                 .single();
