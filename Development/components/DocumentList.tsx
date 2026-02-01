@@ -6,6 +6,7 @@ import { Document } from '@/lib/types';
 import { getDocumentsForEntity, deleteDocument } from '@/lib/documentUtils';
 import { DocumentEntityType } from '@/lib/types';
 import { EmptyState } from '@/components/ui/EmptyState';
+import { useAuth } from '@/components/AuthProvider';
 
 interface DocumentListProps {
     entityType: DocumentEntityType;
@@ -34,6 +35,7 @@ export default function DocumentList({
     allowDelete = false
 }: DocumentListProps) {
     const { language } = useLanguage();
+    const { user } = useAuth();
     const [documents, setDocuments] = useState<Document[]>([]);
     const [loading, setLoading] = useState(true);
     const [expanded, setExpanded] = useState(false);
@@ -89,7 +91,7 @@ export default function DocumentList({
         if (!confirm(language === 'es' ? '¿Estás seguro de eliminar este documento?' : 'Are you sure you want to delete this document?')) return;
 
         try {
-            const { success, error } = await deleteDocument(docId);
+            const { success, error } = await deleteDocument(docId, user?.id || null);
             if (success) {
                 setDocuments(prev => prev.filter(d => d.id !== docId));
             } else {

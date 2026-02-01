@@ -314,6 +314,7 @@ export const ActiveProjectService = {
                 .select('*')
                 .eq('entity_type', entityType)
                 .eq('entity_id', entityId)
+                .is('deleted_at', null)
                 .order('uploaded_at', { ascending: false });
 
             if (error) throw error;
@@ -327,19 +328,17 @@ export const ActiveProjectService = {
     /**
      * Delete a document
      */
-    deleteDocument: async (documentId: string, storagePath: string): Promise<void> => {
+    deleteDocument: async (documentId: string, _storagePath: string): Promise<void> => {
         try {
-            // 1. Delete from Storage
-            const { error: storageError } = await supabase.storage
-                .from('documents')
-                .remove([storagePath]);
+            const { data: authData } = await supabase.auth.getUser();
+            const deletedBy = authData.user?.id || null;
 
-            if (storageError) console.error('Error deleting file from storage:', storageError);
-
-            // 2. Delete from DB
             const { error: dbError } = await supabase
                 .from('documents')
-                .delete()
+                .update({
+                    deleted_at: new Date().toISOString(),
+                    deleted_by: deletedBy
+                })
                 .eq('id', documentId);
 
             if (dbError) throw dbError;

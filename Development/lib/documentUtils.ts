@@ -186,6 +186,7 @@ export async function getDocumentsForEntity(
         .select('*')
         .eq('entity_type', entityType)
         .eq('entity_id', entityId)
+        .is('deleted_at', null)
         .order('uploaded_at', { ascending: false });
 
     if (error) {
@@ -214,35 +215,28 @@ export async function getDocumentsForEntity(
 /**
  * Delete a document from Storage and DB
  */
-export async function deleteDocument(documentId: string): Promise<{ success: boolean; error?: string }> {
+export async function deleteDocument(
+    documentId: string,
+    deletedBy: string | null
+): Promise<{ success: boolean; error?: string }> {
     try {
-        // Get document to find path and bucket
-        const { data: docData, error: fetchError } = await supabase
+        const { data, error: fetchError } = await supabase
             .from('documents')
-            .select('*')
+            .select('id')
             .eq('id', documentId)
-            .single();
+            .maybeSingle();
 
-        if (fetchError || !docData) {
+        if (fetchError) throw fetchError;
+        if (!data) {
             return { success: false, error: 'Document not found' };
         }
 
-        const bucket = getBucketForEntity(docData.entity_type);
-        const path = docData.storage_path;
-
-        // Delete from Storage
-        const { error: storageError } = await supabase.storage
-            .from(bucket)
-            .remove([path]);
-
-        if (storageError) {
-            console.warn("Error removing from storage (might be already deleted):", storageError);
-        }
-
-        // Delete from DB
         const { error: dbError } = await supabase
             .from('documents')
-            .delete()
+            .update({
+                deleted_at: new Date().toISOString(),
+                deleted_by: deletedBy
+            })
             .eq('id', documentId);
 
         if (dbError) throw dbError;
@@ -300,6 +294,7 @@ export async function getDocumentsByCategory(
         .eq('entity_type', entityType)
         .eq('entity_id', entityId)
         .eq('category', category)
+        .is('deleted_at', null)
         .order('created_at', { ascending: false });
 
     if (error) {
