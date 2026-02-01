@@ -19,6 +19,7 @@ interface User {
     company?: string;
     role?: UserRole;
     status?: 'active' | 'deactivated';
+    deletionScheduledFor?: string | null;
     createdAt: any;
 }
 
@@ -46,7 +47,7 @@ export default function ClientsPage() {
             if (!authUser) return;
             try {
                 const { data, error } = await supabase
-                    .from('users')
+                    .from('active_users')
                     .select('role')
                     .eq('id', authUser.id)
                     .single();
@@ -67,8 +68,8 @@ export default function ClientsPage() {
             try {
                 // 1. Fetch Registered Users
                 const { data: userData, error: userError } = await supabase
-                    .from('users')
-                    .select('*')
+                    .from('active_users')
+                    .select('id, full_name, email, phone, company, role, created_at, status, deletion_scheduled_for')
                     .or('role.eq.customer,role.is.null')
                     .order('created_at', { ascending: false });
 
@@ -85,6 +86,7 @@ export default function ClientsPage() {
                     company: u.company,
                     role: u.role || 'customer',
                     status: u.status || 'active',
+                    deletionScheduledFor: u.deletion_scheduled_for || null,
                     createdAt: u.created_at ? new Date(u.created_at) : null
                 }));
 
@@ -169,6 +171,10 @@ export default function ClientsPage() {
         deleteTitle: language === 'es' ? 'Eliminar Cliente' : 'Delete Client',
         deleteKeepData: language === 'es' ? 'Desactivar cuenta (conservar datos)' : 'Deactivate account (keep data)',
         deleteRemoveData: language === 'es' ? 'Eliminar permanentemente (borrar datos)' : 'Delete permanently (remove data)',
+        scheduled: language === 'es' ? 'Eliminacion Programada' : 'Deletion Scheduled',
+        cancelDeletion: language === 'es' ? 'Cancelar Eliminacion' : 'Cancel Deletion',
+        deletionScheduled: language === 'es' ? 'Eliminacion programada' : 'Deletion scheduled',
+        deletionCancelled: language === 'es' ? 'Eliminacion cancelada' : 'Deletion cancelled',
         cancel: language === 'es' ? 'Cancelar' : 'Cancel',
         confirm: language === 'es' ? 'Confirmar' : 'Confirm',
         passwordResetSent: language === 'es' ? 'Correo de restablecimiento enviado' : 'Password reset email sent',
@@ -183,55 +189,70 @@ export default function ClientsPage() {
             user.email.toLowerCase().includes(searchTerm.toLowerCase());
     });
 
+    const runDeletionAction = async (
+        userId: string,
+        action: 'schedule' | 'cancel' | 'hard',
+        payload?: Record<string, unknown>
+    ) => {
+        const response = await fetch(`/api/users/${userId}/deletion`, {
+            method: 'POST',
+            headers: { 'Content-Type': 'application/json' },
+            body: JSON.stringify({ action, ...(payload || {}) })
+        });
+
+        const data = await response.json().catch(() => ({}));
+
+        if (!response.ok) {
+            throw new Error((data as { error?: string })?.error || 'Request failed');
+        }
+
+        return data;
+    };
+
     const handleDeleteClient = async () => {
         if (!deleteModal.user) return;
         const userId = deleteModal.user.id;
 
         try {
             if (deleteModal.keepData) {
-                // Soft delete - deactivate
-                const { error } = await supabase
-                    .from('users')
-                    .update({
-                        status: 'deactivated',
-                        // deactivatedAt: new Date(), // If column exists? Schema doesn't show it, using metadata or valid columns only.
-                        // validated columns: id, email, full_name, phone, company, role, created_at, status, etc.
-                        // Assuming deactivated_at doesn't exist yet, we can skip or add it. Let's start with status.
-                    })
-                    .eq('id', userId);
+                const result = await runDeletionAction(userId, 'schedule', {
+                    reason: 'admin_action'
+                });
 
-                if (error) throw error;
+                setUsers(prev => prev.map(u => u.id === userId ? {
+                    ...u,
+                    deletionScheduledFor: (result as { scheduledFor?: string })?.scheduledFor || new Date().toISOString()
+                } : u));
 
-                setUsers(prev => prev.map(u => u.id === userId ? { ...u, status: 'deactivated' } : u));
+                showToast(t.deletionScheduled, 'success');
             } else {
-                // Hard delete - remove user document AND related data to prevent "Invite Pending" ghosts
-
-                // 1. Delete Inquiries (leads)
-                await supabase.from('inquiries').delete().eq('email', deleteModal.user.email);
-
-                // 2. Delete Quotes (leads)
-                await supabase.from('quotes').delete().eq('client_email', deleteModal.user.email);
-
-                // 3. Delete Projects (owned)
-                // Warning: This deletes projects. Verify if client wants this. (Prompt says "remove data")
-                await supabase.from('active_projects').delete().eq('client_id', userId);
-
-                // 4. Delete Auth/User record
-                const { error } = await supabase
-                    .from('users')
-                    .delete()
-                    .eq('id', userId);
-
-                if (error) throw error;
+                await runDeletionAction(userId, 'hard', {
+                    reason: 'admin_action'
+                });
 
                 setUsers(prev => prev.filter(u => u.id !== userId));
+                showToast(language === 'es' ? 'Cliente eliminado' : 'Client deleted', 'success');
             }
-            showToast(language === 'es' ? 'Cliente eliminado' : 'Client deleted', 'success');
         } catch (error) {
             console.error('Error deleting user:', error);
             showToast(language === 'es' ? 'Error al eliminar' : 'Error deleting', 'error');
         } finally {
             setDeleteModal({ open: false, user: null, keepData: true });
+        }
+    };
+
+    const handleCancelDeletion = async (user: User) => {
+        try {
+            await runDeletionAction(user.id, 'cancel');
+            setUsers(prev => prev.map(u => u.id === user.id ? {
+                ...u,
+                deletionScheduledFor: null,
+                status: 'active'
+            } : u));
+            showToast(t.deletionCancelled, 'success');
+        } catch (error) {
+            console.error('Error cancelling deletion:', error);
+            showToast(language === 'es' ? 'Error al cancelar' : 'Error cancelling', 'error');
         }
     };
 
@@ -365,6 +386,7 @@ export default function ClientsPage() {
                                     const displayName = user.name || user.fullName || 'N/A';
                                     const isDeactivated = user.status === 'deactivated';
                                     const isPending = user.role === 'pending' as any;
+                                    const isScheduled = Boolean(user.deletionScheduledFor);
 
                                     return (
                                         <tr key={user.id} className={`hover:bg-gray-50 animate-fade-in ${isDeactivated ? 'opacity-50' : ''}`} style={{ animationDelay: `${index * 30}ms` }}>
@@ -383,9 +405,11 @@ export default function ClientsPage() {
                                             <td className="px-6 py-4">
                                                 <span className={`px-2 py-1 rounded-full text-xs ${isPending
                                                     ? 'bg-orange-100 text-orange-800'
-                                                    : (isDeactivated ? 'bg-red-100 text-red-800' : 'bg-green-100 text-green-800')
+                                                    : (isScheduled ? 'bg-yellow-100 text-yellow-800' : (isDeactivated ? 'bg-red-100 text-red-800' : 'bg-green-100 text-green-800'))
                                                     }`}>
-                                                    {isPending ? t.pending : (isDeactivated ? t.deactivated : t.active)}
+                                                    {isPending
+                                                        ? t.pending
+                                                        : (isScheduled ? t.scheduled : (isDeactivated ? t.deactivated : t.active))}
                                                 </span>
                                             </td>
                                             <td className="px-6 py-4 text-gray-600 text-sm">
@@ -415,13 +439,24 @@ export default function ClientsPage() {
                                                             </button>
 
                                                             {userRole === 'super_admin' ? (
-                                                                <button
-                                                                    onClick={(e) => { e.stopPropagation(); setDeleteModal({ open: true, user, keepData: true }); }}
-                                                                    className="p-2 text-red-600 hover:bg-red-50 rounded-lg"
-                                                                    title={t.delete}
-                                                                >
-                                                                    <i className="ri-delete-bin-line"></i>
-                                                                </button>
+                                                                <>
+                                                                    {isScheduled && (
+                                                                        <button
+                                                                            onClick={(e) => { e.stopPropagation(); handleCancelDeletion(user); }}
+                                                                            className="p-2 text-orange-600 hover:bg-orange-50 rounded-lg"
+                                                                            title={t.cancelDeletion}
+                                                                        >
+                                                                            <i className="ri-close-circle-line"></i>
+                                                                        </button>
+                                                                    )}
+                                                                    <button
+                                                                        onClick={(e) => { e.stopPropagation(); setDeleteModal({ open: true, user, keepData: true }); }}
+                                                                        className="p-2 text-red-600 hover:bg-red-50 rounded-lg"
+                                                                        title={t.delete}
+                                                                    >
+                                                                        <i className="ri-delete-bin-line"></i>
+                                                                    </button>
+                                                                </>
                                                             ) : (
                                                                 <button
                                                                     onClick={(e) => { e.stopPropagation(); setInquiryModal({ open: true, user, message: '' }); }}
