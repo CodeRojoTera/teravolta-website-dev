@@ -12,7 +12,7 @@ Fix existing issues and establish a solid foundation before automation. The road
 
 Decimal phases appear between their surrounding integers in numeric order.
 
-- [ ] **Phase 1: Foundation & Data Integrity** - Fix critical data issues, implement state machine for all services, schema fixes
+- [x] **Phase 1: Foundation & Data Integrity** - Fix critical data issues, implement state machine for all services, schema fixes
 - [ ] **Phase 2: Quote Submission & Wizard Unification** - Unify 4 wizards, service filtering, all service quote stages
 - [ ] **Phase 3: Shared Service Features** - Quote conversion framework, service-specific portal views, document filtering
 - [ ] **Phase 4: EE Inspection Workflow** - Payment tracking, technician inspection, panel hierarchy
@@ -44,11 +44,11 @@ Decimal phases appear between their surrounding integers in numeric order.
 **Plans**: 5 plans (re-planned 2026-01-30 based on database audit)
 
 Plans:
-- [ ] 01-01-PLAN.md — Soft delete infrastructure (users table columns, active_users view, deletion_audit_log)
+- [x] 01-01-PLAN.md — Soft delete infrastructure (users table columns, active_users view, deletion_audit_log)
 - [x] 01-02-PLAN.md — CASCADE constraints on all foreign keys (15+ constraints)
 - [x] 01-03-PLAN.md — Soft delete for documents table + cleanup legacy deletion_requests
 - [x] 01-04-PLAN.md — User deletion logic (schedule/soft/hard delete with audit)
-- [ ] 01-05-PLAN.md — State machine integration into project service and API
+- [x] 01-05-PLAN.md — State machine integration into project service and API
 
 **Note:** State machine already implemented (01-03-SUMMARY.md from previous execution). Plans 01-01, 01-02, 01-03 are Wave 1 (parallel). Plans 01-04, 01-05 are Wave 2 (depend on Wave 1).
 
@@ -268,7 +268,7 @@ Phases execute in numeric order: 1 -> 2 -> 3 -> 4 -> 5 -> 6 -> 7 -> (8 || 9) -> 
 
 | Phase | Plans Complete | Status | Completed |
 |-------|----------------|--------|-----------|
-| 1. Foundation & Data Integrity | 4/5 | In progress | - |
+| 1. Foundation & Data Integrity | 5/5 | Complete | 2026-02-01 |
 | 2. Quote Submission & Wizard Unification | 0/TBD | Not started | - |
 | 3. Shared Service Features | 0/TBD | Not started | - |
 | 4. EE Inspection Workflow | 0/TBD | Not started | - |
