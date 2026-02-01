@@ -65,7 +65,7 @@ Recent decisions affecting current work:
 
 ### Pending Todos
 
-None yet.
+- [2026-02-01]: Fix global TypeScript errors blocking `npx tsc --noEmit`
 
 ### Blockers/Concerns
 
