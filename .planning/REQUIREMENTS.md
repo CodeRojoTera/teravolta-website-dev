@@ -461,10 +461,10 @@ Standardize status displays, remove broken UI, implement state machine.
 
 Add missing tables, fix foreign keys, improve integrity.
 
-- [ ] **SCHEMA-01**: Add `documents` metadata table to database
-  - **Issue**: Storage works but no centralized document tracking table
-  - **Impact**: Can't query documents by project, no audit trail
-  - **Solution**: Create `documents` table with columns: id, entity_type, entity_id, category, filename, url, uploaded_by, uploaded_at
+- [ ] **SCHEMA-01**: Add soft delete support to existing `documents` table
+  - **Issue**: `documents` table exists but has no soft delete columns
+  - **Impact**: Can't recover documents, no deletion audit trail
+  - **Solution**: Add `deleted_at` and `deleted_by` columns (and indexes) to the existing `documents` table
 
 - [ ] **SCHEMA-02**: Add CASCADE ON DELETE to all user foreign keys
   - **Issue**: Foreign keys exist but no cascade behavior
