@@ -1,5 +1,6 @@
 import { addDays } from 'date-fns';
 import { supabaseAdmin } from '../supabase-admin';
+import { updateProjectStatus } from './project-service';
 import {
     DeletionReason,
     DeletionLogEntry,
@@ -63,21 +64,42 @@ export async function scheduleUserDeletion(userId: string, options: UserDeletion
             return { success: false, error: 'User not found or already deleted' };
         }
 
-        const { data: cancelledProjects, error: projectError } = await supabaseAdmin
+        const { data: activeProjects, error: projectError } = await supabaseAdmin
             .from('active_projects')
-            .update({ status: 'cancelled' })
+            .select('*')
             .eq('user_id', userId)
-            .not('status', 'in', '("completed","cancelled")')
-            .select('*');
+            .not('status', 'in', '("completed","cancelled")');
 
         if (projectError) throw projectError;
 
-        if (cancelledProjects && cancelledProjects.length > 0) {
-            for (const project of cancelledProjects) {
+        if (activeProjects && activeProjects.length > 0) {
+            const actorId = options.requestedBy ?? 'system';
+            const statusNotes = options.notes
+                ? `User deletion scheduled: ${options.notes}`
+                : 'User deletion scheduled';
+
+            for (const project of activeProjects) {
+                const statusResult = await updateProjectStatus(
+                    project.id,
+                    'cancelled',
+                    actorId,
+                    true,
+                    statusNotes
+                );
+
+                if (!statusResult.success) {
+                    throw new Error(
+                        statusResult.error || `Failed to cancel project ${project.id} during deletion scheduling`
+                    );
+                }
+
                 await logDeletion({
                     tableName: 'active_projects',
                     recordId: project.id,
-                    recordData: project,
+                    recordData: {
+                        ...project,
+                        status: 'cancelled'
+                    },
                     deletedBy: options.requestedBy,
                     deletionType: 'scheduled',
                     deletionReason: options.reason,
@@ -150,13 +172,36 @@ export async function executeSoftDelete(userId: string, options: UserDeletionOpt
             return { success: false, error: 'User not found or already deleted' };
         }
 
-        const { error: projectError } = await supabaseAdmin
+        const { data: activeProjects, error: projectError } = await supabaseAdmin
             .from('active_projects')
-            .update({ status: 'cancelled' })
+            .select('*')
             .eq('user_id', userId)
             .not('status', 'in', '("completed","cancelled")');
 
         if (projectError) throw projectError;
+
+        if (activeProjects && activeProjects.length > 0) {
+            const actorId = options.requestedBy ?? 'system';
+            const statusNotes = options.notes
+                ? `User soft delete executed: ${options.notes}`
+                : 'User soft delete executed';
+
+            for (const project of activeProjects) {
+                const statusResult = await updateProjectStatus(
+                    project.id,
+                    'cancelled',
+                    actorId,
+                    true,
+                    statusNotes
+                );
+
+                if (!statusResult.success) {
+                    throw new Error(
+                        statusResult.error || `Failed to cancel project ${project.id} during soft delete`
+                    );
+                }
+            }
+        }
 
         return { success: true, softDeleted: true };
     } catch (error: any) {
