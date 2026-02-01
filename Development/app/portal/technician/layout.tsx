@@ -21,7 +21,7 @@ export default function TechnicianLayout({ children }: { children: React.ReactNo
             try {
                 // Fetch from Supabase 'users' table
                 const { data, error } = await supabase
-                    .from('users')
+                    .from('active_users')
                     .select('full_name, email')
                     .eq('id', user.id)
                     .single();

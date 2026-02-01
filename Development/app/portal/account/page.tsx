@@ -50,7 +50,7 @@ export default function AccountPage() {
         setIsLoadingData(true);
         try {
           const { data, error } = await supabase
-            .from('users')
+            .from('active_users')
             .select('*')
             .eq('id', user.id)
             .single();

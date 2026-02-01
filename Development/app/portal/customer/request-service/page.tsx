@@ -69,7 +69,7 @@ export default function RequestServicePage() {
             if (!user) return;
             try {
                 const { data, error } = await supabase
-                    .from('users')
+                    .from('active_users')
                     .select('*')
                     .eq('id', user.id)
                     .single();

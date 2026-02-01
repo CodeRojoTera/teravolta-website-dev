@@ -45,7 +45,7 @@ export default function LoginPage() {
 
       // Check role to redirect correctly
       const { data: profile } = await supabase
-        .from('users')
+        .from('active_users')
         .select('role')
         .eq('id', user?.id)
         .maybeSingle();
