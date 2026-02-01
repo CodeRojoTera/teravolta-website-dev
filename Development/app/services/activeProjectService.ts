@@ -139,6 +139,46 @@ export const ActiveProjectService = {
     },
 
     /**
+     * Update project status via admin API (state machine enforced)
+     */
+    updateStatusAdmin: async (projectId: string, status: ProjectStatus, notes?: string) => {
+        const response = await fetch(`/api/admin/projects/${projectId}/status`, {
+            method: 'PATCH',
+            headers: { 'Content-Type': 'application/json' },
+            body: JSON.stringify({ status, notes })
+        });
+
+        const payload = await response.json();
+        if (!response.ok) {
+            throw new Error(payload?.error || 'Failed to update project status');
+        }
+
+        if (payload?.warning) {
+            console.warn(payload.warning);
+        }
+
+        return payload;
+    },
+
+    /**
+     * Update project status via customer API (state machine enforced)
+     */
+    updateStatusCustomer: async (projectId: string, status: ProjectStatus, notes?: string) => {
+        const response = await fetch(`/api/projects/${projectId}/status`, {
+            method: 'PATCH',
+            headers: { 'Content-Type': 'application/json' },
+            body: JSON.stringify({ status, notes })
+        });
+
+        const payload = await response.json();
+        if (!response.ok) {
+            throw new Error(payload?.error || 'Failed to update project status');
+        }
+
+        return payload;
+    },
+
+    /**
      * Add an update/note to a project (Simulated via JSON array or subcollection replacement)
      * For now, we'll assume 'updates' is a JSONB column or we create a separate table.
      * Given the schema, we likely have an 'updates' table or we just append to a JSON field.
@@ -181,12 +221,13 @@ export const ActiveProjectService = {
             const { error } = await supabase
                 .from(TABLE_NAME)
                 .update({
-                    assigned_to: technicianIds,
-                    status: 'pending_installation' // Auto-update status logic if needed
+                    assigned_to: technicianIds
                 })
                 .eq('id', projectId);
 
             if (error) throw error;
+
+            await ActiveProjectService.updateStatusAdmin(projectId, 'pending_installation', 'Technician assigned');
 
             // Notify each assigned technician
             for (const techId of technicianIds) {

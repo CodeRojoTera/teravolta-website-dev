@@ -1,5 +1,6 @@
 import { NextResponse } from 'next/server';
 import { supabaseAdmin } from '@/lib/supabase-admin';
+import { updateProjectStatus } from '@/lib/services/project-service';
 
 export async function POST(request: Request) {
     try {
@@ -56,11 +57,7 @@ export async function POST(request: Request) {
         if (candidates.length === 0) {
             console.warn('No technicians available for selected slot.');
 
-            // Update Project to Urgent
-            await supabaseAdmin
-                .from('active_projects')
-                .update({ status: 'urgent_reschedule' })
-                .eq('id', projectId);
+            await updateProjectStatus(projectId, 'urgent_reschedule', 'system', true, 'No technicians available');
 
             return NextResponse.json({ assigned: false, reason: 'No slots available' });
         }
@@ -94,11 +91,11 @@ export async function POST(request: Request) {
 
         if (createError) throw createError;
 
-        // 5. Update Project
+        await updateProjectStatus(projectId, 'pending_installation', 'system', true, 'Auto-assigned technician');
+
         const { error: updateError } = await supabaseAdmin
             .from('active_projects')
             .update({
-                status: 'pending_installation',
                 assigned_to: [assignedTech.id],
                 appointment_id: appointment.id,
                 scheduled_date: date,

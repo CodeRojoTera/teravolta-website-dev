@@ -92,6 +92,14 @@ export default function CustomerProjectDetail() {
         fetchProject();
     }, [id, user, router]);
 
+    const refreshProject = async (projectId: string) => {
+        const updated = await ActiveProjectService.getById(projectId);
+        if (updated) {
+            setProject(updated);
+        }
+        return updated;
+    };
+
     // Fetch available slots when date changes
     useEffect(() => {
         const fetchSlots = async () => {
@@ -121,10 +129,9 @@ export default function CustomerProjectDetail() {
 
             await ActiveProjectService.update(project.id!, {
                 scheduledDate: schedulingDate,
-                scheduledTime: selectedSlot,
-                status: nextStatus,
-                progress: 100 // Project is fully set up
+                scheduledTime: selectedSlot
             });
+            await ActiveProjectService.updateStatusCustomer(project.id!, nextStatus, 'Visit scheduled');
 
             // Add timeline entry
             await ActiveProjectService.addTimelineEntry(project.id!, {
@@ -135,7 +142,10 @@ export default function CustomerProjectDetail() {
                 timestamp: new Date().toISOString()
             });
 
-            setProject({ ...project, scheduledDate: schedulingDate, scheduledTime: selectedSlot, status: nextStatus });
+            const refreshed = await refreshProject(project.id!);
+            if (!refreshed) {
+                setProject({ ...project, scheduledDate: schedulingDate, scheduledTime: selectedSlot, status: nextStatus });
+            }
             showToast(
                 language === 'es' ? '¡Visita programada exitosamente!' : 'Visit scheduled successfully!',
                 'success'
@@ -418,11 +428,13 @@ export default function CustomerProjectDetail() {
                                     // Simulate Payment
                                     const nextStatus = 'pending_documents';
                                     await ActiveProjectService.update(project.id!, {
-                                        status: nextStatus,
-                                        paymentStatus: 'paid',
-                                        progress: 25
+                                        paymentStatus: 'paid'
                                     });
-                                    setProject({ ...project, status: nextStatus, paymentStatus: 'paid', progress: 25 });
+                                    await ActiveProjectService.updateStatusCustomer(project.id!, nextStatus, 'Payment received');
+                                    const refreshed = await refreshProject(project.id!);
+                                    if (!refreshed) {
+                                        setProject({ ...project, status: nextStatus, paymentStatus: 'paid' });
+                                    }
                                     showToast(language === 'es' ? 'Pago recibido' : 'Payment received', 'success');
                                 }}
                                 className="px-8 py-4 bg-[#004a90] hover:bg-[#194271] text-white text-lg font-black rounded-xl shadow-lg transition-all flex items-center gap-3"
@@ -545,11 +557,11 @@ export default function CustomerProjectDetail() {
                         <div className="flex justify-end">
                             <button
                                 onClick={async () => {
-                                    await ActiveProjectService.update(project.id!, {
-                                        status: 'pending_scheduling',
-                                        progress: 50
-                                    });
-                                    setProject({ ...project, status: 'pending_scheduling', progress: 50 });
+                                    await ActiveProjectService.updateStatusCustomer(project.id!, 'pending_scheduling', 'Documents submitted');
+                                    const refreshed = await refreshProject(project.id!);
+                                    if (!refreshed) {
+                                        setProject({ ...project, status: 'pending_scheduling' });
+                                    }
                                     showToast(
                                         language === 'es' ? 'Documentos enviados. ¡Agenda tu visita!' : 'Documents sent. Schedule your visit!',
                                         'success'

@@ -30,6 +30,9 @@ export default function ProjectDetailPage() {
     const [updating, setUpdating] = useState(false);
     const [newNote, setNewNote] = useState('');
     const [progressValue, setProgressValue] = useState(0);
+    const [statusOptions, setStatusOptions] = useState<Array<{ status: ProjectStatus; label: string; color: string }>>([]);
+    const [statusWarning, setStatusWarning] = useState<string | null>(null);
+    const [statusLoading, setStatusLoading] = useState(false);
 
     const [assignedTechnician, setAssignedTechnician] = useState<any>(null);
     const [activeTab, setActiveTab] = useState<'overview' | 'inspection'>('overview');
@@ -160,19 +163,71 @@ export default function ProjectDetailPage() {
         fetchProject();
     }, [projectId, showToast]);
 
+    const fetchStatusOptions = async () => {
+        if (!projectId) return;
+        setStatusLoading(true);
+        try {
+            const response = await fetch(`/api/admin/projects/${projectId}/status?lang=${language}`);
+            const payload = await response.json();
+
+            if (!response.ok) {
+                throw new Error(payload?.error || 'Failed to load status options');
+            }
+
+            setStatusOptions(payload.validStatuses || []);
+
+            if (project && payload.currentStatus && project.status !== payload.currentStatus) {
+                setProject({ ...project, status: payload.currentStatus });
+            }
+        } catch (err) {
+            console.error(err);
+            showToast('Error loading status options', 'error');
+        } finally {
+            setStatusLoading(false);
+        }
+    };
+
+    useEffect(() => {
+        fetchStatusOptions();
+    }, [projectId, language]);
+
     const handleStatusChange = async (newStatus: ProjectStatus) => {
         if (!project || updating) return;
         setUpdating(true);
+        setStatusWarning(null);
         try {
-            await ActiveProjectService.update(project.id!, { status: newStatus });
+            const response = await fetch(`/api/admin/projects/${project.id}/status`, {
+                method: 'PATCH',
+                headers: { 'Content-Type': 'application/json' },
+                body: JSON.stringify({ status: newStatus })
+            });
+
+            const payload = await response.json();
+
+            if (!response.ok) {
+                throw new Error(payload?.error || 'Failed to update status');
+            }
+
+            if (payload.warning) {
+                setStatusWarning(payload.warning);
+                showToast(payload.warning, 'warning');
+            }
+
             const note = {
                 id: crypto.randomUUID(),
                 adminName: user?.email || 'Admin',
-                description: `Status changed to ${newStatus}`,
+                description: `Status changed to ${payload.newStatus || newStatus}`,
                 timestamp: new Date().toISOString()
             };
             await ActiveProjectService.addTimelineEntry(project.id!, note);
-            setProject({ ...project, status: newStatus, timeline: [note, ...(project.timeline || [])] });
+            const refreshed = await ActiveProjectService.getById(project.id!);
+            if (refreshed) {
+                setProject({ ...refreshed, timeline: [note, ...(refreshed.timeline || [])] });
+                setProgressValue(refreshed.progress || 0);
+            } else {
+                setProject({ ...project, status: newStatus, timeline: [note, ...(project.timeline || [])] });
+            }
+            await fetchStatusOptions();
             showToast('Status updated', 'success');
         } catch (err) {
             console.error(err);
@@ -301,9 +356,22 @@ export default function ProjectDetailPage() {
                 });
             }
             await ActiveProjectService.update(project.id!, {
-                assignedTo: [tech.id],
-                status: 'pending_installation'
+                assignedTo: [tech.id]
             });
+
+            const statusResponse = await fetch(`/api/admin/projects/${project.id}/status`, {
+                method: 'PATCH',
+                headers: { 'Content-Type': 'application/json' },
+                body: JSON.stringify({ status: 'pending_installation', notes: 'Technician assigned' })
+            });
+            const statusPayload = await statusResponse.json();
+            if (!statusResponse.ok) {
+                throw new Error(statusPayload?.error || 'Failed to update status');
+            }
+            if (statusPayload.warning) {
+                setStatusWarning(statusPayload.warning);
+                showToast(statusPayload.warning, 'warning');
+            }
             showToast('Technician assigned', 'success');
             window.location.reload();
         } catch (err) {
@@ -391,6 +459,7 @@ export default function ProjectDetailPage() {
                                     handleStatusChange(e.target.value as ProjectStatus);
                                 }
                             }}
+                            disabled={statusLoading || updating}
                             className={`appearance-none pl-4 pr-8 py-2 text-sm rounded-full font-bold focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-[#004a90] cursor-pointer
                                 ${project.status === 'active' ? 'bg-blue-100 text-blue-800' :
                                     project.status === 'completed' ? 'bg-green-100 text-green-800' :
@@ -398,14 +467,24 @@ export default function ProjectDetailPage() {
                                             project.status === 'paused' ? 'bg-gray-100 text-gray-800' :
                                                 'bg-gray-100 text-gray-800'}`}
                         >
-                            <option value="active">{t.statusActive}</option>
-                            <option value="paused">{t.statusPaused}</option>
-                            <option value="completed">{t.statusCompleted}</option>
-                            <option value="cancelled">{t.statusCancelled}</option>
-                            <option value="pending_onboarding" disabled>Pending Onboarding</option>
-                            <option value="pending_scheduling" disabled>Pending Scheduling</option>
-                            <option value="pending_installation" disabled>Pending Installation</option>
-                            <option value="in_review" disabled>In Review</option>
+                            <option value={project.status} disabled>
+                                Current: {project.status}
+                            </option>
+                            {statusLoading && (
+                                <option value="" disabled>
+                                    Loading transitions...
+                                </option>
+                            )}
+                            {!statusLoading && statusOptions.length === 0 && (
+                                <option value="" disabled>
+                                    No valid transitions
+                                </option>
+                            )}
+                            {statusOptions.map(option => (
+                                <option key={option.status} value={option.status}>
+                                    {option.label}
+                                </option>
+                            ))}
                         </select>
                         <div className="pointer-events-none absolute inset-y-0 right-0 flex items-center px-2 text-gray-700">
                             <i className="ri-arrow-down-s-line"></i>
@@ -413,6 +492,13 @@ export default function ProjectDetailPage() {
                     </div>
                 </div>
             </div>
+
+            {statusWarning && (
+                <div className="bg-yellow-50 border border-yellow-200 text-yellow-800 px-4 py-3 rounded-lg text-sm">
+                    <strong className="mr-2">Admin override:</strong>
+                    {statusWarning}
+                </div>
+            )}
 
             {(project.status === 'pending_onboarding' || project.status === 'pending_scheduling') && (
                 <div className="bg-orange-50 p-6 rounded-xl border border-orange-100 flex justify-between items-center">
