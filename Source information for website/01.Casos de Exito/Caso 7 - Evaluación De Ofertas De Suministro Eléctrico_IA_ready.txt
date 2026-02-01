@@ -1,0 +1,30 @@
+Caso de Éxito – Evaluación de Ofertas de Suministro Eléctrico
+Categoría: Consultoría Estratégica
+Tipo de servicio: Selección de proveedor de energía para Gran Cliente Tipo de cliente: Operador de telecomunicaciones multisede
+Ubicación: País de Centroamérica
+
+Desafío
+El cliente buscaba pasar a la modalidad de Gran Cliente para comprar energía en el mercado mayorista y reducir su factura. Necesitaba:
+Invitar a proveedores calificados y recopilar sus propuestas de suministro para mediano y largo plazo.
+Comparar costos totales de energía (precio base + mercado) frente a la tarifa regulada.
+Cuantificar ahorros y riesgos bajo distintos escenarios tarifarios.
+
+Solución TeraVolta
+Convocatoria y recepción de ofertas. Cuatro proveedores preseleccionados presentaron propuestas competitivas de suministro energético a mediano y largo plazo.
+Modelo de costo total. Integración de precio base, cargos de mercado y proyección de consumo para comparar contra la tarifa eléctrica regulada.
+Análisis multi‑horizonte. Evaluación de ahorro en escenarios de mediano y largo plazo; sensibilidad a cambios en la estructura tarifaria.
+Ranking y recomendación. Identificación de la oferta con menor costo y documentación de condiciones contractuales clave.
+
+Resultados
+Volumen estimado de energía contratada (año 1): 28 GWh
+Ahorro real logrado: 20.5 % vs. tarifa regulada
+Oferta ganadora ≈ 2 % más barata que la segunda mejor y hasta 34 % frente a la menos competitiva.
+Informe entregado al comité directivo; el proyecto avanzó a etapa de negociación contractual con el proveedor recomendado.
+
+Valor aportado por TeraVolta
+Metodología de comparación “precio completo” que incluye riesgos de indexación y cargos de mercado.
+Cuantificación transparente de ahorros en múltiples escenarios, facilitando decisión informada.
+Aceleración del cronograma de contratación sin comprometer rigor analítico.
+
+¿Buscas reducir tu costo de energía como Gran Cliente?
+Contáctanos y descubre cómo nuestras evaluaciones objetivas te ayudan a elegir la mejor oferta.

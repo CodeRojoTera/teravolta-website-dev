@@ -1,0 +1,34 @@
+rules_version = '2';
+service firebase.storage {
+  match /b/{bucket}/o {
+    
+    // Helper to check if user is authenticated
+    function isSignedIn() {
+      return request.auth != null;
+    }
+
+    // Helper to check if user is admin
+    function isAdmin() {
+      return isSignedIn() && 
+             firestore.exists(/databases/(default)/documents/users/$(request.auth.uid)) &&
+             firestore.get(/databases/(default)/documents/users/$(request.auth.uid)).data.role in ['admin', 'super_admin'];
+    }
+
+    // Appointment Evidence Images
+    // /appointments/{appointmentId}/{fileName}
+    match /appointments/{appointmentId}/{fileName} {
+      // Techs can read/write if they are signed in (we rely on app logic + firestore validation for strict ownership, 
+      // strict storage rules are harder without custom token claims or extra lookups)
+      // For now, allow any signed in user to upload to appointments folder for simplicity in this phase, 
+      // but we can tighten this by checking if the user is the assigned tech via firestore if needed.
+      // Given limitations, basic auth check is a good start.
+      allow read: if isSignedIn();
+      allow write: if isSignedIn() && request.resource.contentType.matches('image/.*');
+    }
+
+    // Default deny
+    match /{allPaths=**} {
+      allow read, write: if false;
+    }
+  }
+}

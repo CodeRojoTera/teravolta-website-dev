@@ -1,0 +1,8 @@
+
+    <svg xmlns="http://www.w3.org/2000/svg" width="200" height="200" viewBox="0 0 100 100">
+      <g fill="#004a90" stroke="#004a90">
+        <polygon points='50,10 90,80 10,80' />
+      </g>
+      <text x="50%" y="95%" font-family="Arial" font-size="12" text-anchor="middle" fill="#004a90">THREATS</text>
+    </svg>
+    
