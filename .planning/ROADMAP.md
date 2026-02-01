@@ -66,10 +66,15 @@ Plans:
   7. Consulting wizard hides efficiency fields (property_size, device_option, bills) and shows timeline, budget, project_description
   8. Advocacy wizard hides efficiency and consulting fields, shows claim_type, distributor_company, claim_amount, incident_date, damage_description
   9. Service-specific required field validation enforces timeline/budget for consulting, claim data for advocacy
-**Plans**: TBD
+**Plans**: 6 plans in 4 waves
 
 Plans:
-- [ ] TBD during phase planning
+- [ ] 02-01-PLAN.md — Zod schema foundation + shared constants
+- [ ] 02-02-PLAN.md — Shared form field components (PropertyTypeSelector, service-specific fields)
+- [ ] 02-03-PLAN.md — Public quote form RHF/Zod refactor
+- [ ] 02-04-PLAN.md — Customer request wizard RHF/Zod refactor
+- [ ] 02-05-PLAN.md — Admin manual project wizard updates
+- [ ] 02-06-PLAN.md — DocumentManager service filtering + verification
 
 ### Phase 3: Shared Service Features
 **Goal**: Reusable patterns for quote-to-project conversion, service-specific portal views, and document filtering work for all three services
