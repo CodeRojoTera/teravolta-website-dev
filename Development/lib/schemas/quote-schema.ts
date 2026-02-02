@@ -16,7 +16,13 @@
  */
 
 import { z } from 'zod';
-import { PROPERTY_TYPES } from './constants';
+import { 
+  PROPERTY_TYPES, 
+  INSPECTION_REQUIRED_TYPES, 
+  SERVICE_DOCUMENT_CATEGORIES,
+  type PropertyType,
+  type ServiceType,
+} from './constants';
 
 // ============================================================================
 // Base Quote Schema (Common Fields)
@@ -146,3 +152,64 @@ export type QuoteFormData = z.infer<typeof quoteSchema>;
 export type EfficiencyQuoteData = z.infer<typeof efficiencyQuoteSchema>;
 export type ConsultingQuoteData = z.infer<typeof consultingQuoteSchema>;
 export type AdvocacyQuoteData = z.infer<typeof advocacyQuoteSchema>;
+
+// ============================================================================
+// Helper Functions
+// ============================================================================
+
+/**
+ * Determines if inspection is required for efficiency service.
+ * 
+ * Per CONTEXT.md Decision 1:
+ * - hotel, building, industrial = REQUIRED (commercial-scale)
+ * - residential, apartment, small-business = OPTIONAL
+ * 
+ * Only applies to efficiency service. Other services don't have inspections.
+ * 
+ * @param propertyType - The type of property
+ * @returns true if inspection is required, false if optional
+ * 
+ * @example
+ * isInspectionRequired('hotel') // true
+ * isInspectionRequired('residential') // false
+ */
+export function isInspectionRequired(propertyType: PropertyType): boolean {
+  return INSPECTION_REQUIRED_TYPES.includes(propertyType);
+}
+
+/**
+ * Returns allowed document categories for a service type.
+ * 
+ * Per SVC-01: Filter categories to prevent confusion.
+ * Each service has specific document types that are relevant:
+ * - efficiency: bills, meter readings, site plans
+ * - consulting: contracts, reports, deliverables
+ * - advocacy: adds claim evidence and regulatory filings
+ * 
+ * @param service - The service type
+ * @returns Array of allowed document category strings
+ * 
+ * @example
+ * getDocumentCategories('efficiency') // ['bill', 'invoice', 'meter_reading', ...]
+ * getDocumentCategories('consulting') // ['contract', 'invoice', 'report', ...]
+ */
+export function getDocumentCategories(service: ServiceType): readonly string[] {
+  return SERVICE_DOCUMENT_CATEGORIES[service];
+}
+
+/**
+ * Determines if bill upload should be shown for a service.
+ * 
+ * Bill upload only shows for efficiency service, not consulting/advocacy.
+ * Per EE-01 and success criteria #3.
+ * 
+ * @param service - The service type
+ * @returns true if bill upload should be shown, false otherwise
+ * 
+ * @example
+ * shouldShowBillUpload('efficiency') // true
+ * shouldShowBillUpload('consulting') // false
+ */
+export function shouldShowBillUpload(service: ServiceType): boolean {
+  return service === 'efficiency';
+}
