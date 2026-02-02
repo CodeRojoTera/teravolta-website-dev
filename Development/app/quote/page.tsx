@@ -2,6 +2,8 @@
 
 import { useState, useEffect, useRef, Suspense } from 'react';
 import { useRouter, useSearchParams } from 'next/navigation';
+import { useForm } from 'react-hook-form';
+import { zodResolver } from '@hookform/resolvers/zod';
 import Link from 'next/link';
 import Header from '../../components/Header';
 import Footer from '../../components/Footer';
@@ -21,6 +23,9 @@ import examples from 'libphonenumber-js/examples.mobile.json';
 import type { Country } from 'react-phone-number-input';
 import enLabels from 'react-phone-number-input/locale/en.json';
 import esLabels from 'react-phone-number-input/locale/es.json';
+import { quoteSchema, QuoteFormData, shouldShowBillUpload, isInspectionRequired } from '@/lib/schemas/quote-schema';
+import { PropertyTypeSelector } from '@/components/wizards/shared/PropertyTypeSelector';
+import { PropertyType } from '@/lib/schemas/constants';
 
 const PhoneInput = dynamic(() => import('react-phone-number-input'), {
   ssr: false,
@@ -30,29 +35,6 @@ interface FileUpload {
   file: File;
   id: string;
   preview?: string;
-}
-
-interface FormData {
-  service: string;
-  propertyType: string;
-  propertySize: string;
-  // currentBill removed
-  fullName: string;
-  email: string;
-  phone: string;
-  company: string;
-  operatingHours: string; // New field
-  bills: FileUpload[];
-  // deviceMode removed
-  // connectivity removed
-  message: string;
-  address: string;
-  city: string;
-  state: string;
-  zipCode: string;
-  renewableBudget: string;
-  bookingDate: string; // New field
-  bookingTime: string; // New field
 }
 
 export default function QuotePage() {
@@ -81,25 +63,46 @@ function QuotePageContent() {
   const [isClient, setIsClient] = useState(false);
   const [currentStep, setCurrentStep] = useState(1);
   const [selectedService, setSelectedService] = useState('');
-  const [formData, setFormData] = useState<FormData>({
-    service: '',
-    propertyType: '',
-    propertySize: '',
-    fullName: '',
-    email: '',
-    phone: '',
-    company: '',
-    operatingHours: '',
-    bills: [],
-    message: '',
-    address: '',
-    city: '',
-    state: '',
-    zipCode: '',
-    renewableBudget: '',
-    bookingDate: '',
-    bookingTime: ''
+  
+  // React Hook Form setup
+  const {
+    register,
+    handleSubmit,
+    watch,
+    setValue,
+    trigger,
+    formState: { errors, isValid },
+  } = useForm<QuoteFormData>({
+    resolver: zodResolver(quoteSchema),
+    mode: 'onBlur',
+    defaultValues: {
+      service: 'efficiency',
+      clientName: '',
+      clientEmail: '',
+      clientPhone: '',
+      clientCompany: '',
+      address: '',
+      city: '',
+      state: '',
+      zipCode: '',
+      propertyType: undefined,
+      propertySize: '',
+      operatingHours: '',
+      bookingDate: '',
+      bookingTime: '',
+      message: '',
+      inspectionRequested: false,
+    },
   });
+
+  // Watch values for conditional rendering
+  const service = watch('service');
+  const propertyType = watch('propertyType');
+  const clientPhone = watch('clientPhone');
+  const clientEmail = watch('clientEmail');
+
+  // Separate state for file uploads (not part of Zod schema)
+  const [bills, setBills] = useState<FileUpload[]>([]);
   const [isDragOver, setIsDragOver] = useState(false);
   const [uploadError, setUploadError] = useState('');
   const [country, setCountry] = useState<Country>('PA');
@@ -109,7 +112,6 @@ function QuotePageContent() {
 
   const [isSubmitting, setIsSubmitting] = useState(false);
   const { showToast } = useToast();
-
 
   const translations = {
     en: {
@@ -133,14 +135,7 @@ function QuotePageContent() {
       specializedServiceTitle: 'Need another more specialized service?',
       specializedServiceDesc: 'Contact us and we will assist you.',
       contactUsBtn: 'Contact Us',
-      propertyTypeLabel: 'Property type *',
-      residential: 'Residential',
-      apartment: 'Apartment',
-      hotel: 'Hotel', // New
-      building: 'Building / Common Areas', // New
-      industry: 'Industry', // New
-      smallBusiness: 'Business',
-      propertySizeLabel: 'Property size (square feet) *',
+      propertySizeLabel: 'Property size (square feet)',
       selectSize: 'Select size',
       fullNameLabel: 'Full name *',
       fullNamePlaceholder: 'Your name',
@@ -150,15 +145,15 @@ function QuotePageContent() {
       phonePlaceholder: 'Your phone number',
       companyLabel: 'Company',
       companyPlaceholder: 'Company name',
-      operatingHoursLabel: 'Operating Hours', // New
+      operatingHoursLabel: 'Operating Hours',
       operatingHoursPlaceholder: 'e.g., 9:00 AM - 5:00 PM',
       addressLabel: 'Address *',
       addressPlaceholder: 'Your address',
-      cityLabel: 'City *',
+      cityLabel: 'City',
       cityPlaceholder: 'Your city',
-      stateLabel: 'State/Province *',
+      stateLabel: 'State/Province',
       statePlaceholder: 'Your state',
-      zipCodeLabel: 'ZIP Code *',
+      zipCodeLabel: 'ZIP Code',
       zipCodePlaceholder: 'ZIP code',
       messageLabel: 'Additional Comments (optional)',
       messagePlaceholder: 'Tell us more about your specific needs...',
@@ -198,14 +193,7 @@ function QuotePageContent() {
       specializedServiceTitle: '¿Requieres algún otro servicio más especializado?',
       specializedServiceDesc: 'Contáctanos y te atenderemos.',
       contactUsBtn: 'Contáctanos',
-      propertyTypeLabel: 'Tipo de propiedad *',
-      residential: 'Residencial',
-      apartment: 'Apartamento',
-      hotel: 'Hotel', // New
-      building: 'Edificio / Áreas Comunes', // New
-      industry: 'Industria', // New
-      smallBusiness: 'Comercio',
-      propertySizeLabel: 'Tamaño de la propiedad (pies cuadrados) *',
+      propertySizeLabel: 'Tamaño de la propiedad (pies cuadrados)',
       selectSize: 'Selecciona el tamaño',
       fullNameLabel: 'Nombre completo *',
       fullNamePlaceholder: 'Tu nombre',
@@ -215,15 +203,15 @@ function QuotePageContent() {
       phonePlaceholder: 'Tu número de teléfono',
       companyLabel: 'Empresa',
       companyPlaceholder: 'Nombre de la empresa',
-      operatingHoursLabel: 'Horario de Operación', // New
+      operatingHoursLabel: 'Horario de Operación',
       operatingHoursPlaceholder: 'ej. 9:00 AM - 5:00 PM',
       addressLabel: 'Dirección *',
       addressPlaceholder: 'Tu dirección',
-      cityLabel: 'Ciudad *',
+      cityLabel: 'Ciudad',
       cityPlaceholder: 'Tu ciudad',
-      stateLabel: 'Estado/Provincia *',
+      stateLabel: 'Estado/Provincia',
       statePlaceholder: 'Tu estado',
-      zipCodeLabel: 'Código Postal *',
+      zipCodeLabel: 'Código Postal',
       zipCodePlaceholder: 'Código postal',
       messageLabel: 'Comentarios Adicionales (opcional)',
       messagePlaceholder: 'Cuéntanos más sobre tus necesidades específicas...',
@@ -319,29 +307,10 @@ function QuotePageContent() {
     }
   }, [searchParams, isClient]);
 
-
-  const handleInputChange = (e: React.ChangeEvent<HTMLInputElement | HTMLTextAreaElement | HTMLSelectElement>) => {
-    const { name, value } = e.target;
-    setFormData((prev) => ({ ...prev, [name]: value }));
-
-    if (name === 'email') {
-      const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
-      if (value && !emailRegex.test(value)) {
-        setFieldErrors(prev => ({ ...prev, email: language === 'es' ? 'Email inválido' : 'Invalid email' }));
-      } else {
-        setFieldErrors(prev => {
-          const newErrors = { ...prev };
-          delete newErrors.email;
-          return newErrors;
-        });
-      }
-    }
-  };
-
   const handlePhoneChange = (value: string | undefined) => {
     if (!isMountedRef.current || !isClient) return;
     if (!value) {
-      setFormData((prev) => ({ ...prev, phone: '' }));
+      setValue('clientPhone', '');
       return;
     }
     if (value && isValidPhoneNumber(value)) {
@@ -353,23 +322,18 @@ function QuotePageContent() {
     } else if (value) {
       setFieldErrors(prev => ({ ...prev, phone: language === 'es' ? 'Número inválido' : 'Invalid number' }));
     }
-    updateFormField('phone', value);
+    setValue('clientPhone', value, { shouldValidate: true });
   };
 
-  const updateFormField = (name: keyof FormData, value: string) => {
+  const handleServiceSelect = (serviceType: string) => {
     if (!isMountedRef.current || !isClient) return;
-    setFormData((prev) => ({ ...prev, [name]: value }));
-  };
-
-  const handleServiceSelect = (service: string) => {
-    if (!isMountedRef.current || !isClient) return;
-    setSelectedService(service);
-    setFormData((prev) => ({ ...prev, service: service }));
+    setSelectedService(serviceType);
+    setValue('service', serviceType as any);
 
     requestAnimationFrame(() => {
       if (!isMountedRef.current || !isClient) return;
-      if (service === 'consulting' || service === 'advocacy') {
-        router.push(`/inquiry?service=${service}`);
+      if (serviceType === 'consulting' || serviceType === 'advocacy') {
+        router.push(`/inquiry?service=${serviceType}`);
       } else {
         router.push('/quote?step=2');
       }
@@ -412,14 +376,14 @@ function QuotePageContent() {
     if (hasInvalidSize) showToast(language === 'es' ? 'Máximo 5MB' : 'Max 5MB', 'error');
 
     if (validFiles.length > 0) {
-      setFormData((prev) => ({ ...prev, bills: [...prev.bills, ...validFiles].slice(0, 12) }));
+      setBills((prev) => [...prev, ...validFiles].slice(0, 12));
       showToast(language === 'es' ? 'Archivos agregados' : 'Files added', 'success');
     }
   };
 
   const removeFile = (id: string) => {
     if (!isMountedRef.current || !isClient) return;
-    setFormData((prev) => ({ ...prev, bills: prev.bills.filter((bill) => bill.id !== id) }));
+    setBills((prev) => prev.filter((bill) => bill.id !== id));
   };
 
   const handleDrop = (e: React.DragEvent) => {
@@ -442,41 +406,45 @@ function QuotePageContent() {
   };
 
   const isCommercial = () => {
-    const type = formData.propertyType;
-    return ['small-business', 'office', 'industrial', 'hotel', 'building'].includes(type);
+    return propertyType && isInspectionRequired(propertyType);
   };
 
-  const canProceedToBills = () => {
-    const basicValid = formData.propertyType && formData.propertySize && formData.fullName && formData.email && formData.phone && formData.address && formData.city && formData.state && formData.zipCode && !fieldErrors.email && !fieldErrors.phone;
-    if (isCommercial()) {
-      return basicValid && formData.company;
-    }
-    return basicValid;
+  const canProceedToBills = async () => {
+    const fieldsToValidate = [
+      'propertyType',
+      'clientName',
+      'clientEmail',
+      'clientPhone',
+      'address',
+    ] as const;
+    return await trigger(fieldsToValidate as any);
   };
 
   const canProceedToBooking = () => {
-    return formData.bills.length > 0;
+    return bills.length > 0;
   };
 
-  const canSubmitForm = () => {
-    return formData.bookingDate && formData.bookingTime;
+  const canSubmitForm = async () => {
+    const fieldsToValidate = ['bookingDate', 'bookingTime'] as const;
+    return await trigger(fieldsToValidate as any);
   };
 
-  const handleFormSubmit = (e: React.FormEvent) => {
+  const handleFormSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
-    if (!canProceedToBills() || !isMountedRef.current || !isClient) return;
-    router.push('/quote?step=3');
+    const isValid = await canProceedToBills();
+    if (isValid && isMountedRef.current && isClient) {
+      router.push('/quote?step=3');
+    }
   };
 
   const handleBillsContinue = (e: React.FormEvent) => {
     e.preventDefault();
     if (!canProceedToBooking()) return;
     router.push('/quote?step=4');
-  }
+  };
 
-  const handleSubmit = async (e: React.FormEvent) => {
-    e.preventDefault();
-    if (!canSubmitForm() || isSubmitting || !isMountedRef.current || !isClient) return;
+  const onFinalSubmit = async (data: QuoteFormData) => {
+    if (isSubmitting || !isMountedRef.current || !isClient) return;
 
     setIsSubmitting(true);
 
@@ -485,8 +453,8 @@ function QuotePageContent() {
       const uploadedBills = [];
 
       // Upload files
-      if (formData.bills && formData.bills.length > 0) {
-        for (const billFile of formData.bills) {
+      if (bills && bills.length > 0) {
+        for (const billFile of bills) {
           setUploadProgress((prev) => ({ ...prev, [billFile.id]: 10 }));
           const result = await uploadDocument({
             file: billFile.file,
@@ -508,33 +476,39 @@ function QuotePageContent() {
         }
       }
 
+      // Add inspection request to message if applicable
+      let finalMessage = data.message || '';
+      if ((data as any).inspectionRequested) {
+        finalMessage += (finalMessage ? '\n\n' : '') + 'Inspection requested: Yes';
+      }
+
       // Insert Quote via API (bypasses RLS)
       const quoteResponse = await fetch('/api/create-quote', {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
         body: JSON.stringify({
           id: quoteId,
-          service: formData.service || selectedService,
-          property_type: formData.propertyType,
-          property_size: formData.propertySize,
-          client_name: formData.fullName,
-          client_email: formData.email,
-          client_phone: formData.phone,
-          client_company: formData.company,
-          message: formData.message,
+          service: data.service || selectedService,
+          property_type: data.propertyType,
+          property_size: (data as any).propertySize,
+          client_name: data.clientName,
+          client_email: data.clientEmail,
+          client_phone: data.clientPhone,
+          client_company: data.clientCompany,
+          message: finalMessage,
           address: {
-            street: formData.address,
-            city: formData.city,
-            state: formData.state,
-            zip_code: formData.zipCode,
+            street: data.address,
+            city: data.city,
+            state: data.state,
+            zip_code: data.zipCode,
             country: 'PA'
           },
           bill_files: uploadedBills,
           user_id: user ? user.id : null,
           booking_preference: {
-            date: formData.bookingDate,
-            time: formData.bookingTime,
-            operating_hours: formData.operatingHours
+            date: (data as any).bookingDate,
+            time: (data as any).bookingTime,
+            operating_hours: (data as any).operatingHours
           }
         })
       });
@@ -543,8 +517,8 @@ function QuotePageContent() {
       if (!quoteResult.success) throw new Error(quoteResult.error || 'Failed to create quote');
 
       // Update client type
-      if (formData.email && formData.propertyType) {
-        await updateClientType(formData.email, formData.propertyType);
+      if (data.clientEmail && data.propertyType) {
+        await updateClientType(data.clientEmail, data.propertyType);
       }
 
       // Generate Magic Link for Onboarding
@@ -552,10 +526,10 @@ function QuotePageContent() {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
         body: JSON.stringify({
-          email: formData.email,
-          fullName: formData.fullName,
-          phone: formData.phone,
-          company: formData.company,
+          email: data.clientEmail,
+          fullName: data.clientName,
+          phone: data.clientPhone,
+          company: data.clientCompany,
           role: 'customer',
           quoteId: quoteId,
           service: 'efficiency'
@@ -564,12 +538,6 @@ function QuotePageContent() {
 
       const linkData = await linkResponse.json();
       if (!linkData.success) throw new Error('Failed to create onboarding link');
-
-      // Send Email (Internal & External) - Optional, maybe API handles it?
-      // For now, simpler to just redirect.
-      // Notification emails should be handled by a trigger or separate API if needed, 
-      // but 'create-magic-link' might not send email.
-      // Let's assume we want to redirect immediately.
 
       router.push(`/onboard/${linkData.token}`);
 
@@ -601,9 +569,9 @@ function QuotePageContent() {
             <p className="text-lg md:text-xl text-[#004a90] max-w-3xl mx-auto">{getText('subtitle')}</p>
           </div>
 
+          {/* Step 1 - Service Selection */}
           {currentStep === 1 && (
             <div className="bg-white rounded-2xl shadow-lg border border-gray-100 p-6 md:p-8 lg:p-12">
-              {/* Step 1 Content (Service Selection) - Unchanged mostly */}
               <div className="text-center mb-6 md:mb-8">
                 <h2 className="text-2xl md:text-3xl font-bold text-[#004a90] mb-4">{getText('step1Title')}</h2>
                 <p className="text-lg md:text-xl text-gray-600">{getText('step1Subtitle')}</p>
@@ -640,7 +608,8 @@ function QuotePageContent() {
             </div>
           )}
 
-          {currentStep === 2 && (
+          {/* Step 2 - Property Information (efficiency only) */}
+          {currentStep === 2 && service === 'efficiency' && (
             <div className="bg-white rounded-2xl shadow-lg border border-gray-100 p-6 md:p-8 lg:p-12">
               <div className="flex flex-col sm:flex-row sm:justify-between sm:items-start mb-6 gap-4">
                 <div className="flex-1">
@@ -652,32 +621,21 @@ function QuotePageContent() {
               </div>
 
               <form onSubmit={handleFormSubmit} className="space-y-6">
-                <div>
-                  <label className="block text-sm font-medium text-[#004a90] mb-2">{getText('propertyTypeLabel')}</label>
-                  <div className="grid grid-cols-2 md:grid-cols-3 gap-3 md:gap-4">
-                    {[
-                      { value: 'residential', label: getText('residential'), icon: 'ri-home-line' },
-                      { value: 'apartment', label: getText('apartment'), icon: 'ri-building-line' },
-                      { value: 'small-business', label: getText('smallBusiness'), icon: 'ri-store-line' },
-                      { value: 'hotel', label: getText('hotel'), icon: 'ri-hotel-line' }, // New
-                      { value: 'building', label: getText('building'), icon: 'ri-building-2-line' }, // New
-                      { value: 'industrial', label: getText('industry'), icon: 'ri-factory-line' }, // New
-                    ].map((option) => (
-                      <div key={option.value} className={`p-3 md:p-4 border-2 rounded-lg cursor-pointer transition-all group ${formData.propertyType === option.value ? 'border-[#004a90] bg-[#004a90]/5' : 'border-gray-200 hover:border-[#004a90]'}`} onClick={() => updateFormField('propertyType', option.value)}>
-                        <div className="text-center">
-                          <div className="w-10 h-10 md:w-12 md:h-12 flex items-center justify-center bg-[#004a90]/5 rounded-full mx-auto mb-2 group-hover:scale-110 transition-transform">
-                            <i className={`${option.icon} text-xl md:text-2xl text-[#004a90]`}></i>
-                          </div>
-                          <div className="text-xs md:text-sm font-medium text-[#004a90]">{option.label}</div>
-                        </div>
-                      </div>
-                    ))}
-                  </div>
-                </div>
+                {/* Property Type Selector - Using shared component */}
+                <PropertyTypeSelector
+                  register={register}
+                  errors={errors}
+                  setValue={setValue}
+                  value={propertyType}
+                />
 
+                {/* Property Size */}
                 <div>
                   <label className="block text-sm font-medium text-[#004a90] mb-2">{getText('propertySizeLabel')}</label>
-                  <select name="propertySize" value={formData.propertySize} onChange={handleInputChange} className="w-full p-3 border border-gray-300 rounded-lg pr-8 text-sm md:text-base !bg-white">
+                  <select
+                    {...register('propertySize' as any)}
+                    className="w-full p-3 border border-gray-300 rounded-lg pr-8 text-sm md:text-base !bg-white"
+                  >
                     <option value="">{getText('selectSize')}</option>
                     <option value="1000">&lt; 1,000 sq ft</option>
                     <option value="3000">1,000 - 3,000 sq ft</option>
@@ -690,34 +648,72 @@ function QuotePageContent() {
                 <div className="grid grid-cols-1 md:grid-cols-2 gap-4 md:gap-6">
                   <div>
                     <label className="block text-sm font-medium text-[#004a90] mb-2">{getText('fullNameLabel')}</label>
-                    <input type="text" name="fullName" value={formData.fullName} onChange={handleInputChange} className="w-full p-3 border border-gray-300 rounded-lg text-sm md:text-base !bg-white" placeholder={getText('fullNamePlaceholder')} required />
+                    <input
+                      type="text"
+                      {...register('clientName')}
+                      className="w-full p-3 border border-gray-300 rounded-lg text-sm md:text-base !bg-white"
+                      placeholder={getText('fullNamePlaceholder')}
+                    />
+                    {errors.clientName && (
+                      <span className="text-red-500 text-sm mt-1 block">{errors.clientName.message}</span>
+                    )}
                   </div>
                   <div>
                     <label className="block text-sm font-medium text-[#004a90] mb-2">{getText('emailLabel')}</label>
-                    <input type="email" name="email" value={formData.email} onChange={handleInputChange} className={`w-full p-3 border rounded-lg !bg-white ${fieldErrors.email ? 'border-red-500' : 'border-gray-300'}`} placeholder={getText('emailPlaceholder')} required />
+                    <input
+                      type="email"
+                      {...register('clientEmail')}
+                      className={`w-full p-3 border rounded-lg !bg-white ${errors.clientEmail ? 'border-red-500' : 'border-gray-300'}`}
+                      placeholder={getText('emailPlaceholder')}
+                    />
+                    {errors.clientEmail && (
+                      <span className="text-red-500 text-sm mt-1 block">{errors.clientEmail.message}</span>
+                    )}
                   </div>
                 </div>
 
+                {/* Phone Input */}
                 <div className="space-y-1">
                   <label className="block text-sm md:text-base font-medium text-[#004a90]">
                     {getText('phoneLabel')}
                   </label>
                   <div className={`transition-colors rounded-lg overflow-hidden border ${fieldErrors.phone ? 'border-red-500' : 'border-gray-300'}`}>
                     <style jsx global>{phoneInputStyles}</style>
-                    <PhoneInput international country={country} value={formData.phone} onChange={handlePhoneChange} onCountryChange={(c) => setCountry(c as Country)} labels={customLabels} className="w-full text-base !bg-white" />
+                    <PhoneInput
+                      international
+                      country={country}
+                      value={clientPhone}
+                      onChange={handlePhoneChange}
+                      onCountryChange={(c) => setCountry(c as Country)}
+                      labels={customLabels}
+                      className="w-full text-base !bg-white"
+                    />
                   </div>
+                  {fieldErrors.phone && (
+                    <span className="text-red-500 text-sm mt-1 block">{fieldErrors.phone}</span>
+                  )}
                 </div>
 
-                {/* Conditional Company */}
-                {(isCommercial()) && (
+                {/* Conditional Company & Operating Hours for commercial properties */}
+                {isCommercial() && (
                   <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
                     <div>
                       <label className="block text-sm font-medium text-[#004a90] mb-2">{getText('companyLabel')}</label>
-                      <input type="text" name="company" value={formData.company} onChange={handleInputChange} className="w-full p-3 border border-gray-300 rounded-lg" placeholder={getText('companyPlaceholder')} />
+                      <input
+                        type="text"
+                        {...register('clientCompany')}
+                        className="w-full p-3 border border-gray-300 rounded-lg"
+                        placeholder={getText('companyPlaceholder')}
+                      />
                     </div>
                     <div>
                       <label className="block text-sm font-medium text-[#004a90] mb-2">{getText('operatingHoursLabel')}</label>
-                      <input type="text" name="operatingHours" value={formData.operatingHours} onChange={handleInputChange} className="w-full p-3 border border-gray-300 rounded-lg" placeholder={getText('operatingHoursPlaceholder')} />
+                      <input
+                        type="text"
+                        {...register('operatingHours' as any)}
+                        className="w-full p-3 border border-gray-300 rounded-lg"
+                        placeholder={getText('operatingHoursPlaceholder')}
+                      />
                     </div>
                   </div>
                 )}
@@ -725,16 +721,81 @@ function QuotePageContent() {
                 {/* Address */}
                 <div>
                   <label className="block text-sm font-medium text-[#004a90] mb-2">{getText('addressLabel')}</label>
-                  <input type="text" name="address" value={formData.address} onChange={handleInputChange} className="w-full p-3 border border-gray-300 rounded-lg" required />
+                  <input
+                    type="text"
+                    {...register('address')}
+                    className="w-full p-3 border border-gray-300 rounded-lg"
+                  />
+                  {errors.address && (
+                    <span className="text-red-500 text-sm mt-1 block">{errors.address.message}</span>
+                  )}
                 </div>
                 <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
-                  <input type="text" name="city" value={formData.city} onChange={handleInputChange} className="w-full p-3 border border-gray-300 rounded-lg" placeholder={getText('cityLabel')} required />
-                  <input type="text" name="state" value={formData.state} onChange={handleInputChange} className="w-full p-3 border border-gray-300 rounded-lg" placeholder={getText('stateLabel')} required />
-                  <input type="text" name="zipCode" value={formData.zipCode} onChange={handleInputChange} className="w-full p-3 border border-gray-300 rounded-lg" placeholder={getText('zipCodeLabel')} required />
+                  <input
+                    type="text"
+                    {...register('city')}
+                    className="w-full p-3 border border-gray-300 rounded-lg"
+                    placeholder={getText('cityLabel')}
+                  />
+                  <input
+                    type="text"
+                    {...register('state')}
+                    className="w-full p-3 border border-gray-300 rounded-lg"
+                    placeholder={getText('stateLabel')}
+                  />
+                  <input
+                    type="text"
+                    {...register('zipCode')}
+                    className="w-full p-3 border border-gray-300 rounded-lg"
+                    placeholder={getText('zipCodeLabel')}
+                  />
                 </div>
 
+                {/* Inspection requirement notice */}
+                {propertyType && (
+                  <div className={`p-4 rounded-lg text-sm ${
+                    isCommercial()
+                      ? 'bg-blue-50 border border-blue-100 text-blue-800'
+                      : 'bg-gray-50 border border-gray-100 text-gray-600'
+                  }`}>
+                    <i className={`${isCommercial() ? 'ri-information-line' : 'ri-lightbulb-line'} mr-2`}></i>
+                    {isCommercial()
+                      ? (language === 'es'
+                        ? 'Este tipo de propiedad requiere una inspección técnica antes de la instalación.'
+                        : 'This property type requires a technical inspection before installation.')
+                      : (language === 'es'
+                        ? 'La inspección es opcional para propiedades residenciales.'
+                        : 'Inspection is optional for residential properties.')
+                    }
+                  </div>
+                )}
+
+                {/* Optional inspection request checkbox for residential properties */}
+                {propertyType && !isCommercial() && (
+                  <label className="flex items-start gap-3 text-sm text-gray-700">
+                    <input
+                      type="checkbox"
+                      {...register('inspectionRequested' as any)}
+                      className="mt-1"
+                    />
+                    <span>
+                      <span className="font-medium text-[#004a90]">
+                        {language === 'es' ? 'Solicitar inspección técnica' : 'Request a technical inspection'}
+                      </span>
+                      <span className="block text-xs text-gray-500">
+                        {language === 'es'
+                          ? 'Marca esta opción si deseas que el equipo coordine una inspección.'
+                          : 'Check this if you want the team to schedule an inspection.'}
+                      </span>
+                    </span>
+                  </label>
+                )}
+
                 <div className="flex justify-center pt-6">
-                  <button type="submit" disabled={!canProceedToBills()} className={`w-full max-w-md px-8 py-4 rounded-lg font-semibold transition-all duration-200 whitespace-nowrap text-base shadow-md ${canProceedToBills() ? 'bg-[#c3d021] hover:bg-teravolta-lime-dark text-[#194271] cursor-pointer hover:shadow-lg transform hover:scale-105' : 'bg-gray-300 text-gray-500 cursor-not-allowed'}`}>
+                  <button
+                    type="submit"
+                    className="w-full max-w-md px-8 py-4 rounded-lg font-semibold transition-all duration-200 whitespace-nowrap text-base shadow-md bg-[#c3d021] hover:bg-teravolta-lime-dark text-[#194271] cursor-pointer hover:shadow-lg transform hover:scale-105"
+                  >
                     {getText('continueBtn')} <i className="ri-arrow-right-line ml-2"></i>
                   </button>
                 </div>
@@ -742,7 +803,8 @@ function QuotePageContent() {
             </div>
           )}
 
-          {currentStep === 3 && (
+          {/* Step 3 - Bill Upload (efficiency only) */}
+          {currentStep === 3 && shouldShowBillUpload(service as any) && (
             <div className="bg-white rounded-2xl shadow-lg border border-gray-100 p-6 md:p-8 lg:p-12">
               <div className="text-center mb-6 md:mb-8">
                 <h2 className="text-2xl md:text-3xl font-bold text-[#004a90] mb-4">{getText('step3Title')}</h2>
@@ -751,29 +813,54 @@ function QuotePageContent() {
 
               <form onSubmit={handleBillsContinue} className="space-y-6">
                 {/* Drag & Drop Area */}
-                <div className={`border-2 border-dashed rounded-xl p-8 text-center transition-all ${isDragOver ? 'border-[#004a90] bg-[#004a90]/5' : 'border-gray-300 hover:border-[#004a90]'}`}
-                  onDrop={handleDrop} onDragOver={handleDragOver} onDragLeave={handleDragLeave}>
+                <div
+                  className={`border-2 border-dashed rounded-xl p-8 text-center transition-all ${isDragOver ? 'border-[#004a90] bg-[#004a90]/5' : 'border-gray-300 hover:border-[#004a90]'}`}
+                  onDrop={handleDrop}
+                  onDragOver={handleDragOver}
+                  onDragLeave={handleDragLeave}
+                >
                   <i className="ri-upload-cloud-line text-4xl text-[#004a90] mb-4"></i>
                   <p className="text-gray-600 mb-4">{getText('dragDropSubtitle')}</p>
-                  <input type="file" multiple accept=".pdf,.jpg,.jpeg,.png" onChange={(e) => e.target.files && handleFileUpload(e.target.files)} className="hidden" id="file-upload" />
-                  <label htmlFor="file-upload" className="inline-block px-6 py-3 bg-[#004a90] text-white rounded-lg cursor-pointer hover:bg-[#194271]">{getText('selectFilesBtn')}</label>
+                  <input
+                    type="file"
+                    multiple
+                    accept=".pdf,.jpg,.jpeg,.png"
+                    onChange={(e) => e.target.files && handleFileUpload(e.target.files)}
+                    className="hidden"
+                    id="file-upload"
+                  />
+                  <label htmlFor="file-upload" className="inline-block px-6 py-3 bg-[#004a90] text-white rounded-lg cursor-pointer hover:bg-[#194271]">
+                    {getText('selectFilesBtn')}
+                  </label>
                 </div>
 
                 {/* File List */}
-                {formData.bills.length > 0 && (
+                {bills.length > 0 && (
                   <div className="grid grid-cols-1 gap-3">
-                    {formData.bills.map((bill) => (
+                    {bills.map((bill) => (
                       <div key={bill.id} className="flex justify-between items-center p-3 bg-gray-50 rounded border">
                         <span className="truncate max-w-[200px] text-sm">{bill.file.name}</span>
-                        <button type="button" onClick={() => removeFile(bill.id)} className="text-red-500"><i className="ri-close-line"></i></button>
+                        <button type="button" onClick={() => removeFile(bill.id)} className="text-red-500">
+                          <i className="ri-close-line"></i>
+                        </button>
                       </div>
                     ))}
                   </div>
                 )}
 
                 <div className="flex justify-between pt-6">
-                  <button type="button" onClick={() => handleStepChange(2)} className="px-6 py-3 border border-gray-300 rounded-lg">{getText('previousBtn')}</button>
-                  <button type="submit" disabled={!canProceedToBooking()} className={`px-6 py-3 rounded-lg font-bold ${canProceedToBooking() ? 'bg-[#c3d021] text-[#194271]' : 'bg-gray-300'}`}>
+                  <button
+                    type="button"
+                    onClick={() => handleStepChange(2)}
+                    className="px-6 py-3 border border-gray-300 rounded-lg"
+                  >
+                    {getText('previousBtn')}
+                  </button>
+                  <button
+                    type="submit"
+                    disabled={!canProceedToBooking()}
+                    className={`px-6 py-3 rounded-lg font-bold ${canProceedToBooking() ? 'bg-[#c3d021] text-[#194271]' : 'bg-gray-300'}`}
+                  >
                     {getText('continueBtn')}
                   </button>
                 </div>
@@ -781,30 +868,54 @@ function QuotePageContent() {
             </div>
           )}
 
-          {currentStep === 4 && (
+          {/* Step 4 - Booking (efficiency only) */}
+          {currentStep === 4 && service === 'efficiency' && (
             <div className="bg-white rounded-2xl shadow-lg border border-gray-100 p-6 md:p-8 lg:p-12">
               <div className="text-center mb-6 md:mb-8">
                 <h2 className="text-2xl md:text-3xl font-bold text-[#004a90] mb-4">{getText('step4Title')}</h2>
                 <p className="text-lg md:text-xl text-gray-600">{getText('step4Subtitle')}</p>
               </div>
 
-              <form onSubmit={handleSubmit} className="space-y-6 max-w-md mx-auto">
+              <form onSubmit={handleSubmit(onFinalSubmit)} className="space-y-6 max-w-md mx-auto">
                 <div>
                   <label className="block text-sm font-medium text-[#004a90] mb-2">{getText('bookingDateLabel')}</label>
-                  <input type="date" name="bookingDate" value={formData.bookingDate} onChange={handleInputChange} className="w-full p-4 border border-gray-300 rounded-lg text-lg focus:ring-2 focus:ring-[#004a90] outline-none" required min={new Date().toISOString().split('T')[0]} />
+                  <input
+                    type="date"
+                    {...register('bookingDate' as any)}
+                    className="w-full p-4 border border-gray-300 rounded-lg text-lg focus:ring-2 focus:ring-[#004a90] outline-none"
+                    min={new Date().toISOString().split('T')[0]}
+                  />
+                  {(errors as any).bookingDate && (
+                    <span className="text-red-500 text-sm mt-1 block">{(errors as any).bookingDate.message}</span>
+                  )}
                 </div>
                 <div>
                   <label className="block text-sm font-medium text-[#004a90] mb-2">{getText('bookingTimeLabel')}</label>
-                  <input type="time" name="bookingTime" value={formData.bookingTime} onChange={handleInputChange} className="w-full p-4 border border-gray-300 rounded-lg text-lg focus:ring-2 focus:ring-[#004a90] outline-none" required />
+                  <input
+                    type="time"
+                    {...register('bookingTime' as any)}
+                    className="w-full p-4 border border-gray-300 rounded-lg text-lg focus:ring-2 focus:ring-[#004a90] outline-none"
+                  />
+                  {(errors as any).bookingTime && (
+                    <span className="text-red-500 text-sm mt-1 block">{(errors as any).bookingTime.message}</span>
+                  )}
                 </div>
 
                 <div className="pt-6">
-                  <button type="submit" disabled={isSubmitting || !canSubmitForm()} className="w-full bg-[#004a90] text-white py-4 rounded-xl font-bold text-lg hover:bg-[#194271] disabled:opacity-70 shadow-lg hover:shadow-xl transition-all">
+                  <button
+                    type="submit"
+                    disabled={isSubmitting}
+                    className="w-full bg-[#004a90] text-white py-4 rounded-xl font-bold text-lg hover:bg-[#194271] disabled:opacity-70 shadow-lg hover:shadow-xl transition-all"
+                  >
                     {isSubmitting ? getText('submittingBtn') : getText('submitBtn')}
                   </button>
                 </div>
                 <div className="text-center mt-4">
-                  <button type="button" onClick={() => handleStepChange(3)} className="text-gray-500 hover:text-[#004a90] text-sm">
+                  <button
+                    type="button"
+                    onClick={() => handleStepChange(3)}
+                    className="text-gray-500 hover:text-[#004a90] text-sm"
+                  >
                     {getText('previousBtn')}
                   </button>
                 </div>
