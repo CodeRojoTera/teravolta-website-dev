@@ -73,6 +73,7 @@ Recent decisions affecting current work:
 - [2026-02-02]: Separate service field components instead of mega-component (better maintainability)
 - [2026-02-02]: File uploads as separate state (not in Zod schema - different lifecycle)
 - [2026-02-02]: Preserve existing step flow in refactors (working UX patterns)
+- [2026-02-02]: Full RHF refactor over incremental (Option A) - establishes consistent pattern worth the effort
 
 ### Pending Todos
 
@@ -85,9 +86,9 @@ Recent decisions affecting current work:
 
 ## Session Continuity
 
-Last session: 2026-02-02 00:39 UTC
-Stopped at: Completed 02-03-PLAN.md
-Resume file: None
+Last session: 2026-02-02 01:15 UTC
+Stopped at: Plan 02-04 (customer wizard), Task 1 not started
+Resume file: .planning/phases/02-quote-submission---wizard-unification/.continue-here.md
 
 **Re-planning Outcome:**
 - Database audit verified via live Supabase MCP
@@ -124,11 +125,10 @@ Resume file: None
 - Plan 02-01: Complete (Zod schema foundation with discriminated unions)
 - Plan 02-02: Complete (shared wizard field components)
 - Plan 02-03: Complete (public quote form RHF + Zod refactor)
-- Plan 02-03: Pending (ManualProjectWizard RHF refactor)
-- Plan 02-04: Pending (public quote form RHF refactor)
-- Plan 02-05: Pending (customer request wizard locate/fix/unify)
+- Plan 02-04: Paused (customer request wizard RHF refactor)
+- Plan 02-05: Pending (admin ManualProjectWizard unification)
 - Plan 02-06: Pending (DocumentManager service filtering)
-- Plan 02-07: Pending (TBD)
-- Plan 02-08: Pending (TBD)
+- Plan 02-07: Pending (admin quote edits)
+- Plan 02-08: Pending (admin wiring + inspection guard)
 
-**Next action:** Continue Phase 02 with Plan 02-02
+**Next action:** Resume Phase 02 with `/gsd-execute-phase 02 --continue`
