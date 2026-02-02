@@ -5,16 +5,16 @@
 See: .planning/PROJECT.md (updated 2026-01-28)
 
 **Core value:** A working manual workflow where the core business flow (Quote → Project → Technician Assignment → Completion) works end-to-end with no data loss.
-**Current focus:** Phase 1 - Foundation & Data Integrity
+**Current focus:** Phase 2 - Quote Submission & Wizard Unification
 
 ## Current Position
 
-Phase: 1 of 13 (Foundation & Data Integrity)
-Plan: 15 of 15 complete (gap closure execution)
-Status: Phase complete
-Last activity: 2026-02-01 - Completed 01-15-PLAN.md
+Phase: 2 of 13 (Quote Submission & Wizard Unification)
+Plan: 1 of 8 complete (Zod schema foundation)
+Status: In progress
+Last activity: 2026-02-02 - Completed 02-01-PLAN.md
 
-Progress: [██████████] 100%
+Progress: [██████████░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░] 13%
 
 **Re-plan Summary (2026-01-30):**
 - All previous plans archived to .archive/
@@ -26,19 +26,20 @@ Progress: [██████████] 100%
 ## Performance Metrics
 
 **Velocity:**
-- Total plans completed: 15
-- Average duration: 8 min
-- Total execution time: 1.79 hours
+- Total plans completed: 16
+- Average duration: 7 min
+- Total execution time: 1.87 hours
 
 **By Phase:**
 
 | Phase | Plans | Total | Avg/Plan |
 |-------|-------|-------|----------|
 | 01 - Foundation & Data Integrity | 15/15 | 109 min | 8 min |
+| 02 - Quote Submission & Wizard Unification | 1/8 | 4 min | 4 min |
 
 **Recent Trend:**
-- Last 5 plans: 01-15 (1min), 01-14 (1min), 01-13 (1min), 01-12 (1min), 01-11 (1min)
-- Trend: Phase 01 gap closure complete
+- Last 5 plans: 02-01 (4min), 01-15 (1min), 01-14 (1min), 01-13 (1min), 01-12 (1min)
+- Trend: Phase 02 started - schema foundation complete
 
 *Updated after each plan completion*
 
@@ -65,6 +66,9 @@ Recent decisions affecting current work:
 - [2026-02-01]: Add server-side deletion API to keep supabaseAdmin usage off the client
 - [2026-02-01]: Align deletion audit schema to deletion_reason and allow service role inserts
 - [2026-02-01]: Enforce documents.deleted_by SET NULL for deletion audit integrity
+- [2026-02-02]: Advocacy quotes collect only claim fields (no timeline/budget/projectDescription)
+- [2026-02-02]: Inspection required for commercial-scale properties (hotel/building/industrial)
+- [2026-02-02]: Shared constants in lib/schemas/ (co-located with Zod schemas)
 
 ### Pending Todos
 
@@ -77,9 +81,9 @@ Recent decisions affecting current work:
 
 ## Session Continuity
 
-Last session: 2026-02-01 17:31 UTC
-Stopped at: Completed 01-15-PLAN.md
-Resume file: .planning/phases/01-foundation--data-integrity/.continue-here.md
+Last session: 2026-02-02 00:05 UTC
+Stopped at: Completed 02-01-PLAN.md
+Resume file: None
 
 **Re-planning Outcome:**
 - Database audit verified via live Supabase MCP
@@ -112,4 +116,14 @@ Resume file: .planning/phases/01-foundation--data-integrity/.continue-here.md
 - Plan 01-14: Complete (portal active_users reads)
 - Plan 01-15: Complete (cascade constraints audit)
 
-**Next action:** `/gsd-execute-phase 02`
+**Execution Status (Phase 02):**
+- Plan 02-01: Complete (Zod schema foundation with discriminated unions)
+- Plan 02-02: Pending (property type standardization across wizards)
+- Plan 02-03: Pending (ManualProjectWizard RHF refactor)
+- Plan 02-04: Pending (public quote form RHF refactor)
+- Plan 02-05: Pending (customer request wizard locate/fix/unify)
+- Plan 02-06: Pending (DocumentManager service filtering)
+- Plan 02-07: Pending (TBD)
+- Plan 02-08: Pending (TBD)
+
+**Next action:** Continue Phase 02 with Plan 02-02
