@@ -1,0 +1,8 @@
+
+    <svg xmlns="http://www.w3.org/2000/svg" width="200" height="200" viewBox="0 0 100 100">
+      <g fill="#194271" stroke="#194271">
+        <circle cx='50' cy='40' r='25' stroke-width='8' stroke='#194271' fill='none'/><line x1='50' y1='40' x2='75' y2='15' stroke-width='8' stroke='#194271' />
+      </g>
+      <text x="50%" y="95%" font-family="Arial" font-size="12" text-anchor="middle" fill="#194271">OPPORTUNITIES</text>
+    </svg>
+    

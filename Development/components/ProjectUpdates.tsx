@@ -54,7 +54,6 @@ export default function ProjectUpdates({ projectId, timeline = [] }: ProjectUpda
 
                 const importantDocs = docs.filter(d =>
                     d.category === 'report' ||
-                    d.category === 'monthly_report' ||
                     d.category === 'contract'
                 );
 

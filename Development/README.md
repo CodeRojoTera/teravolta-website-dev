@@ -1,30 +1,82 @@
-This is a [Next.js](https://nextjs.org) project bootstrapped with [`create-next-app`](https://nextjs.org/docs/app/api-reference/cli/create-next-app).
+# TeraVolta Project Structure
 
-## Getting Started
+This workspace contains **two separate versions** of the TeraVolta website:
 
-First, run the development server:
+---
 
-```bash
-npm run dev
-# or
-yarn dev
-# or
-pnpm dev
-# or
-bun dev
+## 📁 Folder Structure
+
+```
+Teravolta website dev/
+├── Development/           ← Full version (work in progress)
+│   └── docs/              ← Documentation for full version
+│
+└── website static view dev/   ← Static version (production-ready)
 ```
 
-Open [http://localhost:3000](http://localhost:3000) with your browser to see the result.
+---
 
-You can start editing the page by modifying `app/page.tsx`. The page auto-updates as you edit the file.
+## 🌐 Static Version (`website static view dev/`)
 
-This project uses [`next/font`](https://nextjs.org/docs/app/building-your-application/optimizing/fonts) to automatically optimize and load [Geist](https://vercel.com/font), a new font family for Vercel.
+**Purpose**: Production-ready static website for initial launch on teravolta.com
 
-## Learn More
+**Features**:
+- Static pages (Home, Services, Projects, About)
+- Contact form only
+- No user authentication
+- No dashboards
+- No quote submission flow
 
-To learn more about Next.js, take a look at the following resources:
+**Status**: ✅ Ready for deployment to teravolta.com
 
-- [Next.js Documentation](https://nextjs.org/docs) - learn about Next.js features and API.
-- [Learn Next.js](https://nextjs.org/learn) - an interactive Next.js tutorial.
+> ⚠️ **DO NOT MODIFY** this folder when developing the full version.
 
-You can check out [the Next.js GitHub repository](https://github.com/vercel/next.js) - your feedback and contributions are welcome!
+---
+
+## 💻 Full Version (`Development/`)
+
+**Purpose**: Complete website with full functionality (work in progress)
+
+**Features**:
+- All static version features PLUS:
+- Quote submission flow
+- Service inquiry forms
+- Energy Efficiency purchase flow
+- Customer portal/dashboard
+- Admin dashboard
+- User authentication (Supabase)
+- Invoice management
+- Magic link onboarding
+
+**Status**: 🚧 In development
+
+---
+
+## 📚 Documentation Scope
+
+| Document | Applies To |
+|----------|------------|
+| `Development/docs/ARCHITECTURE.md` | Full version only |
+| `Development/docs/USER_FLOWS.md` | Full version only |
+| `Development/docs/SUPABASE_REFERENCE.md` | Full version only |
+| `Development/docs/BRANDING.md` | **BOTH versions** |
+| `Development/DEPLOYMENT_CHECKLIST.md` | Full version only |
+
+---
+
+## 🎨 Shared Branding
+
+Both versions share the same visual identity defined in:
+`Development/docs/BRANDING.md`
+
+- Colors: `#004a90`, `#194271`, `#c3d021`
+- Font: Gilroy
+- Icons: RemixIcon (outline style)
+
+---
+
+## Development Rules
+
+1. **When working on the full version**: Only modify files in `Development/`
+2. **Never touch** `website static view dev/` unless explicitly requested
+3. **Branding changes** apply to both versions

@@ -1,0 +1,296 @@
+[SHEET]	Tarjetas
+row	#	Original	Tarjeta
+1	1	1. Proyecto Solar – Planta Acetioxígeno La Chorrera	Evaluación y Selección De Proveedor Fotovoltaico ‑ Caso 1.docx
+2	2	2. Proyecto Solar – Colegio Real de Panamá	Evaluación Y Selección De Proveedor Fotovoltaico ‑ Caso 2.docx
+3	3	3. Programa Energy as a Service (EaaS) – Torrecom	Plan de Negocios EaaS Organización Multisede ‑ Caso 3.docx
+4	4	1. Avanzalia Panamá – Comentarios técnicos sobre cargos de transmisión (Subestación El Coco)	Análisis de Cargos de Transmisión – Caso 4.docx
+5	5	2. Club Unión – Análisis financiero de propuesta fotovoltaica de SVF	Análisis Financiero Propuesta FV – Caso 5.docx
+6	6	Residencia Nir Joshua	Caso 6 - Auditoría Y Respaldo Energético Residencial
+7	7	C&W Panama	Caso 7 - Evaluación De Ofertas De Suministro Eléctrico.docx
+8	8	nan	nan
+9	9	nan	nan
+10	10	nan	nan
+11	11	nan	nan
+12	12	nan	nan
+13	13	nan	nan
+14	14	nan	nan
+15	15	nan	nan
+
+[SHEET]	Clientes
+row	#	Lista de Clientes	MWh/Contrato	Ahorro	Plazo (años)	%
+1	1.0	02.PH ARRECIFE	nan	nan	nan	nan
+2	2.0	03.Torrecom	nan	nan	nan	nan
+3	3.0	05.Colegio Real	nan	nan	nan	nan
+4	4.0	06.GME	nan	nan	nan	nan
+5	5.0	09.C&W	174630.864	2689792.8675607503	5.0	0.145
+6	6.0	10.Grupo SVF	nan	nan	nan	nan
+7	7.0	12. Gabriel Dutari	nan	nan	nan	nan
+8	8.0	14. MTS-Plaza del Este	nan	nan	nan	nan
+9	9.0	17.Panama Bond Corporation	nan	nan	nan	nan
+10	10.0	18.Hitech	nan	nan	nan	nan
+11	11.0	20.Avanzalia Panama	nan	nan	nan	nan
+12	12.0	29.TJS_Proyecto Solar	nan	nan	nan	nan
+13	13.0	34.Synex Ingenieros Consultores	nan	nan	nan	nan
+14	14.0	37.Vestas Panama	nan	nan	nan	nan
+15	15.0	ALCOGAL	nan	nan	nan	nan
+16	16.0	CARGILL-FR3	nan	nan	nan	nan
+17	17.0	ALMACENAJES SA	nan	nan	nan	nan
+18	18.0	EEH-Empresa Energia Honduras	nan	nan	nan	nan
+19	19.0	Envases Universales
+Ball de Panamá S.A.	67895.0	1889283.81	3.0	0.19
+20	20.0	Energyst	nan	nan	nan	nan
+21	21.0	03.Gabriel Dutari	nan	nan	nan	nan
+22	22.0	greenyellow.com.co	nan	nan	nan	nan
+23	23.0	Los Andes MALL	nan	nan	nan	nan
+24	24.0	PH Parque Logístico
+Panamá	nan	nan	nan	nan
+25	25.0	AcetiOxigeno- Planta la Chorrera	65543.4444358	2344363.63	5.0	0.18
+26	26.0	AcetiOxigeno- Planta la Villa Lobos	nan	nan	nan	nan
+27	27.0	Administradora Hines de Panamá S. de R.L.	nan	nan	nan	nan
+28	nan	Total	308069.3084358	6923440.30756075	nan	0.17166666666666663
+31	nan	nan	308069.3084358	6923440.3	nan	nan
+
+[SHEET]	C&W
+row	CMS   ESCENARIO ALTERNATIVO US$/kWh	Unnamed: 1	Unnamed: 2	0.06483	0.0611	0.06291	0.06416	0.06753	0.07001	Unnamed: 9	Unnamed: 10
+1	TARIFA REGULADA COSTO E Y P DE GENERACIÓN	AÑO	nan	2018	2019	2020	2021	2022	2023	TOTAL	% ahorro
+2	ENERGIA ESTIMADA ANUAL MWh	nan	nan	28503.504	28740.660000000003	28980.431999999997	29222.796000000002	29467.86	29715.612	nan	nan
+3	nan	INICIO SEGUNDO SEMESTRE 2018	nan	14251.752	28740.660000000003	28980.431999999997	29222.796000000002	29467.86	14857.806	nan	nan
+4	nan	COSTO ESTIMADO MERCADO	nan	0.006483	0.006110000000000001	0.006291	0.006416	0.006753000000000001	0.007001	nan	nan
+5	nan	COSTO PROMEDIO E Y MER	nan	1809800.4229200003	3649499.1730199996	3679720.56528	3710262.1825800003	3741138.0830999995	1886172.77145	nan	nan
+6	nan	COSTO DE POT, ENERGIA Y MERCADO	nan	1817027.7829200001	3664074.85302	3694402.08528	3725064.6625800007	3756046.4030999998	1893679.85145	18550295.638350002	nan
+7	nan	COSTO DE POT, ENERGIA Y MERCADO (miles)	nan	1817.0277829200002	3664.07485302	3694.4020852800004	3725.064662580001	3756.0464030999997	1893.67985145	18550.295638350002	BASE
+9	EDEMET	COSTO TARIFA 	nan	0.117975	0.117975	0.117975	0.117975	0.117975	0.117975	nan	nan
+10	US$/kWh	COSTO PROM ENERGIA  $/kWh	nan	0.0812	0.088	0.0917	0.0819	0.0765	0.07001	nan	nan
+11	nan	VARIACIÓN	nan	nan	0.08374384236453203	0.04204545454545472	-0.10687022900763365	-0.06593406593406592	-0.08483660130718951	nan	nan
+12	nan	% DE CONTRATACIÓN	nan	1.03	1.07	0.96	1.27	1.2	1.03	nan	nan
+13	nan	CARGO DE POT GENERACION	nan	0	0	0	0	0	0	nan	nan
+14	nan	ENERGIA  kWh	nan	20129.28	20304.396	20481.66	20661.06	20842.656	21026.472	nan	nan
+15	nan	DEMANDA KW	nan	2710	2729	2751	2775	2782	2824	nan	nan
+16	nan	COSTO ENERGIA Y MERCADO	nan	1187375.904	2395411.1180999996	2416323.8385	2437488.5535000004	2458912.3416	1240299.0171	12135810.7728	nan
+17	nan	COSTO DE POT, ENERGIA Y MERCADO	nan	1187375.904	2395411.1180999996	2416323.8385	2437488.5535000004	2458912.3416	1240299.0171	12135810.7728	nan
+18	nan	COSTO DE POT, ENERGIA Y MERCADO (miles)	nan	1187.375904	2395.4111181	2416.3238385	2437.4885535000003	2458.9123415999998	1240.2990171000001	12135.810772800001	nan
+20	ENSA	COSTO TARIFA ACTUAL	nan	0.154315	0.154315	0.154315	0.154315	0.154315	0.154315	nan	nan
+21	US$/kWh	COSTO PROM ENERGIA  $/kWh	nan	0.1125	0.1143	0.0822	0.06416	0.06753	0.07001	nan	nan
+22	nan	VARIACIÓN	nan	nan	0.016000000000000014	-0.28083989501312334	-0.21946472019464724	0.052524937655860526	0.03672441877683985	nan	nan
+23	nan	% DE CONTRATACIÓN	nan	1.02	1.04	0.82	0.88	0.86	0.84	nan	nan
+24	nan	CARGO DE POT GENERACION	nan	1.26	1.26	1.26	1.26	1.26	1.26	nan	nan
+25	nan	ENERGIA  kWh	nan	7042.968	7095.612	7148.652	7202.088	7255.956	7310.22	nan	nan
+26	nan	DEMANDA KW	nan	956	964	971	979	986	993	nan	nan
+27	nan	COSTO ENERGIA Y MERCADO	nan	543417.80346	1094959.36578	1103144.23338	1111390.20972	1119702.85014	564038.29965	4972614.46248	nan
+28	nan	COSTO DE POT, ENERGIA Y MERCADO	nan	550645.16346	1109535.04578	1117825.7533800001	1126192.68972	1134611.17014	571545.3796499999	5610355.20213	nan
+29	nan	COSTO DE POT, ENERGIA Y MERCADO (miles)	nan	550.6451634599999	1109.53504578	1117.8257533800002	1126.1926897199999	1134.61117014	571.5453796499999	5610.355202129999	nan
+31	EDECHI	COSTO TARIFA ACTUAL	nan	0.118695	0.118695	0.118695	0.118695	0.118695	0.118695	nan	nan
+32	US$/kWh	COSTO PROM ENERGIA  $/kWh	nan	0.0808	0.0915	0.0917	0.0669	0.06689	0.0686	nan	nan
+33	nan	VARIACIÓN	nan	nan	0.13242574257425743	0.002185792349726823	-0.2704471101417667	-0.0001494768310911221	0.025564359396023084	nan	nan
+34	nan	% DE CONTRATACIÓN	nan	0.97	1.07	1.19	0.99	1.01	1.01	nan	nan
+35	nan	CARGO DE POT GENERACION	nan	0	0	0	0	0	0	nan	nan
+36	nan	ENERGIA  kWh	nan	1331.256	1340.652	1350.1200000000001	1359.6480000000001	1369.248	1378.92	nan	nan
+37	nan	DEMANDA KW	nan	175	176	177	179	180	181	nan	nan
+38	nan	COSTO ENERGIA	nan	79006.71545999999	159128.68914	160252.4934	161383.41936	162522.89135999998	81835.4547	722294.20872	nan
+39	nan	COSTO DE POT, ENERGIA Y MERCADO	nan	79006.71545999999	159128.68914	160252.4934	161383.41936	162522.89135999998	81835.4547	804129.66342	nan
+40	nan	COSTO DE POT, ENERGIA Y MERCADO (miles)	nan	79.00671546	159.12868914	160.25249340000002	161.38341936	162.52289136	81.8354547	804.12966342	nan
+42	CALCULO DE COSTO GENERACIÓN	nan	nan	II Sem 2018	2019	2020	2021	2022	I Sem 2023	TOTAL	nan
+43	POTENCIA $$	nan	nan	8.96	8.96	8.96	8.96	8.96	8.96	nan	nan
+44	DEMANDA MAXIMA KW/mes	nan	nan	3841	3869	3899	3933	3948	3998	nan	nan
+46	nan	PERIODO DE LA OFERTA	nan	2018	2019	2020	2021	2022	nan	nan	nan
+47	ENEL GREEN POWER PANAMA S.A.	PRECIO OFERTADO BASE US$/kWh	nan	0.0807	0.0825	0.0843	0.0861	0.088	0.088	nan	nan
+48	PRECIO INDEXADO	FIJO	nan	0.0807	0.0825	0.0843	0.0861	0.088	0.088	nan	nan
+49	CARGOS DEL MERCADO	HASTA .0085/kWh SIN CARGO ADICIONAL	nan	0	0	0	0	0	0	nan	nan
+50	PRECIO TOTAL DE ENERGIA + MERCADO	nan	nan	0.0807	0.0825	0.0843	0.0861	0.088	0.088	nan	nan
+51	COSTO DE ENERGIA	nan	nan	1150116.3864	2345237.856	2416968.0288	2489782.2192	2565177.213	1307486.928	nan	nan
+52	COSTO E Y P	nan	nan	1356608.5463999999	2761232.736	2836188.5088	2912658.3792000003	2989666.173	1522419.408	nan	nan
+53	COSTO E Y P	miles	nan	1356.6085463999998	2761.232736	2836.1885088	2912.6583792	2989.666173	1522.419408	14378.7737514	nan
+54	AHORRO	miles	nan	460.41923652000037	902.8421170199999	858.2135764800005	812.4062833800008	766.3802300999996	371.2604434499999	4171.521886950001	0.22487630215046248
+59	nan	PERIODO DE LA OFERTA	nan	AÑO 1	AÑO 2	AÑO3	AÑO 4	AÑO 5	nan	nan	nan
+60	TECNISOL I S.A.	PRECIO OFERTADO BASE US$/kWh	nan	0.086	0.086	0.086	0.086	0.086	0.086	nan	nan
+61	PRECIO INDEXADO	FIJO	nan	0.086	0.086	0.086	0.086	0.086	0.086	nan	nan
+62	CARGOS DEL MERCADO	INCLUIDO EN EL PRECIO	nan	0	0	0	0	0	0	nan	nan
+63	PRECIO TOTAL DE ENERGIA + MERCADO	nan	nan	0.086	0.086	0.086	0.086	0.086	0.086	nan	nan
+64	COSTO DE ENERGIA	nan	nan	1225650.672	2471696.7600000002	2492317.152	2513160.4560000002	2534235.96	1277771.3159999999	nan	nan
+65	COSTO E Y P	nan	nan	1432142.832	2887691.64	2911537.6319999998	2936036.6160000004	2958724.92	1492703.7959999999	nan	nan
+66	COSTO E Y P	miles	nan	1432.142832	2887.69164	2911.5376319999996	2936.0366160000003	2958.72492	1492.7037959999998	14618.837436	nan
+67	AHORRO	miles	nan	384.88495092000016	776.3832130199999	782.8644532800008	789.0280465800006	797.3214830999996	400.9760554500001	3931.4582023500006	0.21193506987685362
+69	nan	PERIODO DE LA OFERTA	nan	AÑO 1	AÑO 2	AÑO3	AÑO 4	AÑO 5	nan	nan	nan
+70	AES PANAMA  S.R.L	PRECIO OFERTADO BASE US$/kWh	nan	0.084	0.084	0.084	0.084	0.084	nan	nan	nan
+71	nan	IC o	nan	245.11958333333334	245.11958333333334	245.11958333333334	245.11958333333334	245.11958333333334	nan	nan	nan
+72	nan	IC i (ESTIMADO)	nan	nan	253.50378143180527	257.80281670195825	262.1747570157742	266.6208387309608	nan	nan	nan
+73	PRECIO INDEXADO	PFEC=PB*ICi/ICo	nan	0.084	0.08687317981980214	0.08834641569015597	0.08984463538099616	0.09136826257959416	0.09136826257959416	nan	nan
+74	CARGOS DEL MERCADO	NO INCLUIDOS EN EL PRECIO	nan	0.006483	0.006110000000000001	0.006291	0.006416	0.006753000000000001	0.006753000000000001	nan	nan
+75	PRECIO TOTAL DE ENERGIA + MERCADO	nan	nan	0.09048300000000001	0.09298317981980214	0.09463741569015598	0.09626063538099616	0.09812126257959415	0.09812126257959415	nan	nan
+76	COSTO DE ENERGIA	nan	nan	1289541.276216	2636469.5478498978	2718662.954987923	2789287.4016249306	2864009.277818481	1457866.6838826695	nan	nan
+77	COSTO E Y P	nan	nan	1496033.436216	3052464.4278498976	3137883.434987923	3212163.5616249307	3288498.237818481	1672799.1638826695	nan	nan
+78	COSTO E Y P	miles	nan	1496.033436216	3052.4644278498977	3137.883434987923	3212.1635616249305	3288.498237818481	1672.7991638826695	15859.842262379902	nan
+79	AHORRO	miles	nan	320.99434670400024	611.6104251701022	556.5186502920774	512.9011009550704	467.5481652815188	220.88068756733037	2690.4533759700994	0.14503560635486495
+81	nan	PERIODO DE LA OFERTA	nan	2018	2019	2020	2021	2022	2023	nan	nan
+82	LAS PERLAS SUR S.A.	PRECIO OFERTADO BASE US$/kWh	nan	0.085	0.085	0.085	0.0902	0.092	0.0938	nan	nan
+83	PRECIO INDEXADO	FIJO	nan	0.085	0.085	0.085	0.0902	0.092	0.0938	nan	nan
+84	CARGOS DEL MERCADO	NO INCLUIDO	nan	0.006483	0.006110000000000001	0.006291	0.006416	0.006753000000000001	0.006753000000000001	nan	nan
+85	PRECIO TOTAL DE ENERGIA + MERCADO	nan	nan	0.09148300000000001	0.09111000000000001	0.09129100000000001	0.09661600000000001	0.098753	0.10055299999999999	nan	nan
+86	COSTO DE ENERGIA	nan	nan	1303793.0282160002	2618561.5326000005	2645652.617712	2823389.6583360005	2910039.57858	1493996.966718	nan	nan
+87	COSTO E Y P	nan	nan	1510285.188216	3034556.4126000004	3064873.097712	3246265.8183360007	3334528.53858	1708929.4467179999	nan	nan
+88	COSTO E Y P	miles	nan	1510.285188216	3034.5564126000004	3064.873097712	3246.265818336001	3334.52853858	1708.9294467179998	15899.438502162	nan
+89	AHORRO	miles	nan	306.7425947040001	629.5184404199995	629.5289875680005	478.79884424400007	421.5178645199999	184.7504047320001	2650.8571361880004	0.142901072191418
+
+[SHEET]	Envases Universales
+row	Unnamed: 0	Unnamed: 1	Unnamed: 2	Unnamed: 3	Unnamed: 4	Facturación de Julio 2020	Unnamed: 6	Unnamed: 7	Unnamed: 8	Unnamed: 9	Unnamed: 10	Unnamed: 11	Unnamed: 12	Unnamed: 13	Unnamed: 14	Unnamed: 15	Unnamed: 16	Unnamed: 17	Unnamed: 18	Unnamed: 19	Unnamed: 20	Unnamed: 21	Unnamed: 22	Unnamed: 23	Unnamed: 24	Unnamed: 25	Unnamed: 26	Unnamed: 27	Unnamed: 28	Unnamed: 29	Unnamed: 30	Unnamed: 31	Unnamed: 32	Unnamed: 33	Unnamed: 34	Unnamed: 35	Unnamed: 36	Unnamed: 37	Envases Universales Ball de Panamá, S.A.	Unnamed: 39	Unnamed: 40	Unnamed: 41	Unnamed: 42	Unnamed: 43	Envases Universales Ball de Panamá, S.A..1	Unnamed: 45	Unnamed: 46	Unnamed: 47	Unnamed: 48
+1	Semestre	II	nan	nan	nan	nan	nan	nan	nan	nan	nan	nan	nan	nan	nan	nan	nan	nan	nan	nan	nan	nan	nan	nan	nan	nan	nan	nan	nan	nan	nan	nan	nan	nan	nan	nan	nan	nan	Documento de Transacciones Económicas	nan	nan	nan	nan	nan	Documento de Transacciones Económicas	nan	nan	nan	nan
+2	Cargos aplicados	Jul 1 a Dic 31, 2020	nan	nan	nan	nan	nan	nan	nan	nan	nan	nan	nan	nan	nan	nan	nan	nan	nan	nan	nan	nan	nan	nan	nan	nan	nan	nan	nan	nan	nan	nan	nan	nan	Distribuidora	Porcentaje Subsidio Ley 15 (%)	nan	nan	Julio 2020	nan	nan	nan	nan	nan	Ajuste1 Marzo 2020	nan	nan	nan	nan
+3	Código Cont:	EUBP	nan	Balance con la empresa	nan	nan	EUBP	nan	nan	nan	nan	nan	nan	nan	nan	nan	nan	nan	nan	nan	nan	nan	nan	nan	nan	nan	nan	nan	nan	nan	nan	nan	nan	nan	ENSA - BTD	0.003	nan	nan	nan	nan	nan	nan	nan	nan	nan	nan	nan	nan	nan
+4	Año	2020	nan	Opción tarifaria	nan	nan	Demanda Máxima (BTD) - (MTD)	nan	nan	nan	nan	nan	nan	nan	nan	nan	nan	nan	nan	nan	nan	nan	nan	nan	nan	nan	nan	nan	nan	nan	nan	nan	nan	nan	ENSA - MTD	0.003	nan	nan	nan	nan	nan	nan	nan	nan	nan	nan	nan	nan	nan
+5	Mes	Julio	nan	Cargos aplicados	nan	nan	Jul 1 a Dic 31, 2020	nan	nan	nan	nan	nan	nan	nan	nan	nan	nan	nan	nan	nan	nan	nan	nan	nan	nan	nan	nan	nan	nan	nan	nan	nan	nan	nan	EDEMET - BTD	0.0045	nan	nan	Resumen de Transacciones	nan	nan	nan	nan	nan	Resumen de Transacciones	nan	nan	nan	nan
+6	Precio	0.068	nan	nan	nan	nan	nan	nan	nan	nan	nan	nan	nan	nan	nan	nan	nan	nan	nan	nan	nan	nan	nan	nan	nan	nan	nan	nan	nan	nan	nan	nan	nan	nan	EDEMET - MTD	0.0045	nan	nan	Cantidad	U/M	En concepto de	Débito (B/.)	Crédito (B/.)	nan	Cantidad	U/M	En concepto de	Débito (B/.)	Crédito (B/.)
+7	nan	nan	NIS/NAC	Distribuidora	Razón Social	Punto de medición	Energía Contrato
+(MWh)	Demanda Máxima
+(kW-mes)	Energía Distribuidora (MWh)	Factor de Carga	Cargo fijo ($/cliente-mes)	Cargo por demanda máx. ($/kW-mes)	Cargo por Energía de los primeros 10,000 kWh	Cargo por Energía por los siguientes kWh de 10,001 a 30,000	Cargo por Energía por los siguientes kWh de 30,001 a 50,000	Cargo por Energía por los siguientes kWh de 30,001 a 50,0004	CVC	Fet Adicional cliente regulado	Subtotal	Subsidio Ley 15 (0.45%-0.37%)	Cargos como Cliente Regulado 	Cargo fijo
+($/cliente-mes)	Cargo por energía
+($/kWh)	Demanda máxima
+($/kW-mes)	Demanda Máxima Generación
+(kW-mes)	Cargos Demanda Max. Generación ($/kW-mes)	FET Adicional por uso de redes	Subtotal	Cargos por Uso del Sistema de Distribución	Cargos de Mercado -DTE	DTER	Cargos como Gran Cliente pasivo Energía	nan	Factura como Cliente Regulado ($)	Factura de Enel + Distribuidora ($)	Cálculo del Subsidio ENEL ($)	Cálculo del Subsidio Distribuidora ($)	nan	0	MWh	Energía en Mercado Ocasional	0	nan	nan	0	MWh	Energía en Mercado Ocasional	0	nan
+8	nan	nan	21177942	ENSA - MTD	Envases Universales	FORTUNA - EUBP	1371.102	1983.5320000000002	1371.102	0.9600592949008806	8.73	25349.53896	185043.92592	0	0	0	0	0	210402.19488000002	0	210402.19488000002	2.185	29807.75748	21560.99284	2179.96589476616	19532.494417104797	0	70903.4297371048	70903.4297371048	7549.029999999999	1463.98	93234.94	nan	210402.19488000002	173607.8444530648	302.35191000000003	154.11280596	nan	0	MWh	Energía en Mercado Ocasional	nan	0	nan	0	MWh	Energía en Mercado Ocasional	nan	0
+9	nan	nan	nan	nan	nan	nan	nan	nan	nan	nan	nan	nan	nan	nan	nan	nan	nan	nan	nan	nan	nan	nan	nan	nan	nan	nan	nan	nan	nan	nan	nan	nan	nan	nan	nan	nan	nan	nan	83.819	MWh	Energía en Pérdidas de Transmisión	6996.83	nan	nan	0.014	MWh	Energía en Pérdidas de Transmisión	1.02	nan
+10	nan	nan	nan	nan	nan	nan	nan	nan	nan	nan	nan	nan	nan	nan	nan	nan	nan	nan	nan	nan	nan	nan	nan	nan	nan	nan	nan	nan	nan	nan	nan	nan	nan	nan	nan	nan	nan	nan	0	MWh	Energía en Pérdidas de Transmisión	nan	0	nan	0.246	MWh	Energía en Pérdidas de Transmisión	nan	16.02
+11	nan	nan	nan	nan	nan	nan	nan	nan	nan	nan	nan	nan	nan	nan	nan	nan	nan	nan	nan	nan	nan	nan	nan	nan	nan	nan	nan	nan	nan	nan	nan	nan	nan	nan	nan	nan	nan	nan	27.563	MWh	Extra Costo por Generación Obligada	92.86	nan	nan	0.003	MWh	Extra Costo por Generación Obligada	0	nan
+12	nan	nan	nan	nan	nan	nan	nan	nan	nan	nan	nan	nan	nan	nan	nan	nan	nan	nan	nan	nan	nan	nan	nan	nan	nan	nan	nan	nan	nan	nan	nan	nan	nan	nan	nan	nan	nan	nan	0	MWh	Extra Costo por Generación Obligada	nan	0	nan	0	MWh	Extra Costo por Generación Obligada	nan	0
+13	nan	nan	nan	nan	nan	nan	nan	nan	nan	nan	nan	nan	nan	nan	nan	nan	nan	nan	nan	nan	nan	nan	nan	nan	nan	nan	nan	nan	nan	nan	nan	nan	nan	nan	nan	nan	nan	nan	0	MW	Compensación de Potencia	0	nan	nan	0	MW	Compensación de Potencia	0	nan
+14	nan	nan	nan	nan	nan	nan	nan	nan	nan	nan	nan	nan	nan	nan	nan	nan	nan	nan	nan	nan	nan	nan	nan	nan	nan	nan	nan	nan	nan	nan	nan	nan	nan	nan	nan	nan	nan	nan	0	MW	Compensación de Potencia	nan	0	nan	0	MW	Compensación de Potencia	nan	0
+15	nan	nan	nan	nan	nan	nan	nan	nan	nan	nan	nan	nan	nan	nan	nan	nan	nan	nan	nan	nan	nan	nan	nan	nan	nan	nan	nan	nan	nan	nan	nan	nan	nan	nan	nan	nan	nan	nan	0	MW	Asignación SAERLP	0	nan	nan	0	MW	Asignación SAERLP	0	nan
+16	nan	nan	nan	nan	nan	nan	nan	nan	nan	nan	nan	nan	nan	nan	nan	nan	nan	nan	nan	nan	nan	nan	nan	nan	nan	nan	nan	nan	nan	nan	nan	nan	nan	nan	nan	nan	nan	nan	0	MW	Asignación SAERLP	nan	0	nan	0	MW	Asignación SAERLP	nan	0
+17	nan	nan	nan	nan	nan	nan	nan	nan	nan	nan	nan	nan	nan	nan	nan	nan	nan	nan	nan	nan	nan	nan	nan	nan	nan	nan	nan	nan	nan	nan	nan	nan	nan	nan	nan	nan	nan	nan	0	nan	Diferencia Importación del MER aplica PMO.3.4.1	0	nan	nan	0	nan	Diferencia Importación del MER aplica PMO.3.4.1	0	nan
+18	nan	nan	nan	nan	nan	nan	nan	nan	nan	nan	nan	nan	nan	nan	nan	nan	nan	nan	nan	nan	nan	nan	nan	nan	nan	nan	nan	nan	nan	nan	nan	nan	nan	nan	nan	nan	nan	nan	0	nan	Diferencia Importación del MER aplica PMO.3.4.2	nan	0	nan	0	nan	Diferencia Importación del MER aplica PMO.3.4.2	nan	0
+19	nan	nan	nan	nan	nan	nan	nan	nan	nan	nan	nan	nan	nan	nan	nan	nan	nan	nan	nan	nan	nan	nan	nan	nan	nan	nan	nan	nan	nan	nan	nan	nan	nan	nan	nan	nan	nan	nan	0	nan	Servicio Auxiliar de seguimiento de la demanda	21.16	nan	nan	0	nan	Servicio Auxiliar de seguimiento de la demanda	0	nan
+20	nan	nan	nan	nan	nan	nan	nan	nan	nan	nan	nan	nan	nan	nan	nan	nan	nan	nan	nan	nan	nan	nan	nan	nan	nan	nan	nan	nan	nan	nan	nan	nan	nan	nan	nan	nan	nan	nan	0	nan	Servicio Auxiliar de seguimiento de la demanda	nan	0	nan	0	nan	Servicio Auxiliar de seguimiento de la demanda	nan	0
+21	nan	nan	nan	nan	nan	nan	nan	nan	nan	nan	nan	nan	nan	nan	nan	nan	nan	nan	nan	nan	nan	nan	nan	nan	nan	nan	nan	nan	nan	nan	nan	nan	nan	nan	nan	nan	nan	nan	0	nan	Servicios Auxiliares	453.24	nan	nan	0	nan	Servicios Auxiliares	0	nan
+22	nan	nan	nan	nan	nan	nan	nan	nan	nan	nan	nan	nan	nan	nan	nan	nan	nan	nan	nan	nan	nan	nan	nan	nan	nan	nan	nan	nan	nan	nan	nan	nan	nan	nan	nan	nan	nan	nan	0	nan	Servicios Auxiliares	nan	0	nan	0	nan	Servicios Auxiliares	nan	0.06
+23	nan	nan	nan	nan	nan	nan	nan	nan	nan	nan	nan	nan	nan	nan	nan	nan	nan	nan	nan	nan	nan	nan	nan	nan	nan	nan	nan	nan	nan	nan	nan	nan	nan	nan	nan	nan	nan	nan	0	nan	Incumplimiento al SAERLP	0	nan	nan	0	nan	Incumplimiento al SAERLP	0	nan
+24	nan	nan	nan	nan	nan	nan	1371.102	1983.5320000000002	nan	nan	8.73	25349.53896	185043.92592	0	0	0	nan	nan	210402.19488000002	nan	210402.19488000002	2.185	29807.75748	21560.99284	2179.96589476616	19532.494417104797	nan	70903.4297371048	70903.4297371048	7549.029999999999	1463.98	93234.94	nan	nan	nan	nan	nan	nan	0	nan	Incumplimiento al SAERLP	nan	0	nan	0	nan	Incumplimiento al SAERLP	nan	0
+25	nan	nan	nan	nan	nan	nan	nan	nan	nan	nan	nan	nan	nan	nan	nan	nan	nan	nan	nan	nan	nan	nan	nan	nan	nan	nan	nan	nan	nan	nan	nan	nan	nan	210402.19488000002	173607.8444530648	302.35191000000003	154.11280596	nan	Sub-Total	nan	nan	7564.089999999999	0	nan	Sub-Total	nan	nan	1.02	16.08
+26	nan	nan	nan	nan	nan	nan	nan	nan	nan	nan	nan	nan	nan	nan	nan	nan	nan	nan	nan	nan	nan	nan	nan	nan	nan	nan	nan	nan	nan	nan	nan	nan	nan	nan	nan	nan	nan	nan	TOTAL	nan	nan	-7564.089999999999	-7564.089999999999	nan	TOTAL	nan	nan	15.059999999999999	15.059999999999999
+27	nan	nan	nan	nan	nan	nan	nan	nan	nan	nan	nan	nan	nan	nan	nan	nan	nan	nan	nan	nan	nan	nan	nan	nan	nan	nan	nan	nan	nan	nan	nan	nan	nan	Ahorro ($):	36794.35042693521	nan	nan	nan	Documento de Transacciones Economicas Regional	nan	nan	nan	nan	nan	nan	nan	nan	nan	nan
+28	nan	nan	nan	nan	nan	nan	nan	nan	nan	nan	nan	nan	nan	nan	nan	nan	nan	nan	nan	nan	nan	nan	nan	nan	nan	nan	nan	nan	nan	nan	nan	nan	nan	nan	nan	nan	nan	nan	Julio 2020 - Aplicación del DTER	nan	nan	nan	nan	nan	nan	nan	nan	nan	nan
+29	nan	nan	nan	nan	nan	nan	nan	nan	nan	nan	nan	nan	nan	nan	nan	nan	nan	nan	nan	nan	nan	nan	nan	nan	nan	nan	nan	nan	nan	nan	nan	nan	nan	Ahorro (%):	0.17487626708419254	nan	nan	nan	Envases Universales Ball de Panamá, S.A.	nan	nan	nan	nan	nan	nan	nan	nan	nan	nan
+30	nan	nan	nan	nan	nan	nan	nan	nan	nan	nan	nan	nan	nan	nan	nan	nan	nan	nan	nan	nan	nan	nan	nan	nan	nan	nan	nan	nan	nan	nan	nan	nan	nan	nan	nan	nan	nan	nan	Documento de Transacciones Económicas	nan	nan	nan	nan	nan	nan	nan	nan	nan	nan
+31	nan	nan	nan	nan	nan	nan	nan	nan	nan	nan	nan	nan	nan	nan	nan	nan	nan	nan	nan	nan	nan	nan	nan	nan	nan	nan	nan	nan	nan	nan	nan	nan	nan	Cargos como Cliente Regulado	nan	nan	nan	nan	Cantidad	U/M	En Concepto de:	Débito (B/.)	Crédito (B/.)	nan	nan	nan	nan	nan	nan
+32	nan	nan	nan	nan	nan	nan	nan	nan	nan	nan	nan	nan	nan	nan	nan	nan	nan	nan	nan	nan	nan	nan	nan	nan	nan	nan	nan	nan	nan	nan	nan	nan	nan	210402.19488000002	nan	nan	nan	nan	nan	nan	Transacción no Comprometida en Contratos por Inyección	0	0	nan	nan	nan	nan	nan	nan
+33	nan	nan	nan	nan	nan	nan	nan	nan	nan	nan	nan	nan	nan	nan	nan	nan	nan	nan	nan	nan	nan	nan	nan	nan	nan	nan	nan	nan	nan	nan	nan	nan	nan	nan	nan	nan	nan	nan	nan	nan	Transacción no Comprometida en Contratos por Retiro	0	0	nan	nan	nan	nan	nan	nan
+34	nan	nan	nan	nan	nan	nan	nan	nan	nan	nan	nan	nan	nan	nan	nan	nan	nan	nan	nan	nan	nan	nan	nan	nan	nan	nan	nan	nan	nan	nan	nan	nan	nan	Cargos como Gran Cliente pasivo Energía	nan	nan	nan	nan	nan	nan	Cargo asociado al Compromiso Contractual(CMORC)	0	0	nan	nan	nan	nan	nan	nan
+35	nan	nan	nan	nan	nan	nan	nan	nan	nan	nan	nan	nan	nan	nan	nan	nan	nan	nan	nan	nan	nan	nan	nan	nan	nan	nan	nan	nan	nan	nan	nan	nan	nan	173607.8444530648	nan	nan	nan	nan	nan	nan	Falla Tipo I	0	0	nan	nan	nan	nan	nan	nan
+36	nan	nan	nan	nan	nan	nan	nan	nan	nan	nan	nan	nan	nan	nan	nan	nan	nan	nan	nan	nan	nan	nan	nan	nan	nan	nan	nan	nan	nan	nan	nan	nan	nan	nan	nan	nan	nan	nan	nan	nan	Falla Tipo IV	0	0	nan	nan	nan	nan	nan	nan
+37	nan	nan	nan	nan	nan	nan	nan	nan	nan	nan	nan	nan	nan	nan	nan	nan	nan	nan	nan	nan	nan	nan	nan	nan	nan	nan	nan	nan	nan	nan	nan	nan	nan	nan	nan	nan	nan	nan	nan	nan	Falla Transmisión	0	0	nan	nan	nan	nan	nan	nan
+38	nan	nan	nan	nan	nan	nan	nan	nan	nan	nan	nan	nan	nan	nan	nan	nan	nan	nan	nan	nan	nan	nan	nan	nan	nan	nan	nan	nan	nan	nan	nan	nan	nan	nan	nan	nan	nan	nan	nan	nan	Desviaciones DTER	0	0	nan	nan	nan	nan	nan	nan
+39	nan	nan	nan	nan	nan	nan	nan	nan	nan	nan	nan	nan	nan	nan	nan	nan	nan	nan	nan	nan	nan	nan	nan	nan	nan	nan	nan	nan	nan	nan	nan	nan	nan	nan	nan	nan	nan	nan	nan	nan	Emergencias	0	0	nan	nan	nan	nan	nan	nan
+40	nan	nan	nan	nan	nan	nan	nan	nan	nan	nan	nan	nan	nan	nan	nan	nan	nan	nan	nan	nan	nan	nan	nan	nan	nan	nan	nan	nan	nan	nan	nan	nan	nan	nan	nan	nan	nan	nan	nan	nan	Desvíos de Emergencia	0	0	nan	nan	nan	nan	nan	nan
+41	nan	nan	nan	nan	nan	nan	nan	nan	nan	nan	nan	nan	nan	nan	nan	nan	nan	nan	nan	nan	nan	nan	nan	nan	nan	nan	nan	nan	nan	nan	nan	nan	nan	nan	nan	nan	nan	nan	nan	nan	Cargo CRIE	1138.19	0	nan	nan	nan	nan	nan	nan
+42	nan	nan	nan	nan	nan	nan	nan	nan	nan	nan	nan	nan	nan	nan	nan	nan	nan	nan	nan	nan	nan	nan	nan	nan	nan	nan	nan	nan	nan	nan	nan	nan	nan	nan	nan	nan	nan	nan	nan	nan	Servicios EOR	106.23	0	nan	nan	nan	nan	nan	nan
+43	nan	nan	nan	nan	nan	nan	nan	nan	nan	nan	nan	nan	nan	nan	nan	nan	nan	nan	nan	nan	nan	nan	nan	nan	nan	nan	nan	nan	nan	nan	nan	nan	nan	nan	nan	nan	nan	nan	nan	nan	Intereses	219.56	0	nan	nan	nan	nan	nan	nan
+44	nan	nan	nan	nan	nan	nan	nan	nan	nan	nan	nan	nan	nan	nan	nan	nan	nan	nan	nan	nan	nan	nan	nan	nan	nan	nan	nan	nan	nan	nan	nan	nan	nan	nan	nan	nan	nan	nan	nan	nan	Intereses por Mora por Transacción	0	0	nan	nan	nan	nan	nan	nan
+45	nan	nan	nan	nan	nan	nan	nan	nan	nan	nan	nan	nan	nan	nan	nan	nan	nan	nan	nan	nan	nan	nan	nan	nan	nan	nan	nan	nan	nan	nan	nan	nan	nan	nan	nan	nan	nan	nan	nan	nan	Cargo Complementario	0	0	nan	nan	nan	nan	nan	nan
+46	nan	nan	nan	nan	nan	nan	nan	nan	nan	nan	nan	nan	nan	nan	nan	nan	nan	nan	nan	nan	nan	nan	nan	nan	nan	nan	nan	nan	nan	nan	nan	nan	nan	nan	nan	nan	nan	nan	nan	nan	Renta de Congestión	0	0	nan	nan	nan	nan	nan	nan
+47	nan	nan	nan	nan	nan	nan	nan	nan	nan	nan	nan	nan	nan	nan	nan	nan	nan	nan	nan	nan	nan	nan	nan	nan	nan	nan	nan	nan	nan	nan	nan	nan	nan	nan	nan	nan	nan	nan	nan	nan	Sub-Total	1463.98	0	nan	nan	nan	nan	nan	nan
+49	nan	nan	nan	nan	nan	nan	nan	nan	nan	nan	nan	nan	nan	nan	nan	nan	nan	nan	nan	nan	nan	nan	nan	nan	nan	nan	nan	nan	nan	nan	nan	nan	nan	nan	nan	nan	nan	nan	TOTAL	nan	nan	-1463.98	nan	nan	nan	nan	nan	nan	nan
+53	Cliente Regulado	nan	nan	nan	nan	nan	nan	nan	nan	nan	nan	nan	nan	nan	nan	nan	nan	nan	nan	nan	nan	nan	nan	nan	nan	nan	nan	nan	nan	nan	nan	nan	nan	nan	nan	nan	nan	nan	nan	nan	nan	nan	nan	nan	nan	nan	nan	nan	nan
+54	nan	Cargo fijo ($/cliente-mes)	Cargo por demanda máx. ($/kW-mes)	Cargo por Energía de los primeros 10,000 kWh	Cargo por Energía por los siguientes kWh de 10,001 a 30,000	Cargo por Energía por los siguientes kWh de 30,001 a 50,000	Cargo por Energía por los siguientes kWh de 30,001 a 50,0004	nan	nan	nan	nan	nan	nan	nan	nan	nan	nan	nan	nan	nan	nan	nan	nan	nan	nan	nan	nan	nan	nan	nan	nan	nan	Mes	consumo	Acmuluado	Ahorro 	nan	nan	nan	nan	nan	nan	nan	nan	nan	nan	nan	nan	nan
+55	ENSA - BTD	4.87	15.16	0.15174	0.15559	0.15966	0.16392	nan	nan	nan	nan	nan	nan	nan	nan	nan	nan	nan	nan	nan	nan	nan	nan	nan	nan	nan	nan	nan	nan	nan	nan	nan	Febrero	1208.5826120000004	1208.5826120000004	55095.240621611214	nan	nan	nan	nan	nan	nan	nan	nan	nan	nan	nan	nan	nan
+56	ENSA - MTD	8.73	12.78	0.13496	nan	nan	nan	nan	nan	nan	nan	nan	nan	nan	nan	nan	nan	nan	nan	nan	nan	nan	nan	nan	nan	nan	nan	nan	nan	nan	nan	nan	Marzo	1249.633	2458.2156120000004	56620.026843080996	nan	nan	nan	nan	nan	nan	nan	nan	nan	nan	nan	nan	nan
+57	EDEMET - BTD	5.05	12.65	0.14745	0.1537	0.16579	0.17763	nan	nan	nan	nan	nan	nan	nan	nan	nan	nan	nan	nan	nan	nan	nan	nan	nan	nan	nan	nan	nan	nan	nan	nan	nan	Abril	412.4821630000006	2870.697775000001	8341.233235657724	nan	nan	nan	nan	nan	nan	nan	nan	nan	nan	nan	nan	nan
+58	EDEMET - MTD	12.72	14.03	0.15375	nan	nan	nan	nan	nan	nan	nan	nan	nan	nan	nan	nan	nan	nan	nan	nan	nan	nan	nan	nan	nan	nan	nan	nan	nan	nan	nan	nan	Mayo	1112.333	3983.030775000001	37383.81676928105	nan	nan	nan	nan	nan	nan	nan	nan	nan	nan	nan	nan	nan
+59	nan	nan	nan	nan	nan	nan	nan	nan	nan	nan	nan	nan	nan	nan	nan	nan	nan	nan	nan	nan	nan	nan	nan	nan	nan	nan	nan	nan	nan	nan	nan	nan	Junio	1264.6520430000014	5247.682818000003	38769.91354892691	nan	nan	nan	nan	nan	nan	nan	nan	nan	nan	nan	nan	nan
+60	nan	nan	nan	nan	nan	nan	nan	nan	nan	nan	nan	nan	nan	nan	nan	nan	nan	nan	nan	nan	nan	nan	nan	nan	nan	nan	nan	nan	nan	nan	nan	nan	Julio	1371.102	6618.784818000003	36794.35042693521	nan	nan	nan	nan	nan	nan	nan	nan	nan	nan	nan	nan	nan
+61	nan	nan	nan	nan	nan	nan	nan	nan	nan	nan	nan	nan	nan	nan	nan	nan	nan	nan	nan	nan	nan	nan	nan	nan	nan	nan	nan	nan	nan	nan	nan	nan	Total 	nan	6618.784818000003	233004.5814454931	nan	Mes	Ahorro	nan	nan	nan	nan	nan	nan	nan	nan	nan	nan
+62	Cargos por uso de distribución	nan	nan	nan	nan	nan	nan	nan	nan	nan	nan	nan	nan	nan	nan	nan	nan	nan	nan	nan	nan	nan	nan	nan	nan	nan	nan	nan	nan	nan	nan	nan	Ahorro por MWh	nan	nan	35.20352872204418	nan	Junio	90865.81246986685	nan	nan	nan	nan	nan	nan	nan	nan	nan	nan
+63	nan	nan	nan	nan	nan	nan	nan	nan	nan	nan	nan	nan	nan	nan	nan	nan	nan	nan	nan	nan	nan	nan	nan	nan	nan	nan	nan	nan	nan	nan	nan	nan	nan	nan	nan	nan	nan	Julio	80774.53539465432	nan	nan	nan	nan	nan	nan	nan	nan	nan	nan
+64	nan	Cargo fijo
+($/cliente-mes)	Cargo x energía
+($/kWh)	Demanda máxima
+($/kW-mes)	Demanda maxima de generación ($/kW-mes)	nan	nan	nan	nan	nan	nan	nan	nan	nan	nan	nan	nan	nan	nan	nan	nan	nan	nan	nan	nan	nan	nan	nan	nan	nan	nan	nan	Total MWh Contrato 5 anos	nan	67895	2390143.58258319	nan	Agosto	84155.23151141696	nan	nan	nan	nan	nan	nan	nan	nan	nan	nan
+65	ENSA - BTD	2.44	0.03045	13.46	8.96	nan	nan	nan	nan	nan	nan	nan	nan	nan	nan	nan	nan	nan	nan	nan	nan	nan	nan	nan	nan	nan	nan	nan	nan	nan	nan	nan	nan	nan	nan	nan	nan	Septiembre	79007.50357377774	nan	nan	nan	nan	nan	nan	nan	nan	nan	nan
+66	ENSA - MTD	4.37	0.02174	10.87	8.96	nan	nan	nan	nan	nan	nan	nan	nan	nan	nan	nan	nan	nan	nan	nan	nan	nan	nan	nan	nan	nan	nan	nan	nan	nan	nan	nan	nan	nan	nan	nan	nan	Octubre	79537.32156240684	nan	nan	nan	nan	nan	nan	nan	nan	nan	nan
+67	EDEMET - BTD	5.05	0.0297	11.43	8.96	nan	nan	nan	nan	nan	nan	nan	nan	nan	nan	nan	nan	nan	nan	nan	nan	nan	nan	nan	nan	nan	nan	nan	nan	nan	nan	nan	nan	nan	nan	nan	nan	Noviembre	83781.71477398585	nan	nan	nan	nan	nan	nan	nan	nan	nan	nan
+68	EDEMET - MTD	12.72	0.02835	12.24	8.96	nan	nan	nan	nan	nan	nan	nan	nan	nan	nan	nan	nan	nan	nan	nan	nan	nan	nan	nan	nan	nan	nan	nan	nan	nan	nan	nan	nan	nan	nan	nan	nan	Diciembre	94829.29073236178	nan	nan	nan	nan	nan	nan	nan	nan	nan	nan
+74	ANEXO, Pronóstico de Cambios Futuros de Demanda 	nan	nan	nan	nan	nan	nan	nan	nan	nan	nan	nan	nan	nan	nan	nan	nan	nan	nan	nan	nan	nan	nan	nan	nan	nan	nan	nan	nan	nan	nan	nan	nan	nan	nan	nan	nan	nan	nan	nan	nan	nan	nan	nan	nan	nan	nan	nan	nan
+76	ENVASES UNIVERSALES BALL DE PANAMA S.A.	nan	nan	nan	KWh PROMEDIO MENSUAL - REFERENCIA MES DE DICIEMBRE DE CADA AÑO	nan	nan	nan	nan	nan	nan	nan	nan	nan	nan	nan	nan	nan	nan	nan	nan	nan	nan	nan	nan	nan	nan	nan	nan	nan	nan	nan	nan	nan	nan	nan	nan	nan	nan	nan	nan	nan	nan	nan	nan	nan	nan	nan	nan
+77	UBICACIÓN	DISTRIBUIDORA	NAC	TARIFA	MEDIDOR	2018-01-01 00:00:00	2019-01-01 00:00:00	2020-01-01 00:00:00	2021-01-01 00:00:00	2022-01-02 00:00:00	2023-01-03 00:00:00	2021-01-04 00:00:00	2021-01-05 00:00:00	2021-01-06 00:00:00	2021-01-07 00:00:00	nan	nan	nan	nan	nan	nan	nan	nan	nan	nan	nan	nan	nan	nan	nan	nan	nan	nan	nan	nan	nan	nan	nan	nan	nan	nan	nan	nan	nan	nan	nan	nan	nan	nan
+78	BARRIADA 24 DE DICIEMBRE -PARQUE LOGISTICO PANAMA-	ENSA	21177942	MTD	144665237	1230150	1250000	1300000	1325000	1350000	1350000	1350000	1350000	1350000	1350000	nan	nan	nan	nan	nan	nan	nan	nan	nan	nan	nan	nan	nan	nan	nan	nan	nan	nan	nan	nan	nan	nan	nan	nan	nan	nan	nan	nan	nan	nan	nan	nan	nan	nan
+79	kWh Promedio Mensual	nan	nan	nan	nan	1230150	1250000	1300000	1325000	1350000	1350000	1350000	1350000	1350000	1350000	nan	nan	nan	nan	nan	nan	nan	nan	nan	nan	nan	nan	nan	nan	nan	nan	nan	nan	nan	nan	nan	nan	nan	nan	nan	nan	nan	nan	nan	nan	nan	nan	nan	nan
+81	ENVASES UNIVERSALES BALL DE PANAMA S.A.	nan	nan	nan	KWh PROMEDIO ANUAL - REFERENCIA 635 DIAS AÑO	nan	nan	nan	nan	nan	nan	nan	nan	nan	nan	nan	nan	nan	nan	nan	nan	nan	nan	nan	nan	nan	nan	nan	nan	nan	nan	nan	nan	nan	nan	nan	nan	nan	nan	nan	nan	nan	nan	nan	nan	nan	nan	nan	nan
+82	UBICACIÓN	DISTRIBUIDORA	NAC	TARIFA	MEDIDOR	2018-01-01 00:00:00	2019-01-01 00:00:00	2020-01-01 00:00:00	2021-01-01 00:00:00	2021-01-02 00:00:00	2021-01-03 00:00:00	2021-01-04 00:00:00	2021-01-05 00:00:00	2021-01-06 00:00:00	2021-01-07 00:00:00	nan	nan	nan	nan	nan	nan	nan	nan	nan	nan	nan	nan	nan	nan	nan	nan	nan	nan	nan	nan	nan	nan	nan	nan	nan	nan	nan	nan	nan	nan	nan	nan	nan	nan
+83	BARRIADA 24 DE DICIEMBRE -PARQUE LOGISTICO PANAMA-	ENSA	21177942	MTD	144665237	5195000	15000000	15600000	15900000	16200000	16200000	16200000	16200000	16200000	16200000	nan	nan	nan	nan	nan	nan	nan	nan	nan	nan	nan	nan	nan	nan	nan	nan	nan	nan	nan	nan	nan	nan	nan	nan	nan	nan	nan	nan	nan	nan	nan	nan	nan	nan
+84	kWh Promedio Anual	nan	nan	nan	nan	5195000	15000000	15600000	15900000	16200000	16200000	16200000	16200000	16200000	16200000	nan	nan	nan	nan	nan	nan	nan	nan	nan	nan	nan	nan	nan	nan	nan	nan	nan	nan	nan	nan	nan	nan	nan	nan	nan	nan	nan	nan	nan	nan	nan	nan	nan	nan
+85	Crecimiento Interanual (%)	nan	nan	nan	nan	5195000	15000000	15600000	15900000	16200000	16200000	16200000	16200000	16200000	16200000	nan	nan	nan	nan	nan	nan	nan	nan	nan	nan	nan	nan	nan	nan	nan	nan	nan	nan	nan	nan	nan	nan	nan	nan	nan	nan	nan	nan	nan	nan	nan	nan	nan	nan
+86	kWh Promedio Acumulado	nan	nan	nan	nan	5195000	20195000	35795000	51695000	67895000	nan	nan	nan	nan	nan	nan	nan	nan	nan	nan	nan	nan	nan	nan	nan	nan	nan	nan	nan	nan	nan	nan	nan	nan	nan	nan	nan	nan	nan	nan	nan	nan	nan	nan	nan	nan	nan	nan	nan
+87	nan	nan	nan	nan	nan	Escenario con una sola linea de Producciòn	nan	nan	nan	nan	nan	nan	nan	nan	nan	nan	nan	nan	nan	nan	nan	nan	nan	nan	nan	nan	nan	nan	nan	nan	nan	nan	nan	nan	nan	nan	nan	nan	nan	nan	nan	nan	nan	nan	nan	nan	nan	nan	nan
+
+[SHEET]	Acetioxigeno la Chorrera
+row	Naturgy	2020	2021	2022	2023	2024	2025	Unnamed: 7	Unnamed: 8	AES	2020.1	2021.1	2022.1	2023.1	2024.1	2025.1	Unnamed: 16	Unnamed: 17	Gran Cliente (AES+Naturgy)	2020.2	2021.2	2022.2	2023.2	2024.2	2025.2	Acumulado
+1	2020-01-01 00:00:00	43933.695569999996	107078.63345	82819.17546	82621.39112	71146.82432000001	72360.85543	nan	nan	2020-01-01 00:00:00	65463.139999975705	142762.7999930436	92458.43999999999	82771.3499764852	73457.74999569406	77629.58003242662	nan	nan	2020-01-01 00:00:00	109396.8355699757	249841.43344304358	175277.61546	165392.7410964852	144604.57431569407	149990.43546242663	nan
+2	2020-02-01 00:00:00	43946.959520000004	104725.79665999999	90170.85111	61626.557	69308.77308	72803.95232000001	nan	nan	2020-02-01 00:00:00	53866.07999529336	140434.8499999241	98857.01999999987	73415.889997668	71506.29003143961	71101.8299926808	nan	nan	2020-02-01 00:00:00	97813.03951529336	245160.6466599241	189027.8711099999	135042.446997668	140815.0631114396	143905.7823126808	nan
+3	2020-03-01 00:00:00	2754.0113300000003	92750.40215000001	91245.61717	58298.93016	108910.79023	73748.5322	nan	nan	2020-03-01 00:00:00	54484.36999974313	106468.47000183699	109278.39999126972	64969.7800101012	98091.47999450724	72111.85999528899	nan	nan	2020-03-01 00:00:00	57238.38132974313	199218.872151837	200524.01716126973	123268.7101701012	207002.27022450726	145860.392195289	nan
+4	2020-04-01 00:00:00	44661.33905	64153.73356	63532.90197	86892.64026	104084.46857	108381.038	nan	nan	2020-04-01 00:00:00	57996.23000008351	82955.8099969275	81804.670024002	80581.1899988235	85900.61997752669	89318.799994595	nan	nan	2020-04-01 00:00:00	102657.56905008352	147109.5435569275	145337.571994002	167473.8302588235	189985.08854752668	197699.837994595	nan
+5	2020-05-01 00:00:00	41212.66618	93913.4216	64250.24417	88100.06124	69614.81940000001	73512.63176	nan	nan	2020-05-01 00:00:00	48187.989998859586	110496.11999634557	85753.8299983405	83628.09999071178	70712.81999946201	74599.4600214578	nan	nan	2020-05-01 00:00:00	89400.65617885959	204409.54159634557	150004.0741683405	171728.1612307118	140327.63939946203	148112.0917814578	nan
+6	2020-06-01 00:00:00	42510.35399	106179.65621000002	61685.416690000005	60891.81732	73277.23478000001	74810.23156	nan	nan	2020-06-01 00:00:00	52230.4899935784	147335.109966635	80247.526	72708.04999475222	78708.53999124817	77212.0399994967	nan	nan	2020-06-01 00:00:00	94740.84398357841	253514.76617663502	141932.94269	133599.86731475222	151985.77477124817	152022.2715594967	nan
+7	2020-07-01 00:00:00	46695.38991	105458.29061	61783.68499000001	86799.01636000001	73109.74718	nan	nan	nan	2020-07-01 00:00:00	57767.9899970109	144641.18998435952	82869.2369924	81973.550045135	78948.34000110939	nan	nan	nan	2020-07-01 00:00:00	104463.37990701091	250099.4805943595	144652.9219824	168772.566405135	152058.0871811094	0	nan
+8	2020-08-01 00:00:00	44688.738150000005	106978.77660000001	62651.00392	83463.25822	73404.05867999999	nan	nan	nan	2020-08-01 00:00:00	60419.4896966366	149160.39999774663	85997.0400149218	77166.83028537578	81137.6899625164	nan	nan	nan	2020-08-01 00:00:00	105108.22784663661	256139.17659774664	148648.0439349218	160630.08850537578	154541.74864251638	0	nan
+9	2020-09-01 00:00:00	44016.762200000005	105355.7732	64466.164800000006	89929.77788000001	74045.62374000001	nan	nan	nan	2020-09-01 00:00:00	54772.909998238494	146802.00998478083	87399.460032546	91803.81999268338	80804.7299990042	nan	nan	nan	2020-09-01 00:00:00	98789.67219823849	252157.78318478083	151865.62483254602	181733.59787268337	154850.3537390042	0	nan
+10	2020-10-01 00:00:00	72406.87574999999	103751.34382	65076.26944	89193.39791999999	103136.86071	nan	nan	nan	2020-10-01 00:00:00	59078.8199999405	142989.02994782402	88466.8499567808	90734.5100427896	84910.1399984729	nan	nan	nan	2020-10-01 00:00:00	131485.6957499405	246740.37376782403	153543.1193967808	179927.90796278958	188047.00070847291	0	nan
+11	2020-11-01 00:00:00	94193.4016	99073.17652000001	64011.824400000005	115330.41256	72881.74489999999	nan	nan	nan	2020-11-01 00:00:00	107370.85999996633	127650.33999911281	87210.54000000001	114200.8699971952	78850.25004726	nan	nan	nan	2020-11-01 00:00:00	201564.26159996632	226723.5165191128	151222.36440000002	229531.2825571952	151731.99494725998	0	nan
+12	2020-12-01 00:00:00	95590.7301	62047.30096	62674.69664	72253.76712	78498.16948999999	nan	nan	nan	2020-12-01 00:00:00	111337.7799999337	78287.25004004402	83936.51999137398	76268.92999995283	76820.82004270451	nan	nan	nan	2020-12-01 00:00:00	206928.51009993372	140334.551000044	146611.21663137397	148522.69711995282	155318.9895327045	0	nan
+13	Total 	616610.92335	1151466.30534	834367.8507600001	975401.02716	971419.1150800001	475617.24127	nan	nan	Total 	782976.1496792602	1519983.3799085808	1064279.5330016345	990222.8703316737	959849.470040945	461973.5700359459	nan	nan	Total Gran Cliente	1399587.0730292604	2671449.6852485808	1898647.383761635	1965623.8974916737	1931268.585120945	937590.811305946	10804167.43595804
+16	Cliente Regulado	2020.0	2021.0	2022.0	2023.0	2024.0	2025.0	Acumulado	nan	Ahorro Diferencia	2020.0	2021.0	2022.0	2023.0	2024.0	2025.0	Acumulado	nan	nan	nan	nan	nan	nan	nan	nan	nan
+17	2020-01-01 00:00:00	133648.69353955	303063.29224619997	226241.727238	195798.79834192	169122.61050096003	179040.9238621	nan	nan	2020-01-01 00:00:00	24251.85796957431	53221.858803156385	50964.11177799999	30406.057245434786	24518.036185265955	29050.48839967337	nan	nan	nan	nan	nan	nan	nan	nan	nan	nan
+18	2020-02-01 00:00:00	124307.36320140002	300475.10142039997	251463.62531	181099.069368	170600.23818656	169417.3699704	nan	nan	2020-02-01 00:00:00	26494.323686106654	55314.45476047587	62435.75420000011	46056.622370331985	29785.17507512038	25511.58765771921	nan	nan	nan	nan	nan	nan	nan	nan	nan	nan
+19	2020-03-01 00:00:00	110263.57741770001	234299.6782882	257986.8673636	158223.92405744	238522.57985536003	179844.44394149998	nan	nan	2020-03-01 00:00:00	53025.19608795688	35080.80613636301	57462.85020233027	34955.21388733879	31520.309630852775	33984.051746210986	nan	nan	nan	nan	nan	nan	nan	nan	nan	nan
+20	2020-04-01 00:00:00	123654.12927555	179038.823485	193773.79721319998	203631.87143583997	212465.78083623995	243311.94078999996	nan	nan	2020-04-01 00:00:00	20996.560225466485	31929.2799280725	48436.22521919798	36158.04117701648	22480.692288713268	45612.102795404964	nan	nan	nan	nan	nan	nan	nan	nan	nan	nan
+21	2020-05-01 00:00:00	104881.73151270003	241585.22857439998	206924.46244759997	207632.39990016	159569.5373008	190680.66323219996	nan	nan	2020-05-01 00:00:00	15481.075333840447	37175.68697805441	56920.38827925947	35904.23866944821	19241.897901337972	42568.571450742165	nan	nan	nan	nan	nan	nan	nan	nan	nan	nan
+22	2020-06-01 00:00:00	112292.50958479999	305532.7395602	192420.14731788004	156972.74724288	177270.51334096	192713.65967899997	nan	nan	2020-06-01 00:00:00	17551.665601221583	52017.973383565	50487.20462788004	23372.879928127775	25284.73856971183	40691.38811950327	nan	nan	nan	nan	nan	nan	nan	nan	nan	nan
+23	2020-07-01 00:00:00	125534.24090374999	296791.9084668	197180.5405112233	202197.20947824	174765.18007511998	nan	nan	nan	2020-07-01 00:00:00	21070.86099673908	46692.42787244049	52527.61852882331	33424.64307310499	22707.092894010566	0.0	nan	nan	nan	nan	nan	nan	nan	nan	nan	nan
+24	2020-08-01 00:00:00	127844.15247500001	309414.6995028	204130.05487699996	184838.43956847998	183479.80672256002	nan	nan	nan	2020-08-01 00:00:00	22735.9246283634	53275.52290505337	55482.01094207817	24208.3510631042	28938.058080043644	0.0	nan	nan	nan	nan	nan	nan	nan	nan	nan	nan
+25	2020-09-01 00:00:00	116578.386025	303582.37992559996	201470.46231	215924.98193392	185941.41721608	nan	nan	nan	2020-09-01 00:00:00	17788.71382676151	51424.596740819135	49604.837477453984	34191.38406123663	31091.063477075804	0.0	nan	nan	nan	nan	nan	nan	nan	nan	nan	nan
+26	2020-10-01 00:00:00	141939.273805	302885.5481696	199463.666988	196926.31300759997	212835.73021332003	nan	nan	nan	2020-10-01 00:00:00	10453.578055059508	56145.17440177599	45920.54759121922	16998.40504481038	24788.729504847113	0.0	nan	nan	nan	nan	nan	nan	nan	nan	nan	nan
+27	2020-11-01 00:00:00	235319.58151	280898.0826328	199110.916755	227055.96255859995	182008.2279508	nan	nan	nan	2020-11-01 00:00:00	33755.319910033664	54174.56611368718	47888.55235499999	-2475.3199985952524	30276.233003540023	0.0	nan	nan	nan	nan	nan	nan	nan	nan	nan	nan
+28	2020-12-01 00:00:00	241548.434225	172017.2310464	192300.001489	168238.6306847	178537.03740508	nan	nan	nan	2020-12-01 00:00:00	34619.92412506629	31682.680046355992	45688.784857626015	19715.93356474719	23218.047872375493	0.0	nan	nan	nan	nan	nan	nan	nan	nan	nan	nan
+29	Total Regulado	1697812.0734754498	3229584.7133184	2522466.2698205034	2298540.3475777796	2245118.65960384	1155009.0014751998	13148531.065271175	nan	nan	298225.0004461898	558135.0280698193	623818.8860588686	332916.4500861062	313850.07448289485	217418.19016925397	2344363.6293131327	nan	nan	nan	nan	nan	nan	nan	nan	nan
+30	Monomico	0.17876240956657952	0.17868756270462632	0.20138891007700677	0.1790902009404139	0.17801383372720334	0.22578640527683147	nan	nan	nan	0.17565253840828107	0.17281944200693694	0.24730514477930324	0.1448382015294777	0.1397921990182358	0.188239390248529	0.17829852001530658	nan	nan	nan	nan	nan	nan	nan	nan	nan
+31	nan	nan	nan	nan	nan	nan	nan	nan	nan	Ahorro Cambio Contrato	-83514.15958385637	-133971.77449485273	-136192.84568248066	-160037.96744999994	-20717.750699999982	nan	nan	nan	nan	nan	nan	nan	nan	nan	nan	nan
+32	nan	nan	nan	nan	nan	nan	nan	nan	nan	nan	-0.2800374195956292	-0.24003470084678805	-0.21832113250516177	-0.4807151085763632	-0.06601161632392451	nan	nan	nan	nan	nan	nan	nan	nan	nan	nan	nan
+35	Naturgy Monomico	2020.0	2021.0	2022.0	2023.0	2024.0	2025.0	nan	nan	AES Monomico	2020.0	2021.0	2022.0	2023.0	2024.0	2025.0	nan	nan	Gran Cliente Monomico	2020.0	2021.0	2022.0	2023.0	2024.0	2025	nan
+36	2020-01-01 00:00:00	0.059847832786170625	0.06195568702952595	0.0737842892422825	0.08348487518402839	0.07603219711331922	0.07166122687204819	nan	nan	2020-01-01 00:00:00	0.08917590486176859	0.082602542363953	0.08237198984364558	0.0836364012748712	0.07850180497239001	0.07687901025530408	nan	nan	2020-01-01 00:00:00	0.14902373764793922	0.14455822939347893	0.1561562790859281	0.1671212764588996	0.15453400208570922	0.14854023712735226	nan
+37	2020-02-01 00:00:00	0.06523030267767026	0.0610638923511096	0.07493941500934968	0.06221448387259603	0.07163282857012927	0.07680454759513541	nan	nan	2020-02-01 00:00:00	0.07995321497846784	0.08188525498240493	0.08215833783503003	0.07411628892803795	0.07390403246059103	0.07500889322287385	nan	nan	2020-02-01 00:00:00	0.1451835176561381	0.14294914733351452	0.15709775284437974	0.13633077280063402	0.1455368610307203	0.15181344081800924	nan
+38	2020-03-01 00:00:00	0.004023626406218041	0.0721001874596746	0.07222284264558053	0.06677050471639767	0.08223958740054263	0.07633277841317815	nan	nan	2020-03-01 00:00:00	0.07960197820141883	0.08276402546764794	0.08649617298796865	0.07441071372462697	0.07406982196365298	0.07463875504741938	nan	nan	2020-03-01 00:00:00	0.08362560460763688	0.15486421292732255	0.1587190156335492	0.14118121844102463	0.15630940936419563	0.15097153346059752	nan
+39	2020-04-01 00:00:00	0.061105418120373796	0.06325238704461425	0.06440690365256532	0.0802600315155837	0.09083611241097213	0.09037024764445926	nan	nan	2020-04-01 00:00:00	0.07935014844926529	0.08179029824690905	0.08293003053840821	0.07443034104519004	0.074966788798111	0.07447577753238972	nan	nan	2020-04-01 00:00:00	0.1404555665696391	0.1450426852915233	0.14733693419097352	0.15469037256077373	0.16580290120908314	0.164846025176849	nan
+40	2020-05-01 00:00:00	0.0680683549367423	0.07046748124137103	0.06259217739091467	0.07802776869078173	0.07653512544251193	0.0736477016448166	nan	nan	2020-05-01 00:00:00	0.0795890562528649	0.0829102287024623	0.08354083332359838	0.07406707725603875	0.07774227665456804	0.07473652681163033	nan	nan	2020-05-01 00:00:00	0.1476574111896072	0.15337770994383335	0.14613301071451307	0.15209484594682052	0.15427740209708	0.14838422845644691	nan
+41	2020-06-01 00:00:00	0.06469979603981495	0.060812742315336114	0.06678173092183824	0.06364124644909375	0.07050999934567947	0.0745144093548612	nan	nan	2020-06-01 00:00:00	0.07949362290511751	0.08438388667111586	0.0868774011109824	0.07599101377171798	0.0757361971960904	0.07690672031982698	nan	nan	2020-06-01 00:00:00	0.14419341894493243	0.14519662898645197	0.1536591320328206	0.13963226022081174	0.14624619654176985	0.15142112967468818	nan
+42	2020-07-01 00:00:00	0.06633150547608563	0.06260547145426805	0.06505069783844616	0.07904803985960618	0.07126220329731385	nan	nan	nan	2020-07-01 00:00:00	0.08206030086084762	0.08586645808782452	0.0872512168312348	0.07465347792106307	0.07695325004055789	nan	nan	nan	2020-07-01 00:00:00	0.14839180633693325	0.14847192954209257	0.15230191466968096	0.15370151778066923	0.14821545333787176	nan	nan
+43	2020-08-01 00:00:00	0.06128545118556207	0.06065278553569303	0.06310142186930309	0.08456831235757646	0.07006958716594691	nan	nan	nan	2020-08-01 00:00:00	0.08285836297348646	0.0845681175183818	0.08661530002651104	0.07818851967192887	0.07745190853896418	nan	nan	nan	2020-08-01 00:00:00	0.14414381415904853	0.1452209030540748	0.14971672189581411	0.1627568320295053	0.14752149570491108	nan	nan
+44	2020-09-01 00:00:00	0.06701597448272713	0.06139327607104564	0.0630303337961243	0.07506772044988991	0.06963533916906636	nan	nan	nan	2020-09-01 00:00:00	0.0833923204552892	0.08554496875715632	0.08545284424074191	0.0766320528961899	0.0759918614461723	nan	nan	nan	2020-09-01 00:00:00	0.15040829493801633	0.14693824482820195	0.1484831780368662	0.1516997733460798	0.14562720061523868	nan	nan
+45	2020-10-01 00:00:00	0.10266838107054235	0.06180163203040303	0.06333530848048832	0.07530758325818904	0.09140008446390543	nan	nan	nan	2020-10-01 00:00:00	0.08377003899318042	0.08517437064286208	0.08610012959448753	0.07660877182375168	0.07524752948923123	nan	nan	nan	2020-10-01 00:00:00	0.1864384200637228	0.14697600267326513	0.14943543807497586	0.1519163550819407	0.16664761395313668	nan	nan
+46	2020-11-01 00:00:00	0.07313720133550741	0.06595907999786957	0.06275115372173044	0.08210802692262238	0.0701399733420589	nan	nan	nan	2020-11-01 00:00:00	0.0833689416879931	0.08498464754541345	0.08549298591300769	0.08130386339716222	0.07588394657561905	nan	nan	nan	2020-11-01 00:00:00	0.1565061430235005	0.15094372754328303	0.14824413963473812	0.1634118903197846	0.14602391991767796	nan	nan
+47	2020-12-01 00:00:00	0.07193709416696141	0.0684833678726739	0.06352246749113671	0.07680761373046557	0.0796604957839841	nan	nan	nan	2020-12-01 00:00:00	0.08378758437995928	0.08640786079782348	0.08507188942767574	0.08107583519269236	0.07795830974012265	nan	nan	nan	2020-12-01 00:00:00	0.15572467854692074	0.15489122867049734	0.14859435691881245	0.15788344892315792	0.15761880552410673	nan	nan
+48	Promedio	0.06492288289450274	0.06370871982060337	0.066614342510042	0.07599812904552872	0.07702311861850171	0.07764854910064167	nan	nan	Promedio	0.08243945565972635	0.08409815800382986	0.0849700540034245	0.07715296927912287	0.07610576983630926	0.07542110403809178	nan	nan	Promedio	0.1473623385542291	0.14780687782443322	0.15158439651346656	0.1531510983246516	0.15312888845481099	0.15306965313873347	nan
+50	Energia Factura (MWh)	2020.0	2021.0	2022.0	2023.0	2024.0	2025.0	nan	nan	Demanda Maxima (MW)	2020.0	2021.0	2022.0	2023.0	2024.0	2025.0	nan	nan	Regulado Monomico	2020.0	2021.0	2022.0	2023.0	2024.0	2025	nan
+51	2020-01-01 00:00:00	734.09	1728.31	1122.45	989.657	935.746	1009.763	nan	nan	2020-01-01 00:00:00	1084.0	2554.0	2338.0	2471.0	1499.0	1575.0	nan	nan	2020-01-01 00:00:00	0.1820603652679508	0.17535239178515427	0.20156062830237426	0.19784511031793842	0.1807355954510733	0.17730984781785428	nan
+52	2020-02-01 00:00:00	673.72	1715.02	1203.25	990.55	967.556	947.912	nan	nan	2020-02-01 00:00:00	1099.0	2516.0	2564.0	1544.0	1525.0	1544.0	nan	nan	2020-02-01 00:00:00	0.18450894021462924	0.17520209759676272	0.20898701459380842	0.18282678246226847	0.17632078989387692	0.17872689655833032	nan
+53	2020-03-01 00:00:00	684.46	1286.41	1263.39	873.124	1324.311	966.145	nan	nan	2020-03-01 00:00:00	0.0	2522.0	2551.0	1542.0	2502.0	1585.0	nan	nan	2020-03-01 00:00:00	0.16109572132440172	0.1821345280961746	0.20420208119709668	0.18121586860221456	0.18011069896373288	0.18614643137572517	nan
+54	2020-04-01 00:00:00	730.89	1014.25	986.43	1082.639	1145.849	1199.3	nan	nan	2020-04-01 00:00:00	1082.0	1583.0	1583.0	2547.0	2474.0	2527.0	nan	nan	2020-04-01 00:00:00	0.1691829540362435	0.17652336552625092	0.1964394809699624	0.1880884315416681	0.1854221462306464	0.2028782963311932	nan
+55	2020-05-01 00:00:00	605.46	1332.72	1026.49	1129.086	909.58	998.166	nan	nan	2020-05-01 00:00:00	1070.0	2531.0	1599.0	2538.0	1534.0	1574.0	nan	nan	2020-05-01 00:00:00	0.17322652448171644	0.18127230669187824	0.2015844893253709	0.18389422940339356	0.17543210855647662	0.1910310141120815	nan
+56	2020-06-01 00:00:00	657.04	1746.01	923.687	956.798	1039.246	1003.97	nan	nan	2020-06-01 00:00:00	1053.0	2535.0	1591.0	1519.0	1569.0	1592.0	nan	nan	2020-06-01 00:00:00	0.17090665649701692	0.17498911206705575	0.20831747910047455	0.16406048846556953	0.17057608433514296	0.19195161178023243	nan
+57	2020-07-01 00:00:00	703.97	1684.49	949.7774358	1098.054	1025.926	nan	nan	nan	2020-07-01 00:00:00	1192.0	2549.0	1563.0	2490.0	1572.0	nan	nan	nan	2020-07-01 00:00:00	0.1783232821054164	0.17619095896490927	0.2076071014944018	0.18414140787086972	0.17034871918161737	nan	nan
+58	2020-08-01 00:00:00	729.19	1763.79	992.862	986.933	1047.588	nan	nan	nan	2020-08-01 00:00:00	1066.0	2572.0	1535.0	2460.0	1582.0	nan	nan	nan	2020-08-01 00:00:00	0.17532351304186838	0.175426042500978	0.20559761062161708	0.18728570183434942	0.17514500616899015	nan	nan
+59	2020-09-01 00:00:00	656.81	1716.08	1022.78	1197.982	1063.334	nan	nan	nan	2020-09-01 00:00:00	1061.0	2559.0	1578.0	2504.0	1591.0	nan	nan	nan	2020-09-01 00:00:00	0.17749179522997519	0.17690456151554704	0.19698318534777765	0.18024058953633695	0.17486642693272292	nan	nan
+60	2020-10-01 00:00:00	705.25	1678.78	1027.488	1184.388	1128.411	nan	nan	nan	2020-10-01 00:00:00	2327.0	2533.0	1570.0	2503.0	2463.0	nan	nan	nan	2020-10-01 00:00:00	0.2012609341439206	0.18042003607953397	0.19412749052835654	0.16626841289138355	0.18861543375004322	nan	nan
+61	2020-11-01 00:00:00	1287.9	1502.04	1020.09	1404.618	1039.09	nan	nan	nan	2020-11-01 00:00:00	2558.0	2544.0	1564.0	2522.0	1570.0	nan	nan	nan	2020-11-01 00:00:00	0.18271572444289153	0.18701105338925725	0.19518955852424788	0.16164961758898147	0.17516117752148516	nan	nan
+62	2020-12-01 00:00:00	1328.81	906.02	986.654	940.711	985.409	nan	nan	nan	2020-12-01 00:00:00	2551.0	1626.0	1562.0	1524.0	1785.0	nan	nan	nan	2020-12-01 00:00:00	0.18177800755939527	0.18986030225204742	0.19490115226715748	0.17884199364597628	0.18118064418437418	nan	nan
+63	Total	9497.589999999998	18073.920000000002	12525.3484358	12834.539999999999	12612.046	6125.256	nan	nan	Total	18163.0	30645.0	23620.0	28187.0	23690.0	12422.0	nan	nan	Total 	0.17876240956657952	0.17868756270462632	0.20138891007700677	0.1790902009404139	0.17801383372720334	0.18856501695197717	nan
+64	nan	nan	nan	nan	nan	65543.4444358	nan	nan	nan	nan	nan	nan	nan	nan	nan	nan	nan	nan	nan	nan	nan	nan	nan	nan	nan	nan
+65	nan	nan	nan	nan	nan	nan	nan	nan	nan	nan	nan	nan	nan	nan	nan	nan	nan	nan	FACTOR DE CARGA	2020.0	2021.0	2022.0	2023.0	2024.0	2025	nan
+66	nan	nan	nan	nan	nan	nan	nan	nan	nan	nan	nan	nan	nan	nan	nan	nan	nan	nan	2020-01-01 00:00:00	0.92	0.97	0.64	0.54	0.84	0.86	nan
+67	nan	nan	nan	nan	nan	nan	nan	nan	nan	nan	nan	nan	nan	nan	nan	nan	nan	nan	2020-02-01 00:00:00	0.84	0.98	0.69	0.9	0.88	0.87	nan
+68	nan	nan	nan	nan	nan	nan	nan	nan	nan	nan	nan	nan	nan	nan	nan	nan	nan	nan	2020-03-01 00:00:00	0.38	0.71	0.67	0.77	0.71	0.87	nan
+69	nan	nan	nan	nan	nan	nan	nan	nan	nan	nan	nan	nan	nan	nan	nan	nan	nan	nan	2020-04-01 00:00:00	0.94	0.88	0.86	0.59	0.64	0.66	nan
+70	nan	nan	nan	nan	nan	nan	nan	nan	nan	nan	nan	nan	nan	nan	nan	nan	nan	nan	2020-05-01 00:00:00	0.75	0.73	0.86	0.62	0.8	0.85	nan
+71	nan	nan	nan	nan	nan	nan	nan	nan	nan	nan	nan	nan	nan	nan	nan	nan	nan	nan	2020-06-01 00:00:00	0.87	0.95	0.85	0.87	0.91	0.88	nan
+72	nan	nan	nan	nan	nan	nan	nan	nan	nan	nan	nan	nan	nan	nan	nan	nan	nan	nan	2020-07-01 00:00:00	0.8	0.89	0.79	0.6	0.87	-	nan
+73	nan	nan	nan	nan	nan	nan	nan	nan	nan	nan	nan	nan	nan	nan	nan	nan	nan	nan	2020-08-01 00:00:00	0.89	0.93	0.88	0.54	0.89	-	nan
+74	nan	nan	nan	nan	nan	nan	nan	nan	nan	nan	nan	nan	nan	nan	nan	nan	nan	nan	2020-09-01 00:00:00	0.85	0.92	0.89	0.66	0.92	-	nan
+75	nan	nan	nan	nan	nan	nan	nan	nan	nan	nan	nan	nan	nan	nan	nan	nan	nan	nan	2020-10-01 00:00:00	0.41	0.9	0.88	0.64	0.61	-	nan
+76	nan	nan	nan	nan	nan	nan	nan	nan	nan	nan	nan	nan	nan	nan	nan	nan	nan	nan	2020-11-01 00:00:00	0.74	0.81	0.9	0.77	0.92	-	nan
+77	nan	nan	nan	nan	nan	nan	nan	nan	nan	nan	nan	nan	nan	nan	nan	nan	nan	nan	2020-12-01 00:00:00	0.7	0.75	0.89	0.84	0.77	-	nan
+78	nan	nan	nan	nan	nan	nan	nan	nan	nan	nan	nan	nan	nan	nan	nan	nan	nan	nan	Promedio	0.7574999999999998	0.8683333333333333	0.8166666666666668	0.695	0.8133333333333334	0.8316666666666667	nan

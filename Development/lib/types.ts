@@ -455,8 +455,47 @@ export interface UserSettings {
 export type DocumentEntityType = 'activeProjects' | 'active_projects' | 'quotes' | 'inquiries' | 'users' | 'technicians';
 
 /**
+ * Document categories for organization and filtering
+ * Updated: 2026-01-29 - Added claim_evidence and regulatory_filing for advocacy service
+ */
+export type DocumentCategory =
+  | 'bill'
+  | 'contract'
+  | 'invoice'
+  | 'report'
+  | 'deliverable'
+  | 'payment_proof'
+  | 'site_plan'
+  | 'meter_reading'
+  | 'claim_evidence'
+  | 'regulatory_filing'
+  | 'other';
+
+/**
+ * Database record for documents table (Supabase schema)
+ * Created: 2026-01-29 - Phase 01-01
+ * This matches the database schema exactly for type safety
+ */
+export interface DocumentRecord {
+  id: string;
+  name: string;
+  storage_path: string;
+  download_url: string;
+  content_type: string;
+  size_bytes: number;
+  linked_entity_type: 'active_projects' | 'quotes' | 'users' | 'technicians';
+  linked_entity_id: string;
+  category: DocumentCategory;
+  uploaded_by: string | null;
+  uploaded_at: string;
+  description?: string;
+  deleted_at?: string | null;
+}
+
+/**
  * Centralized document record for the documents collection.
  * This provides unified document management across all entities.
+ * @deprecated Use DocumentRecord for new code to match database schema
  */
 export interface Document {
     /** Firestore document ID */
@@ -493,7 +532,7 @@ export interface Document {
     description?: string;
 
     /** Document category for organization */
-    category?: 'bill' | 'contract' | 'invoice' | 'report' | 'monthly_report' | 'deliverable' | 'payment_proof' | 'site_plan' | 'meter_reading' | 'other';
+    category?: DocumentCategory;
 }
 
 // ============================================================================
@@ -588,4 +627,32 @@ export interface ElectricalBoard {
     photos: string[]; // JSONB array of strings
     created_at?: string;
     updated_at?: string;
+}
+
+// ============================================================================
+// Deletion Audit Types
+// ============================================================================
+
+/** Reason for deletion */
+export type DeletionReason = 'user_request' | 'admin_action' | 'inactivity' | 'violation' | 'cascade';
+
+/** Type of deletion operation */
+export type DeletionType = 'soft' | 'hard' | 'cascade' | 'scheduled';
+
+/**
+ * Deletion audit log record
+ * Tracks all deletion operations for compliance and recovery
+ * Created: 2026-01-29 - Phase 01-01
+ */
+export interface DeletionAuditLog {
+  id: string;
+  table_name: string;
+  record_id: string;
+  record_data: Record<string, unknown>;
+  deleted_at: string;
+  deleted_by: string | null;
+  delete_reason: DeletionReason | null;
+  deletion_type: DeletionType;
+  parent_deletion_id: string | null;
+  related_deletions: Array<{ table: string; id: string }>;
 }

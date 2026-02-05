@@ -1,0 +1,244 @@
+---
+# Phase 14 UAT Diagnosis Report
+# Diagnosed: 2026-02-04
+# All 3 issues from 14-UAT.md analyzed
+
+issues:
+  - issue_id: 1
+    test: "Test 2 - Technician Resend Invite Button"
+    title: "Technician Dashboard 400 Error on Inquiries Query"
+    severity: major
+    status: diagnosed-incomplete
+    
+    description: |
+      After technician completes onboarding, dashboard loads but shows 400 Bad Request 
+      on GET /rest/v1/inquiries?select=*&email=eq.[email]&status=in.(pending,contacted)
+    
+    investigation_summary: |
+      Technician dashboard (app/portal/technician/page.tsx) loads appointments via 
+      AppointmentService, not inquiries. The 400 error originates from a different query 
+      source not yet identified - potentially a service layer, component, or context provider.
+    
+    root_cause: "INCOMPLETE - Query location not identified in codebase"
+    
+    affected_files:
+      - path: "app/portal/technician/page.tsx"
+        role: "Dashboard main page - uses AppointmentService"
+      - path: "components/technician/*.tsx"
+        role: "Possible location of inquiries query"
+      - path: "app/services/*Service.ts"
+        role: "Service layer may contain the failing query"
+    
+    investigation_needed:
+      - Find the exact Supabase query being executed
+      - Verify inquiries table exists and has RLS policies
+      - Check email parameter URL encoding
+      - Review Supabase API logs
+    
+    debug_session: ".planning/debug/issue-01-technician-dashboard-400.md"
+
+  - issue_id: 2
+    test: "Test 5 - ContratarFlow Component Renders"
+    title: "ManualProjectWizard Missing Key Prop on Phases List"
+    severity: major
+    status: diagnosed-fixable
+    
+    description: |
+      ManualProjectWizard component throws React warning:
+      "Each child in a list should have a unique key prop"
+      Warning appears at the payment phases list.
+    
+    root_cause: "Using array index as key in dynamic list"
+    root_cause_code: |
+      File: components/ManualProjectWizard.tsx
+      Line: 568
+      
+      Current (WRONG):
+        {formData.project.phases.map((phase, idx) => (
+            <div key={idx} className="flex gap-2 items-center">
+      
+      Should be:
+        {formData.project.phases.map((phase, idx) => (
+            <div key={phase.id} className="flex gap-2 items-center">
+    
+    why_wrong: |
+      1. Phase objects have unique stable IDs (generated via crypto.randomUUID on line 609)
+      2. The phases list is dynamic (can add/remove items, line 609 adds, line 593 removes)
+      3. Using index keys breaks React's reconciliation algorithm
+      4. When list changes, index keys cause duplicate key warnings and state confusion
+      5. Input values for phase.name and phase.amount may show wrong values after list changes
+    
+    fix: |
+      Change line 568 from:
+        <div key={idx} className="flex gap-2 items-center">
+      
+      To:
+        <div key={phase.id} className="flex gap-2 items-center">
+    
+    affected_files:
+      - path: "components/ManualProjectWizard.tsx"
+        lines: [568]
+        change: "Replace key={idx} with key={phase.id}"
+    
+    impact: |
+      - User visible: React console warning
+      - Functional: State management issues when adding/removing/reordering phases
+      - Scope: Only in Admin → Projects → Create Project Wizard
+      - Public quote form (different code path) unaffected
+    
+    verification: |
+      After fix, navigate to Admin → Projects → Create Project Wizard
+      Add/remove payment phases - no React warning should appear in console
+    
+    debug_session: ".planning/debug/issue-02-manual-project-wizard-key.md"
+
+  - issue_id: 3
+    test: "Test 7 - Resend Email Dev Guard"
+    title: "Resend Email Routes Crash When API Key Missing - Dev Guard Incomplete"
+    severity: blocker
+    status: diagnosed-fixable
+    
+    description: |
+      When RESEND_API_KEY is undefined (common in development), routes crash with:
+      Error: Missing API key. Pass it to the constructor `new Resend(undefined)`
+      
+      Expected: Dev-safe guard should gracefully skip email send with [DEV] warning
+      Actual: 500 error with "Missing API key"
+    
+    root_cause: "Resend client initialized at module load time BEFORE guard check"
+    root_cause_code: |
+      File: app/api/send-onboarding-email/route.ts (and 3 others)
+      Line: 6
+      
+      Current (WRONG):
+        const resend = new Resend(process.env.RESEND_API_KEY);  // Line 6 - CRASHES HERE
+        
+        export async function POST(request: Request) {
+            try {
+                if (!process.env.RESEND_API_KEY) {  // Line 10 - Too late, already crashed
+                    if (process.env.NODE_ENV !== 'production') {
+                        console.warn('[DEV] RESEND_API_KEY missing — skipping email send');
+                        return NextResponse.json({ success: true, messageId: 'dev-skip', skipped: true }, { status: 200 });
+                    }
+                }
+            }
+        }
+      
+      Correct pattern:
+        export async function POST(request: Request) {
+            try {
+                if (!process.env.RESEND_API_KEY) {
+                    if (process.env.NODE_ENV !== 'production') {
+                        console.warn('[DEV] RESEND_API_KEY missing — skipping email send');
+                        return NextResponse.json({ success: true, messageId: 'dev-skip', skipped: true }, { status: 200 });
+                    }
+                    return NextResponse.json({ error: 'Email service not configured' }, { status: 503 });
+                }
+                
+                const resend = new Resend(process.env.RESEND_API_KEY);  // MOVE HERE
+                // ... rest of handler
+            }
+        }
+    
+    why_wrong: |
+      1. Resend client initialization happens at MODULE LOAD TIME (line 6)
+      2. This is BEFORE any request handler executes
+      3. The guard check (lines 10-16) only runs WHEN A REQUEST COMES IN
+      4. But the module is already loaded and crashed by then
+      5. The error happens at import/initialization, not at runtime
+    
+    scope_of_issue: |
+      This affects ALL 4 Resend email routes:
+      - app/api/send-onboarding-email/route.ts (line 6) - BLOCKER
+      - app/api/send-email/route.ts (line 5)
+      - app/api/send-invoice/route.ts (line 5)
+      - app/api/notify-existing-client/route.ts (line 4)
+      
+      All initialize Resend at module load with potentially undefined API key.
+    
+    fix: |
+      FOR EACH OF THE 4 FILES:
+      
+      1. Remove the top-level Resend initialization
+      2. Move it INSIDE the POST handler, AFTER the guard check
+      3. Ensure guard check comes FIRST
+      
+      Example for send-onboarding-email/route.ts:
+      
+      // DELETE THIS:
+      const resend = new Resend(process.env.RESEND_API_KEY);
+      
+      // MOVE TO INSIDE POST HANDLER:
+      export async function POST(request: Request) {
+          try {
+              if (!process.env.RESEND_API_KEY) {
+                  if (process.env.NODE_ENV !== 'production') {
+                      console.warn('[DEV] RESEND_API_KEY missing — skipping email send');
+                      return NextResponse.json({ success: true, messageId: 'dev-skip', skipped: true }, { status: 200 });
+                  }
+                  return NextResponse.json({ error: 'Email service not configured' }, { status: 503 });
+              }
+              
+              // ADD HERE:
+              const resend = new Resend(process.env.RESEND_API_KEY);
+              
+              // ... rest of handler
+          }
+      }
+    
+    affected_files:
+      - path: "app/api/send-onboarding-email/route.ts"
+        lines: [6]
+        change: "Move Resend initialization from line 6 to inside POST handler after guard check"
+      - path: "app/api/send-email/route.ts"
+        lines: [5]
+        change: "Move Resend initialization from line 5 to inside POST handler after guard check"
+      - path: "app/api/send-invoice/route.ts"
+        lines: [5]
+        change: "Move Resend initialization from line 5 to inside POST handler after guard check"
+      - path: "app/api/notify-existing-client/route.ts"
+        lines: [4]
+        change: "Move Resend initialization from line 4 to inside POST handler after guard check"
+    
+    impact: |
+      - Severity: BLOCKER - Application crashes when any email route is called without API key
+      - Error: 500 Internal Server Error with "Missing API key"
+      - Dev impact: Cannot test locally without setting a real or dummy RESEND_API_KEY
+      - Test: Test 7 fails because resending technician onboarding email crashes with 500
+    
+    reproduction: |
+      1. Ensure RESEND_API_KEY env var is NOT set
+      2. In development mode, try to resend technician onboarding email
+      3. Observe: 500 error "Missing API key"
+      4. Expected: [DEV] warning, email skipped gracefully
+    
+    verification: |
+      After fix for all 4 files:
+      1. Unset RESEND_API_KEY env var (set to empty)
+      2. Restart dev server
+      3. Trigger email action (e.g., resend technician invite)
+      4. Should see: [DEV] RESEND_API_KEY missing — skipping email send
+      5. Should NOT see: 500 error
+      6. Should NOT see: "Missing API key" error
+    
+    debug_session: ".planning/debug/issue-03-resend-dev-guard-incomplete.md"
+
+summary:
+  total_issues: 3
+  diagnosed_complete: 1
+  diagnosed_incomplete: 1
+  diagnosed_fixable: 2
+  
+  blocking_items:
+    - "Issue #3 (Resend dev guard) affects all 4 email routes - BLOCKER for testing without real API key"
+  
+  recommended_fix_order:
+    - "1. Fix Issue #3 (Resend guard) - BLOCKER, prevents testing entire email system"
+    - "2. Fix Issue #2 (ManualProjectWizard key) - Major, affects project wizard"
+    - "3. Investigate Issue #1 (Dashboard 400) - Major, but requires finding query location first"
+  
+  testing_strategy:
+    - "After Issue #3 fix: Test email routes in dev mode without RESEND_API_KEY"
+    - "After Issue #2 fix: Test project wizard phase list add/remove/reorder"
+    - "For Issue #1: Enable verbose logging for Supabase queries to identify source"
+
